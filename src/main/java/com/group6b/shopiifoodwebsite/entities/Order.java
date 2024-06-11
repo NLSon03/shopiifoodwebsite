@@ -3,6 +3,7 @@ package com.group6b.shopiifoodwebsite.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.List;
 @Getter
 @Setter
@@ -30,6 +31,8 @@ public class Order {
 
     @Column(name = "totalPrice",nullable = false)
     private double totalPrice;
+    @Column(name = "order_date")
+    private Date orderDate = new Date();
 
     private String status;
 }

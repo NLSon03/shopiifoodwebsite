@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,13 @@ public interface FoodItemRepository extends
                 Sort.by(sortBy)))
                 .getContent();
     }
+
+    @Query("""
+        SELECT f FROM FoodItem f
+        WHERE f.FoodName LIKE %?1%
+        OR f.description LIKE %?1%
+        OR f.category.categoryDescription LIKE %?1%
+        OR f.restaurant.name LIKE %?1%
+        """)
+    List<FoodItem> searchFood(String keyword);
 }
