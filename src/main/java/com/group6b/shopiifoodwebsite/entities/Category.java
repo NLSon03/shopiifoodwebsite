@@ -23,6 +23,8 @@ public class Category {
     @Column(name = "categoryDescription", length = 50, nullable = false)
     private String categoryDescription;
 
+    @Column(name = "mainPicture", nullable = false)
+    private String mainPicture;
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<FoodItem> foodItems;

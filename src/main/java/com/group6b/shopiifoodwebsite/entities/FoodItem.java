@@ -3,6 +3,8 @@ package com.group6b.shopiifoodwebsite.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -23,6 +25,8 @@ public class FoodItem {
     @Column(name = "description", length = 200)
     private String description;
 
+    @Column(name = "mainPicture")
+    private String mainPicture;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -30,4 +34,7 @@ public class FoodItem {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FoodPicture> pictures; // List of pictures
 }
