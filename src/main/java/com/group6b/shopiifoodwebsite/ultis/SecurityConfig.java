@@ -44,13 +44,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                /*.csrf(AbstractHttpConfigurer::)*/
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register", "/error").permitAll()
-                        .requestMatchers("/books/edit/**", "/books/add", "/books/delete").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/books", "/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers("/api/**", "/api/v1/books/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
+                        .requestMatchers( "/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -88,16 +87,5 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.realmName("hutech"))
                 .build();
     }
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:8080")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
-            }
-        };
-    }
+
 }

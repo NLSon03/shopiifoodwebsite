@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <link th:fragment="link-css" rel="stylesheet"
+          th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet"
+          th:href="@{/css/style.css}">
+    <style>
+    .restaurant {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 400px;
+    }
+    .restaurant img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body>
+
+<th:block th:replace="~{layout::header}"></th:block>
+
+<h1>Restaurant List</h1>
+<a href="/restaurants/add" sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-primary">Thêm thể loại mới</a>
+
+<div th:each="restaurant : ${restaurants}">
+    <div class="restaurant">
+        <h2 th:text="${restaurant.name}"></h2>
+        <p th:text="${restaurant.address}"></p>
+        <p th:text="${restaurant.phoneNumber}"></p>
+        <img th:src="@{${restaurant.RestaurantPicture}}" alt="[[${restaurant.name}]] Image">
+        <br>
+<!--
+        <a th:href="@{/restaurants/{id}(id=${restaurant.id})}">View Details</a>
+-->
+    </div>
+</div>
+<th:block th:replace="~{layout::footer}"></th:block>
+
+</body>
+</html>

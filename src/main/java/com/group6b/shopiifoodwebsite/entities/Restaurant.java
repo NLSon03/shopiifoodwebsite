@@ -28,8 +28,11 @@ public class Restaurant {
     private String address;
     @Length(min = 10, max = 10, message = "Số điện thoại phải có 10 ký tự")
     @Pattern(regexp = "^[0-9]*$", message = "Số điện thoại phải là số")
+    @Column(name = "phoneNumber",nullable = false)
     private String phoneNumber;
 
+    @Column(name = "restaurantpicture",nullable = false)
+    private String RestaurantPicture;
     @OneToMany(mappedBy = "restaurant")
     private List<FoodItem> foodItems;
 }

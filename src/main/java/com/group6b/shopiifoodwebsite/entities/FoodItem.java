@@ -35,6 +35,4 @@ public class FoodItem {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FoodPicture> pictures; // List of pictures
 }
