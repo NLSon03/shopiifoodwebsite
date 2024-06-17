@@ -46,13 +46,13 @@
             <td th:text="${food.getPrice()}"></td>
             <td th:text="${food.getDescription()}"></td>
             <td th:text="${food.restaurant.name}"></td>
-            <img th:src="@{${food.mainPicture}}" alt="[[${food.getFoodName()}]] Image">
+            <td><img th:src="${food.mainPicture}" th:alt="${food.getFoodName()} + 'Image'"> </td>
 
             <td th:text="${food.category.categoryDescription}"></td>
             <td colspan="2">
                 <a class="btn btn-primary"
                     sec:authorize="hasAnyAuthority('ADMIN')"
-                   th:href="@{/foods/update/{id}(id=${food.getId()})}">Edit</a>
+                   th:href="@{/foods/edit/{id}(id=${food.getId()})}">Edit</a>
                 <a class="btn btn-danger"
                    sec:authorize="hasAnyAuthority('ADMIN')"
                    th:href="@{/foods/delete/{id}(id=${food.getId()})}"

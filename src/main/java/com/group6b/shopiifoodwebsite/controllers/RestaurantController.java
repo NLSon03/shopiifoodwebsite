@@ -52,16 +52,15 @@ public class RestaurantController {
 
     // Create a new food item
     @PostMapping("/add")
-    public String addFoodItem(@Valid @ModelAttribute Restaurant restaurant, Model model,
-                              @RequestParam("restaurantPicture") MultipartFile picture,
+    public String addRestaurant(@Valid @ModelAttribute Restaurant restaurant,
+                              @RequestParam("image") MultipartFile restaurantPicture,
                               BindingResult result) throws IOException {
         if(result.hasErrors()){
-            var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             return "restaurant/add";
         }
-        if(!picture.isEmpty()){
+        if(!restaurantPicture.isEmpty()){
             try{
-                String imageName = saveImageStatic(picture);
+                String imageName = saveImageStatic(restaurantPicture);
                 restaurant.setRestaurantPicture("/restaurantimages/"+imageName);
             }
             catch (IOException ex){

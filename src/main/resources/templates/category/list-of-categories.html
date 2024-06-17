@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,19 +9,39 @@
           th:href="@{/css/bootstrap.min.css}">
     <link th:fragment="custom-css" rel="stylesheet"
           th:href="@{/css/style.css}">
+    <style>
+        .card {
+            display: flex;
+            align-items: center;
+        }
+        .card img {
+            margin-right: 10px;
+            width: 50px; /* Adjust as needed */
+            height: 50px; /* Adjust as needed */
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
 
 <th:block th:replace="~{layout::header}"></th:block>
 
 <h1>category List</h1>
-
-<div th:each="category : ${categories}">
-    <div class="card">
-        <h2 th:text="${category.categoryDescription}"></h2>
-        <img th:src="@{${category.mainPicture}}" alt="[[${category.categoryDescription}]] Image">
+<a href="/categories/add" sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-primary">Thêm thể loại mới</a>
+<div class="container">
+    <h1>Categories</h1>
+    <div th:each="category : ${categories}">
+        <button class="btn btn-primary">
+            <div class="card" style="width: 18rem;">
+                <img th:src="${category.mainPicture}" class="card-img-top" alt="Category Image">
+                <div class="card-body">
+                    <p class="card-text" th:text="${category.categoryDescription}"></p>
+                </div>
+            </div>
+        </button>
     </div>
 </div>
+
 <th:block th:replace="~{layout::footer}"></th:block>
 
 </body>

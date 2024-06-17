@@ -12,21 +12,12 @@
 <th:block th:replace="~{layout::header}"></th:block>
 <div class="container">
     <h1>Add Food</h1>
-    <form th:action="@{/restaurants/add}" th:object="${restaurant}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/categories/add}" th:object="${category}" method="post" enctype="multipart/form-data">
 
         <div class="col-6 mb-3">
-            <label class="form-label" for="name">name:</label>
-            <input class="form-control" type="text" th:field="*{name}" id="name" placeholder="Enter name">
+            <label class="form-label" for="categoryDescription">name:</label>
+            <input class="form-control" type="text" th:field="*{categoryDescription}" id="categoryDescription" placeholder="Enter description">
         </div>
-        <div class="col-6 mb-3">
-            <label class="form-label" for="address">address:</label>
-            <input class="form-control" type="text" th:field="*{address}" id="address" placeholder="Enter address">
-        </div>
-        <div class="col-6 mb-3">
-            <label class="form-label" for="phoneNumber">phone no:</label>
-            <input class="form-control" type="text" th:field="*{phoneNumber}" id="phoneNumber" placeholder="Enter phoneno">
-        </div>
-
         <div class="col-6 mb-3">
             <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>
             <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
@@ -35,7 +26,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     <br>
-    <a th:href="@{/restaurants}">Back to List</a>
+    <a th:href="@{/categories}">Back to List</a>
 </div>
 <th:block th:replace="~{layout::footer}"></th:block>
 </body>

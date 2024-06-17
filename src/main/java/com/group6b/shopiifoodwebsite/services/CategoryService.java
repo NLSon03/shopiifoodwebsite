@@ -30,9 +30,7 @@ public class CategoryService {
     public Optional<Category> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
-    public void addCategory(Category category, MultipartFile mainPicture) throws IOException {
-        String categoryIcon  = saveImage(mainPicture);
-        category.setMainPicture(categoryIcon);
+    public void addCategory(Category category) throws IOException {
         categoryRepository.save(category);
     }
     public void updateCategory(@NotNull Category category, MultipartFile multipartFile)  throws IOException{

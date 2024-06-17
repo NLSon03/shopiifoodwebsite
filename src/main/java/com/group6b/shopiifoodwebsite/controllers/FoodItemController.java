@@ -32,8 +32,10 @@ import java.util.*;
 public class FoodItemController {
 
     private final FoodItemService foodItemService;
-    private  final CategoryService categoryService;
+    private final CategoryService categoryService;
     private final RestaurantService restaurantService;
+
+
     @GetMapping
     public String showAllFoods( @NotNull Model model,
                                      @RequestParam(defaultValue = "0") Integer pageNo,
@@ -44,13 +46,7 @@ public class FoodItemController {
         model.addAttribute("totalPages",foodItemService.getAllFood(pageNo,pageSize,sortBy).size() / pageSize);
         return "food/list-of-foods";
     }
-    private String saveImageStatic(MultipartFile image) throws IOException {
-        File saveFile = new ClassPathResource("static/foodimages").getFile();
-        String fileName = UUID.randomUUID()+ "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
-        Path path = Paths.get(IMAGE_PATH  + fileName);
-        Files.copy(image.getInputStream(), path,StandardCopyOption.REPLACE_EXISTING);
-        return fileName;
-    }
+
     // Show form to create a new food item
     @GetMapping("/add")
     public String showAddForm(@NotNull Model model) {
@@ -62,26 +58,29 @@ public class FoodItemController {
 
     // Create a new food item
     @PostMapping("/add")
-    public String addFoodItem(@Valid @ModelAttribute FoodItem foodItem, Model model,
-                              @RequestParam("mainPicture") MultipartFile picture,
+    public String addFoodItem(@Valid @ModelAttribute FoodItem foodItem,
+                              @RequestParam("image") MultipartFile image,
                               BindingResult result) throws IOException {
-        if(result.hasErrors()){
+        if (result.hasErrors()) {
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             return "food/add";
         }
-        if(!picture.isEmpty()){
-            try{
-                String imageName = saveImageStatic(picture);
-                foodItem.setMainPicture("/foodimages/"+imageName);
-            }
-            catch (IOException ex){
+        if (!image.isEmpty()) {
+            try {
+                String imageSavePath = "src/main/resources/static/foodimages/";  // Replace with your actual path
+                String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
+                Path imagePath = Paths.get(imageSavePath + fileName);
+                image.transferTo(imagePath);
+                foodItem.setMainPicture("/foodimages/" + fileName);  // Adjust the path based on your storage location
+            } catch (IOException ex) {
                 ex.printStackTrace();
+                // Handle any exceptions during image saving
+                return "redirect:/foods/add";  // Redirect back to the add form with error handling
             }
         }
         foodItemService.addFood(foodItem);
         return "redirect:/foods";
     }
-    private final String IMAGE_PATH = "src/main/resources/static/foodimages/";
     // Show form to update an existing food item
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable long id,@NotNull Model model) {
@@ -98,9 +97,10 @@ public class FoodItemController {
 
     // Update an existing food item
     @PostMapping("/edit")
-    public String updateFoodItem(@NotNull BindingResult result, Model model,
-                                 @ModelAttribute FoodItem foodItem,
-                                 @RequestParam("mainPicture") MultipartFile mainPicture) throws IOException {
+    public String updateFoodItem(
+                                 @Valid @ModelAttribute("food") FoodItem foodItem,
+                                 @NotNull BindingResult result, Model model,
+                                 @RequestParam("image") MultipartFile mainPicture) throws IOException {
         if(result.hasErrors()){
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             model.addAttribute("errors", errors);
@@ -110,7 +110,7 @@ public class FoodItemController {
             return "food/edit";
         }
 
-        foodItemService.updateFood(foodItem, mainPicture);
+        foodItemService.updateFood(foodItem,mainPicture);
         return "redirect:/foods";
     }
 

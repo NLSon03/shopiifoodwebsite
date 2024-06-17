@@ -12,8 +12,9 @@
 <body>
 <th:block th:replace="~{layout::header}"></th:block>
 <div class="container">
-    <h1>Add Food</h1>
-    <form th:action="@{/foods/add}" th:object="${foodItem}" method="post" enctype="multipart/form-data">
+    <h1>Edit Food</h1>
+    <form th:action="@{/foods/edit}" th:object="${food}" method="post" id="showUpdateForm" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
         <div class="col-6 mb-3">
             <label class="form-label" for="FoodName">Food Name: <span class="text-danger">*</span></label>
             <input class="form-control" type="text" th:field="*{foodName}" id="FoodName" required autofocus>
@@ -33,17 +34,22 @@
             <label class="form-label" for="category">Category: <span class="text-danger">*</span></label>
             <select class="form-control" id="category" th:field="*{category.id}" required>
                 <option value="">-- Select Category --</option>
-                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.categoryDescription}"></option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:text="${category.categoryDescription}"
+                        th:selected="${category.id == food.category.getId()}"></option>
             </select>
-            <span class="text-danger" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
         </div>
         <div class="col-6 mb-3">
             <label class="form-label" for="restaurant">Restaurant: <span class="text-danger">*</span></label>
             <select class="form-control" id="restaurant" th:field="*{restaurant.id}" required>
                 <option value="">-- Select Restaurant --</option>
-                <option th:each="restaurant : ${restaurants}" th:value="${restaurant.getId()}" th:text="${restaurant.name}"></option>
+                <option th:each="restaurant : ${restaurants}"
+                        th:value="${restaurant.getId()}"
+                        th:text="${restaurant.getName()}"
+                        th:selected="${restaurant.getId() ==
+                        food.restaurant.getId()}"></option>
             </select>
-            <span class="text-danger" th:if="${#fields.hasErrors('restaurant')}" th:errors="*{restaurant}"></span>
         </div>
         <div class="col-6 mb-3">
             <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>

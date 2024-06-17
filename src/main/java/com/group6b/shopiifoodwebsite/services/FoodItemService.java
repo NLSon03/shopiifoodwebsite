@@ -10,16 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.SERIALIZABLE,
@@ -47,16 +45,23 @@ public class FoodItemService {
     public void updateFood(@NotNull FoodItem foodItem, MultipartFile mainPicture) throws IOException {
         FoodItem existingFood = foodItemRepository.findById(foodItem.getId())
                 .orElse(null);
-        Objects.requireNonNull(existingFood).setFoodName(foodItem.getFoodName());
-        existingFood.setDescription(foodItem.getDescription());
-        existingFood.setPrice(foodItem.getPrice());
-        existingFood.setCategory(foodItem.getCategory());
 
-        if (mainPicture != null && !mainPicture.isEmpty()) {
-            String mainPicturePath = saveImage(mainPicture);
-            existingFood.setMainPicture(mainPicturePath);
+        if (existingFood != null) {
+            existingFood.setFoodName(foodItem.getFoodName());
+            existingFood.setDescription(foodItem.getDescription());
+            existingFood.setPrice(foodItem.getPrice());
+            existingFood.setCategory(foodItem.getCategory());
+
+            if (mainPicture != null && !mainPicture.isEmpty()) {
+                String imageSavePath = "src/main/resources/static/foodimages/";  // Đường dẫn lưu ảnh
+                String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(mainPicture.getOriginalFilename());
+                Path imagePath = Paths.get(imageSavePath + fileName);
+                mainPicture.transferTo(imagePath);
+                existingFood.setMainPicture("/foodimages/" + fileName);  // Đường dẫn truy cập ảnh
+            }
+
+            foodItemRepository.save(existingFood);
         }
-        foodItemRepository.save(existingFood);
     }
 
     public void deleteFoodById(Long id) {

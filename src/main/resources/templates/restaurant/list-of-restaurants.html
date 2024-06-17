@@ -34,7 +34,7 @@
         <h2 th:text="${restaurant.name}"></h2>
         <p th:text="${restaurant.address}"></p>
         <p th:text="${restaurant.phoneNumber}"></p>
-        <img th:src="@{${restaurant.RestaurantPicture}}" alt="[[${restaurant.name}]] Image">
+        <img th:src="${restaurant.RestaurantPicture}" th:alt="${restaurant.name} + 'Image'">
         <br>
 <!--
         <a th:href="@{/restaurants/{id}(id=${restaurant.id})}">View Details</a>
