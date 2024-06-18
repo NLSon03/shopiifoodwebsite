@@ -98,9 +98,16 @@
                         Help & FAQs
                     </a>
 
-                    <a href="#" class="flex-c-m trans-04 p-lr-25">
-                        My Account
-                    </a>
+                    <div sec:authorize="isAuthenticated()" class="flex-c-m trans-04 p-lr-25">
+                        <form th:action="@{/logout}" method="post">
+                            <button class="btn btn-outline-danger" type="submit">Logout</button>
+                        </form>
+                    </div>
+                    <div sec:authorize="!isAuthenticated()" class="flex-c-m trans-04 p-lr-25">
+                        <a href="/login"  class="flex-c-m trans-04 p-lr-25">
+                            Login
+                        </a>
+                    </div>
 
                     <a href="#" class="flex-c-m trans-04 p-lr-25">
                         EN
