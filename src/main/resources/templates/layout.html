@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -293,7 +294,7 @@
     </div>
 </header>
     <div class="container">
-        <div th:fragment="content"></div>
+        <div layout:fragment="content"></div>
     </div>
 <footer th:fragment="footer" class="bg3 p-t-75 p-b-32">
 
