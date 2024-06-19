@@ -70,4 +70,38 @@ public class RestaurantController {
         restaurantService.addRestaurant(restaurant);
         return "redirect:/restaurants";
     }
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable long id,@NotNull Model model) {
+        var restaurant = restaurantService.getRestaurantById(id);
+        model.addAttribute("restaurant", restaurant.orElseThrow(() -> new
+                IllegalArgumentException("Food not found")));
+        model.addAttribute("restaurants",restaurantService.getAllRestaurants());
+        return "restaurant/edit";
+    }
+
+
+    // Update an existing food item
+    @PostMapping("/edit")
+    public String updateRestaurantInfo(
+            @Valid @ModelAttribute("restaurant") Restaurant restaurant,
+            @NotNull BindingResult result, Model model,
+            @RequestParam("image") MultipartFile mainPicture) throws IOException {
+        if(result.hasErrors()){
+            var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
+            model.addAttribute("errors", errors);
+
+            model.addAttribute("restaurants",restaurantService.getAllRestaurants());
+            return "restaurant/edit";
+        }
+
+        restaurantService.updateRestaurant(restaurant,mainPicture);
+        return "redirect:/restaurants";
+    }
+
+    // Delete a food item
+    @GetMapping("/delete/{id}")
+    public String deleteFoodItem(@PathVariable Long id) {
+        restaurantService.getRestaurantById(id).ifPresentOrElse(restaurant->restaurantService.deleteRestaurantById(id),()->{ throw new IllegalArgumentException("Food not found"); });
+        return "redirect:/restaurants";
+    }
 }

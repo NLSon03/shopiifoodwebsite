@@ -33,16 +33,12 @@ public class CategoryService {
     public void addCategory(Category category) throws IOException {
         categoryRepository.save(category);
     }
-    public void updateCategory(@NotNull Category category, MultipartFile multipartFile)  throws IOException{
+    public void updateCategory(@NotNull Category category){
         Category existingCategory = categoryRepository.findById(category.getId())
                 .orElse(null);
         Objects.requireNonNull(existingCategory).setCategoryDescription(category.getCategoryDescription());
         existingCategory.setCategoryDescription(category.getCategoryDescription());
-        if(multipartFile !=null  && !multipartFile.isEmpty())
-        {
-            String pictureUrl = saveImage(multipartFile);
-            existingCategory.setMainPicture(pictureUrl);
-        }
+
         categoryRepository.save(existingCategory);
     }
     public void deleteCategoryById(Long id) {

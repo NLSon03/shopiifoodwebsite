@@ -24,23 +24,41 @@
 </head>
 <body>
 
-<th:block th:replace="~{layout::header}"></th:block>
+
 
 <h1>Restaurant List</h1>
 <a href="/restaurants/add" sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-primary">Thêm thể loại mới</a>
 
-<div th:each="restaurant : ${restaurants}">
-    <div class="restaurant">
-        <h2 th:text="${restaurant.name}"></h2>
-        <p th:text="${restaurant.address}"></p>
-        <p th:text="${restaurant.phoneNumber}"></p>
-        <img th:src="${restaurant.RestaurantPicture}" th:alt="${restaurant.name} + 'Image'">
-        <br>
-<!--
-        <a th:href="@{/restaurants/{id}(id=${restaurant.id})}">View Details</a>
--->
-    </div>
-</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>PhoneNo</th>
+        <th>Picture</th>
+
+        <th  sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="restaurant : ${restaurants}">
+        <td th:text="${restaurant.id}"></td>
+        <td th:text="${restaurant.name}"></td>
+        <td th:text="${restaurant.address}"></td>
+        <td th:text="${restaurant.phoneNumber}"></td>
+        <td><img th:src="${restaurant.restaurantPicture}" th:alt="Picture" width="100px" height="100px"></td>
+        <td colspan="2">
+            <a class="btn btn-primary"  sec:authorize="hasAnyAuthority('ADMIN')"
+               th:href="@{/restaurants/edit/{id}(id=${restaurant.getId()})}">Edit</a>
+            <a class="btn btn-danger" sec:authorize="hasAnyAuthority('ADMIN')"
+               th:href="@{/restaurants/delete/{id}(id=${restaurant.getId()})}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+
+        </td>
+
+    </tr>
+    </tbody>
+</table>
 <th:block th:replace="~{layout::footer}"></th:block>
 
 </body>

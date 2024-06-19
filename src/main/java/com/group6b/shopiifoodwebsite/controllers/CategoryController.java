@@ -46,26 +46,42 @@ public class CategoryController {
     // Create a new food item
     @PostMapping("/add")
     public String addCategory(@Valid @ModelAttribute Category category,
-                                @RequestParam("image") MultipartFile image,
                                 BindingResult result) throws IOException {
         if (result.hasErrors()) {
             return "category/add";
         }
-        if (!image.isEmpty()) {
-            try {
-                String imageSavePath = "src/main/resources/static/categoryimages/";  // Replace with your actual path
-                String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
-                Path imagePath = Paths.get(imageSavePath + fileName);
-                image.transferTo(imagePath);
-                category.setMainPicture("/categoryimages/" + fileName);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                return "redirect:/categories/add";
-            }
-        }
+
         categoryService.addCategory(category);
         return "redirect:/categories";
 
+    }
+    @GetMapping("/edit/{id}")
+    public String editCategoryForm(@NotNull Model model, @PathVariable long id) {
+        var category = categoryService.getCategoryById(id);
+        model.addAttribute("category", category.orElseThrow(() -> new
+                IllegalArgumentException("Book not found")));
+        return "category/edit";
+    }
+    @PostMapping("/edit")
+    public String editCategory(@Valid @ModelAttribute("category") Category category,@NotNull BindingResult bindingResult,
+                               Model model) {
+        if(bindingResult.hasErrors()){
+            var errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .toArray(String[]::new);
+            model.addAttribute("errors", errors);
+            return "category/edit";
+
+        }
+        categoryService.updateCategory(category);
+        return "redirect:/categories";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteCategory(@PathVariable long id) {
+        if (categoryService.getCategoryById(id).isPresent())
+            categoryService.deleteCategoryById(id);
+        return "redirect:/categories";
     }
    /* @GetMapping("/add")
     public String addCategoryForm(@NotNull Model model) {

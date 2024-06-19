@@ -23,19 +23,11 @@ public class Category {
     @Column(name = "categoryDescription", length = 50, nullable = false)
     private String categoryDescription;
 
-    @Column(name = "mainPicture")
-    private String mainPicture;
+
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<FoodItem> foodItems;
 
-    public String getMainPicture() {
-        return mainPicture;
-    }
-
-    public void setMainPicture(String mainPicture) {
-        this.mainPicture = mainPicture;
-    }
 
     public String getCategoryDescription() {
         return categoryDescription;

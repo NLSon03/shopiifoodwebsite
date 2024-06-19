@@ -87,8 +87,7 @@ public class FoodItemController {
         var foodItem = foodItemService.getFoodById(id);
         model.addAttribute("food", foodItem.orElseThrow(() -> new
                 IllegalArgumentException("Food not found")));
-        model.addAttribute("categories",
-                categoryService.getAllCategories());
+        model.addAttribute("categories",categoryService.getAllCategories());
         model.addAttribute("restaurants",restaurantService.getAllRestaurants());
 
         return "food/edit";
@@ -104,8 +103,7 @@ public class FoodItemController {
         if(result.hasErrors()){
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             model.addAttribute("errors", errors);
-            model.addAttribute("categories",
-                    categoryService.getAllCategories());
+            model.addAttribute("categories",  categoryService.getAllCategories());
             model.addAttribute("restaurants",restaurantService.getAllRestaurants());
             return "food/edit";
         }

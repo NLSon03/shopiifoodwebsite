@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit category</title>
+    <th:block th:replace="~{layout::custom-css1}"></th:block>
+    <th:block th:replace="~{layout::custom-css2}"></th:block>
+    <th:block th:replace="~{layout::custom-css3}"></th:block>
+    <th:block th:replace="~{layout::custom-css4}"></th:block>
+    <th:block th:replace="~{layout::custom-css5}"></th:block>
+    <th:block th:replace="~{layout::custom-css6}"></th:block>
+    <th:block th:replace="~{layout::custom-css7}"></th:block>
+    <th:block th:replace="~{layout::custom-css8}"></th:block>
+    <th:block th:replace="~{layout::custom-css9}"></th:block>
+    <th:block th:replace="~{layout::custom-css10}"></th:block>
+    <th:block th:replace="~{layout::custom-css11}"></th:block>
+    <th:block th:replace="~{layout::custom-css12}"></th:block>
+    <th:block th:replace="~{layout::custom-css13}"></th:block>
+    <th:block th:replace="~{layout::custom-css14}"></th:block>
+</head>
+<body>
+<div class="container">
+    <h1>Edit Category</h1>
+    <form th:action="@{/categories/edit}" th:object="${category}" method="post">
+        <input type="hidden" th:field="*{id}" />
+        <div class="col-6 mb-3">
+            <label class="form-label" for="title">Title:</label>
+            <input class="form-control" type="text" th:field="*{categoryDescription}"
+                   id="title">
+            <div class="text-danger" th:if="${#fields.hasErrors('categoryDescription')}" th:errors="*{categoryDescription}">Title Error</div>
+        </div>
+
+        <input type="submit" value="Save">
+    </form>
+    <br>
+    <a th:href="@{/categories}">Back to List</a>
+</div>
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+
+<th:block th:replace="~{layout::footer}"></th:block>
+</body>
+</html>

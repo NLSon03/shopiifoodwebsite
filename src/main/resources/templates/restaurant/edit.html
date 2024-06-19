@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <h1>Edit Food</h1>
+    <form th:action="@{/restaurants/edit}" th:object="${restaurant}" method="post" id="showUpdateForm" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}">
+        <div class="col-6 mb-3">
+            <label class="form-label" for="name">Food Name: <span class="text-danger">*</span></label>
+            <input class="form-control" type="text" th:field="*{name}" id="name" required autofocus>
+            <span class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="address">Address: <span class="text-danger">*</span></label>
+            <input class="form-control" type="text" th:field="*{address}" id="address" placeholder="Enter price" required>
+            <span class="text-danger" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+        </div>
+        <div class="col-6 mb-3">
+            <label class="form-label" for="phoneNumber">PhoneNo:</label>
+            <input class="form-control" type="text" th:field="*{phoneNumber}" id="phoneNumber" placeholder="Enter description">
+            <span class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></span>
+        </div>
+
+        <div class="col-6 mb-3">
+            <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <br>
+    <a th:href="@{/foods}">Back to List</a>
+</div>
+</body>
+</html>

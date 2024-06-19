@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("user", new User());
-        return "user/register";
+        return "auth/register";
     }
 
     @PostMapping("/register")
@@ -36,7 +36,7 @@ public class UserController {
                     .map(DefaultMessageSourceResolvable::getDefaultMessage)
                     .toArray(String[]::new);
             model.addAttribute("errors", errors);
-            return "user/register";
+            return "auth/register";
         }
         userService.save(user);
         return "redirect:/login";

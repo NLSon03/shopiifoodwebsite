@@ -28,45 +28,46 @@ public class FoodItemService {
     private FoodItemRepository foodItemRepository;
 
 
-    public List<FoodItem> getAllFood(Integer pageNo,    Integer pageSize,    String sortBy) {
+    public List<FoodItem> getAllFood(Integer pageNo, Integer pageSize, String sortBy) {
         return foodItemRepository.findAllFoods(pageNo, pageSize, sortBy);
     }
 
-    public Optional<FoodItem> getFoodById(Long id){
+    public Optional<FoodItem> getFoodById(Long id) {
         return foodItemRepository.findById(id);
     }
-
 
 
     public void addFood(FoodItem foodItem) {
         foodItemRepository.save(foodItem);
     }
 
-    public void updateFood(@NotNull FoodItem foodItem, MultipartFile mainPicture) throws IOException {
+    public FoodItem updateFood(@NotNull FoodItem foodItem, MultipartFile mainPicture) throws IOException {
         FoodItem existingFood = foodItemRepository.findById(foodItem.getId())
-                .orElse(null);
+                .orElseThrow(() -> new IllegalArgumentException("Food with id " + foodItem.getId() + " not found."));
 
-        if (existingFood != null) {
-            existingFood.setFoodName(foodItem.getFoodName());
-            existingFood.setDescription(foodItem.getDescription());
-            existingFood.setPrice(foodItem.getPrice());
-            existingFood.setCategory(foodItem.getCategory());
+        // Cập nhật các trường khác
+        existingFood.setFoodName(foodItem.getFoodName());
+        existingFood.setDescription(foodItem.getDescription());
+        existingFood.setPrice(foodItem.getPrice());
+        existingFood.setCategory(foodItem.getCategory());
 
-            if (mainPicture != null && !mainPicture.isEmpty()) {
-                String imageSavePath = "src/main/resources/static/foodimages/";  // Đường dẫn lưu ảnh
-                String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(mainPicture.getOriginalFilename());
-                Path imagePath = Paths.get(imageSavePath + fileName);
-                mainPicture.transferTo(imagePath);
-                existingFood.setMainPicture("/foodimages/" + fileName);  // Đường dẫn truy cập ảnh
-            }
-
-            foodItemRepository.save(existingFood);
+        // Cập nhật ảnh nếu có
+        if (mainPicture != null && !mainPicture.isEmpty()) {
+            String imageSavePath = "src/main/resources/static/foodimages/";  // Đường dẫn lưu ảnh
+            String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(mainPicture.getOriginalFilename());
+            Path imagePath = Paths.get(imageSavePath + fileName);
+            mainPicture.transferTo(imagePath);
+            existingFood.setMainPicture("/foodimages/" + fileName);  // Đường dẫn truy cập ảnh
         }
+
+        return foodItemRepository.save(existingFood);
     }
+
 
     public void deleteFoodById(Long id) {
         foodItemRepository.deleteById(id);
     }
+
     public List<FoodItem> searchFood(String keyword) {
         return foodItemRepository.searchFood(keyword);
     }

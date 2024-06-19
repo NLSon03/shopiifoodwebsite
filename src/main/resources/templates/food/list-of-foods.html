@@ -9,7 +9,7 @@
     <th:block th:replace="~{layout::custom-css}"></th:block>
 </head>
 <body>
-<th:block th:replace="~{layout::header}"></th:block>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -36,6 +36,7 @@
             <th>Price</th>
             <th>description</th>
             <th>restaurant</th>
+            <th>picture</th>
             <th>Category</th>
             <th sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
         </tr>
@@ -46,7 +47,7 @@
             <td th:text="${food.getPrice()}"></td>
             <td th:text="${food.getDescription()}"></td>
             <td th:text="${food.restaurant.name}"></td>
-            <td><img th:src="${food.mainPicture}" th:alt="${food.getFoodName()} + 'Image'"> </td>
+            <td><img th:src="@{${food.getMainPicture()}}" th:alt="Image" width="100px" height="100px"> </td>
 
             <td th:text="${food.category.categoryDescription}"></td>
             <td colspan="2">
