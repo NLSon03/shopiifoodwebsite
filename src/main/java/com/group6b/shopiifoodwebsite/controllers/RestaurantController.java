@@ -2,6 +2,7 @@ package com.group6b.shopiifoodwebsite.controllers;
 
 import com.group6b.shopiifoodwebsite.entities.FoodItem;
 import com.group6b.shopiifoodwebsite.entities.Restaurant;
+import com.group6b.shopiifoodwebsite.services.FoodItemService;
 import com.group6b.shopiifoodwebsite.services.RestaurantService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -29,6 +30,7 @@ import java.util.UUID;
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    private final FoodItemService foodItemService;
     private final String IMAGE_PATH = "src/main/resources/static/restaurantimages/";
 
     @GetMapping
@@ -78,7 +80,13 @@ public class RestaurantController {
         model.addAttribute("restaurants",restaurantService.getAllRestaurants());
         return "restaurant/edit";
     }
-
+    @GetMapping("/details/{id}")
+    public String viewRestaurantDetails(@PathVariable long id, Model model) {
+        var restaurant = restaurantService.getRestaurantById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
+        model.addAttribute("restaurant", restaurant);
+        model.addAttribute("foodByRestaurant",foodItemService.getFoodItemsByRestaurantId(id));
+        return "restaurant/details";
+    }
 
     // Update an existing food item
     @PostMapping("/edit")

@@ -52,6 +52,8 @@
             <td th:text="${food.category.categoryDescription}"></td>
             <td colspan="2">
                 <a class="btn btn-primary"
+                   th:href="@{/foods/details/{id}(id=${food.getId()})}">Details</a>
+                <a class="btn btn-primary"
                     sec:authorize="hasAnyAuthority('ADMIN')"
                    th:href="@{/foods/edit/{id}(id=${food.getId()})}">Edit</a>
                 <a class="btn btn-danger"

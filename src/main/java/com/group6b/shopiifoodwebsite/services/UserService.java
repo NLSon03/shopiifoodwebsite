@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserService implements UserDetailsService {
+public class    UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
@@ -31,44 +31,50 @@ public class UserService implements UserDetailsService {
     public void save(@NotNull User user) {
         user.setPassword(new BCryptPasswordEncoder()
                 .encode(user.getPassword()));
+
         userRepository.save(user);
+        setDefaultRole(user.getUsername());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE,
             rollbackFor = {Exception.class, Throwable.class})
-    public void setDefaultRole(String username) {
-        userRepository.findByUsername(username).get().getRoles()
-                .add(roleRepository.findRoleById(Role.USER.value));
+    public void setDefaultRole(String username){
+        userRepository.findByUsername(username).getRoles()
+                .add(roleRepository .findRoleById(Role.USER.value));
     }
+
 
     public Optional<User> findByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
-    }
+            return Optional.ofNullable(userRepository.findByUsername(username));
+        }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var user = userRepository.findByUsername(username);
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.get().getUsername())
-                .password(user.get().getPassword())
-                .authorities(user.get().getAuthorities())
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
-    }
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            var user = userRepository.findByUsername(username);
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(user.getUsername())
+                    .password(user.getPassword())
+                    .authorities(user.getAuthorities())
+                    .accountExpired(false)
+                    .accountLocked(false)
+                    .credentialsExpired(false)
+                    .disabled(false)
+                    .build();
+        }
 
-    public void saveOauthUser(String email, @NotNull String username) {
-        if (userRepository.findByUsername(username).isPresent())
-            return;
-        var user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(new BCryptPasswordEncoder().encode(username));
-        user.setProvider(Provider.GOOGLE.value);
-        user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
-        userRepository.save(user);
+        public void saveOauthUser(String email, @NotNull String username) {
+            User existingUser = userRepository.findByUsername(username);
+            if (existingUser != null) {
+                return; // User already exists
+            }
+            var user = new User();
+            user.setUsername(username);
+            user.setEmail(email);
+            user.setPassword(new BCryptPasswordEncoder().encode(username));
+            user.setProvider(Provider.GOOGLE.value);
+            user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
 
-    }
+            userRepository.save(user);
+
+        }
 }

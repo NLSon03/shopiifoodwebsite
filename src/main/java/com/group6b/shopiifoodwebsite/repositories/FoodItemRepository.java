@@ -22,6 +22,8 @@ public interface FoodItemRepository extends
                 Sort.by(sortBy)))
                 .getContent();
     }
+    List<FoodItem> findByCategoryId(Long categoryId);
+    List<FoodItem> findByRestaurantId(Long restaurantId);
 
     @Query("""
         SELECT f FROM FoodItem f

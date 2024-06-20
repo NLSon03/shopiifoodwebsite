@@ -1,11 +1,10 @@
 package com.group6b.shopiifoodwebsite.repositories;
 
-import com.group6b.shopiifoodwebsite.entities.Restaurant;
+import com.group6b.shopiifoodwebsite.entities.PictureList;
 import org.springframework.data.jpa.repository.JpaRepository;
+
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface RestaurantRepository extends JpaRepository<Restaurant,Long>
-{
-
+public interface PictureListRepository extends JpaRepository<PictureList, Long> {
 }

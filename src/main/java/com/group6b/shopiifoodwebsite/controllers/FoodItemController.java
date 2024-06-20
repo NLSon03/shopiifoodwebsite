@@ -1,6 +1,7 @@
 package com.group6b.shopiifoodwebsite.controllers;
 
 import com.group6b.shopiifoodwebsite.entities.FoodItem;
+import com.group6b.shopiifoodwebsite.entities.PictureList;
 import com.group6b.shopiifoodwebsite.services.CategoryService;
 import com.group6b.shopiifoodwebsite.services.FoodItemService;
 import com.group6b.shopiifoodwebsite.services.RestaurantService;
@@ -60,6 +61,7 @@ public class FoodItemController {
     @PostMapping("/add")
     public String addFoodItem(@Valid @ModelAttribute FoodItem foodItem,
                               @RequestParam("image") MultipartFile image,
+                              @RequestParam("images") List<MultipartFile> pictures,
                               BindingResult result) throws IOException {
         if (result.hasErrors()) {
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
@@ -78,6 +80,30 @@ public class FoodItemController {
                 return "redirect:/foods/add";  // Redirect back to the add form with error handling
             }
         }
+        List<PictureList> pictureList = new ArrayList<>();
+        if (pictures != null && !pictures.isEmpty()) {
+            for (MultipartFile picture : pictures) {
+                if (!picture.isEmpty()) {
+                    try {
+                        String imageSavePath = "src/main/resources/static/foodimages/";
+                        String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(picture.getOriginalFilename());
+                        Path imagePath = Paths.get(imageSavePath + fileName);
+                        picture.transferTo(imagePath);
+
+                        PictureList newPicture = new PictureList();
+                        newPicture.setFoodItem(foodItem);
+                        newPicture.setUrl("/foodimages/" + fileName);
+                        pictureList.add(newPicture);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        // Xử lý ngoại lệ khi lưu ảnh
+                        return "redirect:/foods/add";  // Chuyển hướng lại form thêm với thông báo lỗi
+                    }
+                }
+            }
+        }
+
+        foodItem.setPictures(pictureList);
         foodItemService.addFood(foodItem);
         return "redirect:/foods";
     }
@@ -93,13 +119,19 @@ public class FoodItemController {
         return "food/edit";
     }
 
-
+    @GetMapping("/details/{id}")
+    public String viewFoodItemDetails(@PathVariable long id, Model model) {
+        var foodItem = foodItemService.getFoodById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
+        model.addAttribute("foodItem", foodItem);
+        return "food/details";
+    }
     // Update an existing food item
     @PostMapping("/edit")
     public String updateFoodItem(
                                  @Valid @ModelAttribute("food") FoodItem foodItem,
                                  @NotNull BindingResult result, Model model,
-                                 @RequestParam("image") MultipartFile mainPicture) throws IOException {
+                                 @RequestParam("image") MultipartFile mainPicture,
+                                 @RequestParam("images") List<MultipartFile> pictures) throws IOException {
         if(result.hasErrors()){
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             model.addAttribute("errors", errors);
@@ -108,7 +140,7 @@ public class FoodItemController {
             return "food/edit";
         }
 
-        foodItemService.updateFood(foodItem,mainPicture);
+        foodItemService.updateFood(foodItem,mainPicture,pictures);
         return "redirect:/foods";
     }
 

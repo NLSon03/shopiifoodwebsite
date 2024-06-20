@@ -18,6 +18,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Transactional(isolation = Isolation.SERIALIZABLE,
@@ -27,11 +29,19 @@ public class FoodItemService {
     @Autowired
     private FoodItemRepository foodItemRepository;
 
-
+    public List<FoodItem> getRandomFoodItems(int count) {
+        List<FoodItem> allFoods = foodItemRepository.findAll();
+        Random random = new Random();
+        return IntStream.range(0, count)
+                .mapToObj(i -> allFoods.get(random.nextInt(allFoods.size())))
+                .collect(Collectors.toList());
+    }
     public List<FoodItem> getAllFood(Integer pageNo, Integer pageSize, String sortBy) {
         return foodItemRepository.findAllFoods(pageNo, pageSize, sortBy);
     }
-
+    public List<FoodItem> getAllFood(){
+        return foodItemRepository.findAll();
+    }
     public Optional<FoodItem> getFoodById(Long id) {
         return foodItemRepository.findById(id);
     }
@@ -41,7 +51,7 @@ public class FoodItemService {
         foodItemRepository.save(foodItem);
     }
 
-    public FoodItem updateFood(@NotNull FoodItem foodItem, MultipartFile mainPicture) throws IOException {
+    public FoodItem updateFood(@NotNull FoodItem foodItem, MultipartFile mainPicture,List<MultipartFile> pictures) throws IOException {
         FoodItem existingFood = foodItemRepository.findById(foodItem.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Food with id " + foodItem.getId() + " not found."));
 
@@ -59,7 +69,26 @@ public class FoodItemService {
             mainPicture.transferTo(imagePath);
             existingFood.setMainPicture("/foodimages/" + fileName);  // Đường dẫn truy cập ảnh
         }
+        if (pictures != null && !pictures.isEmpty()) {
+            // Xóa các ảnh cũ
+            existingFood.getPictures().clear();
 
+            // Thêm các ảnh mới
+            for (MultipartFile picture : pictures) {
+                if (!picture.isEmpty()) {
+                    String imageSavePath = "src/main/resources/static/foodimages/";
+                    String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(picture.getOriginalFilename());
+                    Path imagePath = Paths.get(imageSavePath + fileName);
+                    picture.transferTo(imagePath);
+
+                    PictureList pictureList = new PictureList();
+                    pictureList.setFoodItem(existingFood);
+                    pictureList.setUrl("/foodimages/" + fileName);
+
+                    existingFood.getPictures().add(pictureList);
+                }
+            }
+        }
         return foodItemRepository.save(existingFood);
     }
 
@@ -72,16 +101,10 @@ public class FoodItemService {
         return foodItemRepository.searchFood(keyword);
     }
 
-    private final String IMAGE_PATH = "src/main/resources/static/foodimages/";
-
-    private String saveImage(MultipartFile image) throws IOException {
-        if (image == null || image.isEmpty()) {
-            return null;
-        }
-        byte[] bytes = image.getBytes();
-        Path path = Paths.get(IMAGE_PATH + image.getOriginalFilename());
-        Files.write(path, bytes);
-        return "/foodimages/" + image.getOriginalFilename();
+    public List<FoodItem> getFoodItemsByCategoryId(long categoryId) {
+        return foodItemRepository.findByCategoryId(categoryId);
     }
-
+    public List<FoodItem> getFoodItemsByRestaurantId(long restaurantId) {
+        return foodItemRepository.findByRestaurantId(restaurantId);
+    }
 }

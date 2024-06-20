@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Category Details</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<h1>Category Details</h1>
+<div>
+    <h2 th:text="${restaurant.name}">Category Name</h2>
+    <p><strong>Name:</strong> <span th:text="${restaurant.name}">Description</span></p>
+
+    <h3>Food Items in this Restaurant</h3>
+    <div>
+        <div th:each="foodItem : ${foodByRestaurant}">
+            <h4 th:text="${foodItem.foodName}">Food Name</h4>
+            <a th:href="@{/foods/details/{id}(id=${foodItem.id})}"><img th:src="@{${foodItem.mainPicture}}" th:alt="${foodItem.foodName} + ' Image'" width="100px" height="100px"></a>
+            <p th:text="${foodItem.description}">Food Description</p>
+            <p><strong>Price:</strong> <span th:text="${foodItem.price}">Price</span></p>
+        </div>
+    </div>
+</div>
+<a th:href="@{/restaurants}">Back to Restaurant List</a>
+</body>
+</html>

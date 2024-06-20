@@ -45,8 +45,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**","/", "/oauth/**", "/register", "/error","/fonts/**","/vendor/**","/images/**","/auth/**","/foodimages/**").permitAll()
-                        .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/css/**", "/js/**","/", "/oauth/**", "/register",
+                                "/error","/fonts/**","/vendor/**","/images/**","/auth/**","/foodimages/**",
+                                "/foods/details/**","/categories/details/**","/restaurants/details/**").permitAll()
+                        .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN","SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers( "/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")

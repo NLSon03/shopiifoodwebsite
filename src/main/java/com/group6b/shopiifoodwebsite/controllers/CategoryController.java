@@ -3,6 +3,7 @@ package com.group6b.shopiifoodwebsite.controllers;
 import com.group6b.shopiifoodwebsite.entities.Category;
 import com.group6b.shopiifoodwebsite.entities.Restaurant;
 import com.group6b.shopiifoodwebsite.services.CategoryService;
+import com.group6b.shopiifoodwebsite.services.FoodItemService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService categoryService;
-
+    private final FoodItemService foodItemService;
     @GetMapping
     public String showAllRestaurant(@NotNull Model model) {
         model.addAttribute("categories", categoryService.getAllCategories());
@@ -77,61 +78,19 @@ public class CategoryController {
         categoryService.updateCategory(category);
         return "redirect:/categories";
     }
+    @GetMapping("/details/{id}")
+    public String viewCategoryDetails(@PathVariable long id, Model model) {
+        var category = categoryService.getCategoryById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
+        model.addAttribute("category", category);
+        model.addAttribute("foodsByCategory",foodItemService.getFoodItemsByCategoryId(id));
+        return "category/details";
+    }
+
     @GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable long id) {
         if (categoryService.getCategoryById(id).isPresent())
             categoryService.deleteCategoryById(id);
         return "redirect:/categories";
     }
-   /* @GetMapping("/add")
-    public String addCategoryForm(@NotNull Model model) {
-        model.addAttribute("category", new Category());
-        return "category/add";
-    }
-    @PostMapping("/add")
-    public String addCategory(
-            @Valid @ModelAttribute("book") Category category,
-            @NotNull BindingResult bindingResult,
-            Model model) {
-        if (bindingResult.hasErrors()) {
-            var errors = bindingResult.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
-            model.addAttribute("errors", errors);
-            return "category/add";
-        }
-        categoryService.addCategory(category);
-        return "redirect:/categories";
-    }
-    @GetMapping("/edit/{id}")
-    public String editCategoryForm(@NotNull Model model, @PathVariable long id) {
-        var bookCategory = categoryService.getCategoryById(id);
-        model.addAttribute("category", bookCategory.orElseThrow(() -> new
-                IllegalArgumentException("Book not found")));
-        return "category/edit";
-    }
 
-    @PostMapping("/edit")
-    public String editCategory(@Valid @ModelAttribute("category") Category bookCategory,@NotNull BindingResult bindingResult,
-                               Model model) {
-        if(bindingResult.hasErrors()){
-            var errors = bindingResult.getAllErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .toArray(String[]::new);
-            model.addAttribute("errors", errors);
-            return "category/edit";
-
-        }
-        categoryService.updateCategory(bookCategory);
-        return "redirect:/categories";
-    }
-
-
-    @GetMapping("/delete/{id}")
-    public String deleteCategory(@PathVariable long id) {
-        if (categoryService.getCategoryById(id).isPresent())
-            categoryService.deleteCategoryById(id);
-        return "redirect:/categories";
-    }*/
 }

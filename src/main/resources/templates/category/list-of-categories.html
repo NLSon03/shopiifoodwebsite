@@ -47,7 +47,8 @@
                    th:href="@{/categories/edit/{id}(id=${category.getId()})}">Edit</a>
                 <a class="btn btn-danger" sec:authorize="hasAnyAuthority('ADMIN')"
                    th:href="@{/categories/delete/{id}(id=${category.getId()})}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
-
+                <a class="btn btn-primary"
+                   th:href="@{/categories/details/{id}(id=${category.getId()})}">Details</a>
             </td>
 
         </tr>
