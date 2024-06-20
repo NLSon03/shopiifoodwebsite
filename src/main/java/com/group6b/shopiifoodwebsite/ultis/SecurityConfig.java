@@ -46,12 +46,14 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**","/", "/oauth/**", "/register",
-                                "/error","/fonts/**","/vendor/**","/images/**","/auth/**","/foodimages/**",
+                                "/error","/fonts/**","/vendor/**","/images/**","/auth/**","/foodimages/**","/restaurantpictures/**",
                                 "/foods/details/**","/categories/details/**","/restaurants/details/**").permitAll()
                         .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN","SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers( "/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/templates/sellerDashboard/**", "/restaurants/edit/**","/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN","SELLE"
+                        )
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
