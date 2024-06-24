@@ -52,8 +52,12 @@ public class User implements UserDetails {
     @Pattern(regexp = "^[0-9]*$", message = "Số điện thoại phải là số")
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user")
-    private List<Order> orders;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Order> orders = new ArrayList<>();
+
+    @Column(name = "default_delivery_address", length = 300)
+    private String defaultDeliveryAddress;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

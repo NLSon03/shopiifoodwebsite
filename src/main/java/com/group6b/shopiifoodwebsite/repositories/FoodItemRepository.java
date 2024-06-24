@@ -24,7 +24,7 @@ public interface FoodItemRepository extends
     }
     List<FoodItem> findByCategoryId(Long categoryId);
     List<FoodItem> findByRestaurantId(Long restaurantId);
-
+    FoodItem findFoodItemById(Long Id);
     @Query("""
         SELECT f FROM FoodItem f
         WHERE f.FoodName LIKE %?1%

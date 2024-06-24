@@ -36,13 +36,14 @@ public class    UserService implements UserDetailsService {
         setDefaultRole(user.getUsername());
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE,
-            rollbackFor = {Exception.class, Throwable.class})
+    @Transactional(isolation = Isolation.SERIALIZABLE, rollbackFor = {Exception.class, Throwable.class})
     public void setDefaultRole(String username){
         userRepository.findByUsername(username).getRoles()
                 .add(roleRepository .findRoleById(Role.USER.value));
     }
-
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(userRepository.findById(id));
+    }
 
     public Optional<User> findByUsername(String username) throws UsernameNotFoundException {
             return Optional.ofNullable(userRepository.findByUsername(username));

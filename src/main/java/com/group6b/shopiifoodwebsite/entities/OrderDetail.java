@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Builder
 @Entity
 @Data
@@ -30,4 +29,15 @@ public class OrderDetail {
     private int quantity;
     @Column(name = "price",nullable = false)
     private double price;
+
+    public OrderDetail(Long id, Order order, FoodItem foodItem, int quantity, double price) {
+        this.id = id;
+        this.order = order;
+        this.foodItem = foodItem;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public OrderDetail(Long foodId, String foodName, int quantity, Double price) {
+    }
 }

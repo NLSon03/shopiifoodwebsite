@@ -1,11 +1,14 @@
 package com.group6b.shopiifoodwebsite.controllers;
 
+import com.group6b.shopiifoodwebsite.daos.CartItem;
 import com.group6b.shopiifoodwebsite.entities.FoodItem;
 import com.group6b.shopiifoodwebsite.entities.PictureList;
+import com.group6b.shopiifoodwebsite.services.CartService;
 import com.group6b.shopiifoodwebsite.services.CategoryService;
 import com.group6b.shopiifoodwebsite.services.FoodItemService;
 import com.group6b.shopiifoodwebsite.services.RestaurantService;
 import jakarta.jws.WebParam;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +38,7 @@ public class FoodItemController {
     private final FoodItemService foodItemService;
     private final CategoryService categoryService;
     private final RestaurantService restaurantService;
-
+    private final CartService cartService;
 
     @GetMapping
     public String showAllFoods( @NotNull Model model,
@@ -149,5 +152,26 @@ public class FoodItemController {
     public String deleteFoodItem(@PathVariable Long id) {
         foodItemService.getFoodById(id).ifPresentOrElse(book->foodItemService.deleteFoodById(id),()->{ throw new IllegalArgumentException("Food not found"); });
         return "redirect:/foods";
+    }
+    @PostMapping("/add-to-cart")
+    public String addToCart(HttpSession session,
+                            @RequestParam long id,
+/*                            @RequestParam String name,
+                            @RequestParam double price,
+                            @RequestParam(required = false) String image,*/
+                            @RequestParam(defaultValue = "1") int quantity) {
+        var cart = cartService.getCart(session);
+        FoodItem foodItem = foodItemService.getFoodById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Food item not found"));
+
+        CartItem cartItem = new CartItem();
+        cartItem.setFoodId(foodItem.getId());
+        cartItem.setFoodName(foodItem.getFoodName());
+        cartItem.setPrice(foodItem.getPrice());
+        cartItem.setQuantity(quantity);
+        cartItem.setImageUrl(foodItem.getMainPicture()); // Lấy URL của ảnh từ FoodItem
+        cart.addItems(cartItem);
+        cartService.updateCart(session, cart);
+        return "redirect:/cart";
     }
 }

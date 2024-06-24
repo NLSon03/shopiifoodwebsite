@@ -10,6 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
@@ -34,9 +35,14 @@ public class SecurityConfig {
     }
 
     @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserService();
+    }
+
+    @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         var auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService);
+        auth.setUserDetailsService(userDetailsService());
         auth.setPasswordEncoder(passwordEncoder());
         return auth;
     }
@@ -45,14 +51,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**","/", "/oauth/**", "/register",
-                                "/error","/fonts/**","/vendor/**","/images/**","/auth/**","/foodimages/**","/restaurantpictures/**",
-                                "/foods/details/**","/categories/details/**","/restaurants/details/**").permitAll()
-                        .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN","SELLER")
+                        .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register",
+                                "/error", "/fonts/**", "/vendor/**", "/images/**", "/auth/**", "/foodimages/**", "/restaurantpictures/**",
+                                "/foods/details/**", "/categories/details/**", "/restaurants/details/**").permitAll()
+                        .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
-                        .requestMatchers( "/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers("/templates/sellerDashboard/**", "/restaurants/edit/**","/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN","SELLER")
+                        .requestMatchers("/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/orders/", "/orders/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -77,11 +84,12 @@ public class SecurityConfig {
                             response.sendRedirect("/");
                         })
                         .permitAll())
+
                 .rememberMe(rememberMe -> rememberMe
                         .key("hutech")
                         .rememberMeCookieName("hutech")
                         .tokenValiditySeconds(24 * 60 * 60)
-                        .userDetailsService(userService))
+                        .userDetailsService(userDetailsService()))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedPage("/403"))
                 .sessionManagement(sessionManagement -> sessionManagement
