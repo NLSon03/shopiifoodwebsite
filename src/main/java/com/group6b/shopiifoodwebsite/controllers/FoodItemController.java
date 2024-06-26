@@ -121,6 +121,14 @@ public class FoodItemController {
 
         return "food/edit";
     }
+    // Tìm kiếm món ăn
+    @GetMapping("/search")
+    public String searchFoods(@RequestParam("keyword") String keyword, Model model) {
+        List<FoodItem> searchResults = foodItemService.searchFood(keyword);
+        model.addAttribute("foods", searchResults);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "food/list-of-foods";
+    }
 
     @GetMapping("/details/{id}")
     public String viewFoodItemDetails(@PathVariable long id, Model model) {
