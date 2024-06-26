@@ -65,6 +65,9 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
     @Column(name = "provider", length = 50)
     private String provider;
+
+    @OneToOne(mappedBy = "user")
+    private Restaurant restaurant;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> userRoles = this.getRoles();

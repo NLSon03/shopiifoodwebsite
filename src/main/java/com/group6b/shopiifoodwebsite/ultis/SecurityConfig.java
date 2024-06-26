@@ -1,5 +1,6 @@
 package com.group6b.shopiifoodwebsite.ultis;
 
+import com.group6b.shopiifoodwebsite.components.CustomAuthenticationSuccessHandler;
 import com.group6b.shopiifoodwebsite.services.OAuthService;
 import com.group6b.shopiifoodwebsite.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -48,18 +52,27 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+        return new CustomAuthenticationSuccessHandler();
+    }
+
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register",
+        return http.authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register", "/register/restaurant", "/register/restaurant/**",
                                 "/error", "/fonts/**", "/vendor/**", "/images/**", "/auth/**", "/foodimages/**", "/restaurantpictures/**",
                                 "/foods/details/**", "/categories/details/**", "/restaurants/details/**").permitAll()
                         .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers("/orders/", "/orders/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/orders/order/details/**", "/orders/checkout/", "/orders/complete/**", "/orders/checkout/", "/orders/cancel/**",
+                                "/orders/confirmation/", "/orders/order/**")
+                        .hasAnyAuthority("ADMIN", "SELLER", "USER")
+                        .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
+                        .requestMatchers("/adminDashboard/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -72,6 +85,7 @@ public class SecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/")
+                        .successHandler(customAuthenticationSuccessHandler())
                         .failureUrl("/login?error")
                         .permitAll())
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -79,12 +93,24 @@ public class SecurityConfig {
                         .failureUrl("/login?error")
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuthService))
                         .successHandler((request, response, authentication) -> {
-                            var oidcUser = (DefaultOidcUser) authentication.getPrincipal();
-                            userService.saveOauthUser(oidcUser.getEmail(), oidcUser.getName());
+                            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+                            String email = null;
+                            String name = null;
+                            if (oAuth2User instanceof DefaultOidcUser) {
+                                DefaultOidcUser oidcUser = (DefaultOidcUser) oAuth2User;
+                                email = oidcUser.getEmail();
+                                name = oidcUser.getName();
+                            } else if (oAuth2User instanceof DefaultOAuth2User) {
+                                DefaultOAuth2User oauth2User = (DefaultOAuth2User) oAuth2User;
+                                email = (String) oauth2User.getAttributes().get("email");
+                                name = oauth2User.getName();
+                            }
+                            if (email != null && name != null) {
+                                userService.saveOauthUser(email, name);
+                            }
                             response.sendRedirect("/");
                         })
                         .permitAll())
-
                 .rememberMe(rememberMe -> rememberMe
                         .key("hutech")
                         .rememberMeCookieName("hutech")

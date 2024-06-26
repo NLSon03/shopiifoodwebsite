@@ -36,4 +36,8 @@ public class FoodItem {
     private Restaurant restaurant;
     @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PictureList> pictures;
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails;
+
 }

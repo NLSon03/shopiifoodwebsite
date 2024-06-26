@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Order List</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details</title>
+    <!--===============================================================================================-->
     <link rel="icon" th:href="@{/images/icons/favicon.png}" type="image/png"/>
     <!--===============================================================================================-->
     <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css">
@@ -35,39 +35,36 @@
 </head>
 <body>
 <div th:replace="fragments/home-and-product-header :: header"></div>
-<div class="container">
-    <h1>Order List</h1>
-    <div th:if="${#lists.isEmpty(orderLists)}" class="alert alert-info">
-        You have no orders.
-    </div>
-    <div th:unless="${#lists.isEmpty(orderLists)}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Order Date</th>
-                <th>Total Price</th>
-                <th>Delivery Address</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orderLists}">
-                <td th:text="${order.id}">Order ID</td>
-                <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">Order Date</td>
-                <td th:text="${order.totalPrice}">Total Price</td>
-                <td th:text="${order.deliveryAddress}">Delivery Address</td>
-                <td th:text="${order.status.statusName}">Status</td>
-                <td>
-                    <a th:href="@{/orders/cancel/{id}(id=${order.getId()})}">Hủy đơn hàng</a> |
-                    <a th:href="@{/orders/order/details/{id}(id=${order.getId()})}">Chi tiết đơn hàng</a> |
-                    <a th:href="@{/orders/complete/{id}(id=${order.getId()})}">Hoàn thành</a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+
+<h1>Order Details</h1>
+<div th:if="${order != null}">
+    <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
+    <p><strong>User:</strong> <span th:text="${order.user.username}"></span></p>
+    <p><strong>Delivery Address:</strong> <span th:text="${order.deliveryAddress}"></span></p>
+    <p><strong>Total Price:</strong> <span th:text="${order.totalPrice}"></span></p>
+
+    <h2>Order Items</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>Food Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="orderItem : ${order.orderItems}">
+            <td th:text="${orderItem.foodItem.foodName}"></td>
+            <td th:text="${orderItem.quantity}"></td>
+            <td th:text="${orderItem.price}"></td>
+            <td th:text="${orderItem.quantity * orderItem.price}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div th:unless="${order != null}">
+    <p>Order not found!</p>
 </div>
 <!--===============================================================================================-->
 <script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
@@ -175,11 +172,5 @@
 </script>
 <!--===============================================================================================-->
 <script th:src="@{/js/main.js}"></script>
-<script>
-    document.getElementById('logoutLink').addEventListener('click', function (event) {
-        event.preventDefault();
-        document.getElementById('logoutForm').submit();
-    });
-</script>
 </body>
 </html>

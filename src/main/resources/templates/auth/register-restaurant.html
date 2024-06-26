@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Đăng ký nhà hàng</title>
+    <link th:href="@{/auth/assets/css/pace.min.css}" rel="stylesheet"/>
+    <script th:src="@{/auth/assets/js/pace.min.js}"></script>
+    <!--favicon-->
+    <link rel="icon" th:href="@{/auth/assets/images/favicon.ico}" type="image/x-icon">
+    <!-- Bootstrap core CSS-->
+    <link th:href="@{/auth/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <!-- animate CSS-->
+    <link th:href="@{/auth/assets/css/animate.css}" rel="stylesheet" type="text/css"/>
+    <!-- Icons CSS-->
+    <link th:href="@{/auth/assets/css/icons.css}" rel="stylesheet" type="text/css"/>
+    <!-- Custom Style-->
+    <link th:href="@{/auth/assets/css/app-style.css}" rel="stylesheet"/>
+
+</head>
+<body>
+
+<h1>Đăng ký tài khoản nhà hàng</h1>
+<form th:action="@{/register/restaurant}" method="post"  enctype="multipart/form-data">
+    <div class="col-6 mb-3">
+        <label for="username">Tên đăng nhập:</label>
+        <input type="text" id="username" name="username" th:field="*{user.username}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="password">Mật khẩu:</label>
+        <input type="password" id="password" name="password" th:field="*{user.password}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:field="*{user.email}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="phoneNumber">Số điện thoại:</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{user.phoneNumber}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="name">Tên nhà hàng:</label>
+        <input type="text" id="name" name="name" th:field="*{restaurant.name}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label for="address">Địa chỉ:</label>
+        <input type="text" id="address" name="address" th:field="*{restaurant.address}" required/>
+    </div>
+    <div class="col-6 mb-3">
+        <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>
+        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+    </div>
+    <button type="submit">Đăng ký</button>
+</form>
+
+<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
+<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
+
+<script th:src="@{/auth/assets/js/jquery.min.js}"></script>
+<script th:src="@{/auth/assets/js/popper.min.js}"></script>
+<script th:src="@{/auth/assets/js/bootstrap.min.js}"></script>
+
+
+</body>
+</html>

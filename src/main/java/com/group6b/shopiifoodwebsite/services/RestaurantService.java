@@ -41,7 +41,9 @@ public class RestaurantService {
     public Restaurant addRestaurant(@Valid Restaurant restaurant)  throws IOException  {
         return restaurantRepository.save(restaurant);
     }
-
+    public Optional<Restaurant> getRestaurantByName(String name) {
+        return Optional.ofNullable(restaurantRepository.findByName(name));
+    }
     public Restaurant updateRestaurant(@NotNull Restaurant restaurant,MultipartFile multipartFile)throws IOException {
         // Check if the restaurant exists
         Restaurant existingRestaurant = restaurantRepository.findById(restaurant.getId())

@@ -38,29 +38,29 @@
 <!-- breadcrumb -->
 <div class="container">
     <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
-        <a class="stext-109 cl8 hov-cl1 trans-04" href="index.html">
-            Home
+        <a class="stext-109 cl8 hov-cl1 trans-04" th:href="@{/}">
+            Trang chủ
             <i aria-hidden="true" class="fa fa-angle-right m-l-9 m-r-10"></i>
         </a>
 
         <span class="stext-109 cl4">
-				Shoping Cart
+				Giỏ hàng
 			</span>
     </div>
 </div>
 
 
 <!-- Shoping Cart -->
-<form class="bg0 p-t-75 p-b-85" th:action="@{/orders/checkout}" method="post">
-    <div class="container">
+<form class="bg0 p-t-75 p-b-85" th:action="@{/orders/checkout}" method="post" onsubmit="return checkCartNotEmpty()">
+    <div class="container text-center">
         <div class="row">
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                <div class="m-l-25 m-r--38 m-lr-0-xl">
+                <div class="m-lr-0-xl">
                     <div class="wrap-table-shopping-cart">
                         <div th:if="${cart.getCartItems().isEmpty()}" class="alert alert-info text-black">
                             Giỏ hàng trống
                         </div>
-                        <table class="table-shopping-cart" th:unless="${cart.getCartItems().isEmpty()}">
+                        <table class="table-shopping-cart" th:unless="${cart.getCartItems().isEmpty()}" id="cartTable">
                             <tr class="table_head">
                                 <th class="column-1">Product</th>
                                 <th class="column-2"></th>
@@ -100,11 +100,9 @@
                 </div>
             </div>
             <div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
-                    <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" type="submit">
-                        Proceed to Checkout
+                    <button  id="checkoutBtn" class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer" type="submit">
+                        Đặt hàng
                     </button>
-                <!--<a class="btn flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer"
-                th:href="@{/orders/checkout}">Checkout</a>-->
             </div>
         </div>
     </div>
@@ -160,6 +158,15 @@
             });
         });
     });
+
+    function checkCartNotEmpty(){
+        var cartTable = document.getElementById("cartTable");
+        if(cartTable==null|| cartTable.rows.length <1){
+            alert("Giỏ hàng trống. Vui lòng thêm sản phẩm trước khi thanh toán");
+            return false;
+        }
+        return true;
+    }
 </script>
 <!--===============================================================================================-->
 <script th:src="@{/js/main.js}"></script>

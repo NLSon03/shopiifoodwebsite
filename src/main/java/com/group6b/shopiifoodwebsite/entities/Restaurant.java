@@ -20,10 +20,10 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(max = 250,min = 20, message = "Tên phải có ít nhất 20 ký tự")
+    @Size(max = 250,min = 4, message = "Tên phải có ít nhất 4 ký tự")
     @Column(name = "name", length = 250,nullable = false)
     private String name;
-    @Size(max = 250,min = 20, message = "Địa chỉ phải có ít nhất 20 ký tự")
+    @Size(max = 250,min = 10, message = "Địa chỉ phải có ít nhất 20 ký tự")
     @Column(name = "address", length = 250,nullable = false)
     private String address;
     @Length(min = 10, max = 10, message = "Số điện thoại phải có 10 ký tự")
@@ -35,4 +35,11 @@ public class Restaurant {
     private String RestaurantPicture;
     @OneToMany(mappedBy = "restaurant")
     private List<FoodItem> foodItems;
+
+    @OneToMany(mappedBy = "restaurant")
+    private List<Order> orders;
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
 }

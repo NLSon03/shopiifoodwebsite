@@ -112,4 +112,10 @@ public class RestaurantController {
         restaurantService.getRestaurantById(id).ifPresentOrElse(restaurant->restaurantService.deleteRestaurantById(id),()->{ throw new IllegalArgumentException("Food not found"); });
         return "redirect:/restaurants";
     }
+
+    @GetMapping("/dashboard")
+    public String showDashboard(Model model) {
+        // Thêm bất kỳ logic nào bạn cần ở đây, ví dụ: lấy dữ liệu cần thiết để hiển thị trên dashboard
+        return "sellerDashboard/dashboard";
+    }
 }

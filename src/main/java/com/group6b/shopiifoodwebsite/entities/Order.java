@@ -38,6 +38,10 @@ public class Order {
     private Date orderDate = new Date();
 
     @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
+
+    @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
     private OrderStatus status;
 

@@ -36,7 +36,8 @@
 <div th:replace="fragments/home-and-product-header :: header"></div>
 <h1>Order Confirmation</h1>
 <p th:text="${message}"></p>
-
+<a href="/" class="btn btn-primary">Go to Home</a>
+<a th:href="@{/orders/order}" class="btn btn-danger ">Đi tới đơn hàng</a>
 <!-- Footer -->
 <div th:replace="fragments/home-and-product-footer :: footer"></div>
 
