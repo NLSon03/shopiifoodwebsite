@@ -30,13 +30,15 @@
             <div class="lds-pos"></div>
         </div>
     </div>
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+    </form>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <div id="main-wrapper">
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+        <div th:replace="fragments/admin-header :: header"></div>
 
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+        <div th:replace="fragments/admin-header :: aside"></div>
         <!-- ============================================================== -->
         <!-- ============================================================== -->
         <!-- Page wrapper  -->
@@ -570,7 +572,7 @@
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+            <div th:replace="fragments/admin-footer :: footer"></div>
 
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -610,6 +612,12 @@
     <script src="../../static/seller/assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
     <script src="../../static/seller/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <script src="../../static/seller/assets/libs/quill/dist/quill.min.js"></script>
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
     <script>
         //***********************************//
         // For select 2

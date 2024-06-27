@@ -5,6 +5,7 @@ import com.group6b.shopiifoodwebsite.entities.Order;
 import com.group6b.shopiifoodwebsite.entities.OrderStatus;
 import com.group6b.shopiifoodwebsite.repositories.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.*;
@@ -20,6 +21,7 @@ import java.util.*;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderStatusRepository orderStatusRepository;
+    private final TaskScheduler taskScheduler;
 
     public boolean cancelOrder(Long orderId, Long userId) {
         var order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
@@ -41,7 +43,6 @@ public class OrderService {
     }
 
 
-
     public void completeOrder(Long orderId, Long userId) {
         var order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
         var completedStatus = orderStatusRepository.findByStatusName("COMPLETED");
@@ -54,25 +55,30 @@ public class OrderService {
         order.setLastStatusUpdate(new Date());
         orderRepository.save(order);
     }
+
     @Transactional(readOnly = true)
     public Optional<Order> findByIdAndUserId(Long orderId, Long userId) {
         return orderRepository.findByIdAndUserId(orderId, userId);
     }
+
     public void save(Order order) {
         orderRepository.save(order);
     }
+
     public void createOrder(Order order) {
-        var confirmed = orderStatusRepository.findByStatusName("PENDING");
-        order.setStatus(confirmed);
+        var pendingStatus = orderStatusRepository.findByStatusName("PENDING");
+        order.setStatus(pendingStatus);
         order.setLastStatusUpdate(new Date());
         orderRepository.save(order);
-        updateOrderStatuses();
+        scheduleOrderStatusUpdate(order);
     }
+
     public List<Order> findByUserId(Long orderId) {
         return orderRepository.findOrderByUserId(orderId);
     }
-    public Optional<Order> findOrdersById(Long id){
-        return  orderRepository.findOrderById(id);
+
+    public Optional<Order> findOrdersById(Long id) {
+        return orderRepository.findOrderById(id);
     }
 
 
@@ -91,25 +97,23 @@ public class OrderService {
 
         return true;
     }
-    @Scheduled(fixedRate = 60000) // Chạy mỗi 60 giây
-    public void updateOrderStatuses() {
-        var pendingStatus = orderStatusRepository.findByStatusName("PENDING");
-        var confirmedStatus = orderStatusRepository.findByStatusName("CONFIRMED");
-        var inProgressStatus = orderStatusRepository.findByStatusName("IN_PROGRESS");
+    private void scheduleOrderStatusUpdate(Order order) {
+        long currentTime = System.currentTimeMillis();
 
-        var orders = orderRepository.findAll();
-        for (Order order : orders) {
-            long elapsedTime = (new Date().getTime() - order.getLastStatusUpdate().getTime()) / 1000; // Thời gian trôi qua tính bằng giây
-
-            if (order.getStatus().equals(pendingStatus) && elapsedTime >= 120) { // Chuyển từ PENDING sang CONFIRMED sau 60 giây
-                order.setStatus(confirmedStatus);
-                order.setLastStatusUpdate(new Date());
-                orderRepository.save(order);
-            } else if (order.getStatus().equals(confirmedStatus) && elapsedTime >= 240) { // Chuyển từ CONFIRMED sang IN_PROGRESS sau 120 giây
-                order.setStatus(inProgressStatus);
-                order.setLastStatusUpdate(new Date());
-                orderRepository.save(order);
-            }
-        }
+        taskScheduler.schedule(() -> updateOrderStatuses(order.getId(), "CONFIRMED"), new Date(currentTime + 45000));
+        taskScheduler.schedule(() -> updateOrderStatuses(order.getId(), "IN_PROGRESS"), new Date(currentTime + 75000));
+        taskScheduler.schedule(() -> enableUserCompleteOrder(order.getId()), new Date(currentTime + 135000));
+    }
+    private void enableUserCompleteOrder(Long orderId) {
+        // Logic to enable the 'Complete Order' button for the user
+        // You might set a flag or update a status to indicate that the user can now mark the order as completed
+    }
+    @Transactional
+    public void updateOrderStatuses(Long orderId, String statusName) {
+        var order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        var status = orderStatusRepository.findByStatusName(statusName);
+        order.setStatus(status);
+        order.setLastStatusUpdate(new Date());
+        orderRepository.save(order);
     }
 }

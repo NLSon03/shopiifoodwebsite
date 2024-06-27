@@ -111,16 +111,7 @@ public class FoodItemController {
         return "redirect:/foods";
     }
     // Show form to update an existing food item
-    @GetMapping("/edit/{id}")
-    public String showUpdateForm(@PathVariable long id,@NotNull Model model) {
-        var foodItem = foodItemService.getFoodById(id);
-        model.addAttribute("food", foodItem.orElseThrow(() -> new
-                IllegalArgumentException("Food not found")));
-        model.addAttribute("categories",categoryService.getAllCategories());
-        model.addAttribute("restaurants",restaurantService.getAllRestaurants());
 
-        return "food/edit";
-    }
     // Tìm kiếm món ăn
     @GetMapping("/search")
     public String searchFoods(@RequestParam("keyword") String keyword, Model model) {
@@ -135,6 +126,15 @@ public class FoodItemController {
         var foodItem = foodItemService.getFoodById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
         model.addAttribute("foodItem", foodItem);
         return "food/details";
+    }
+    @GetMapping("/edit/{id}")
+    public String showUpdateForm(@PathVariable long id,@NotNull Model model) {
+        var foodItem = foodItemService.getFoodById(id);
+        model.addAttribute("food", foodItem.orElseThrow(() -> new
+                IllegalArgumentException("Food not found")));
+        model.addAttribute("categories",categoryService.getAllCategories());
+        model.addAttribute("restaurants",restaurantService.getAllRestaurants());
+        return "food/edit";
     }
     // Update an existing food item
     @PostMapping("/edit")
@@ -158,7 +158,7 @@ public class FoodItemController {
     // Delete a food item
     @GetMapping("/delete/{id}")
     public String deleteFoodItem(@PathVariable Long id) {
-        foodItemService.getFoodById(id).ifPresentOrElse(book->foodItemService.deleteFoodById(id),()->{ throw new IllegalArgumentException("Food not found"); });
+        foodItemService.getFoodById(id).ifPresentOrElse(foodItem->foodItemService.deleteFoodById(id),()->{ throw new IllegalArgumentException("Food not found"); });
         return "redirect:/foods";
     }
     @PostMapping("/add-to-cart")

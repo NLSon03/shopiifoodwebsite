@@ -107,4 +107,8 @@ public class FoodItemService {
     public List<FoodItem> getFoodItemsByRestaurantId(long restaurantId) {
         return foodItemRepository.findByRestaurantId(restaurantId);
     }
+
+    public void save(FoodItem foodItem) {
+        foodItemRepository.save(foodItem);
+    }
 }

@@ -33,6 +33,8 @@ public class Restaurant {
 
     @Column(name = "restaurantpicture",nullable = false)
     private String RestaurantPicture;
+
+    
     @OneToMany(mappedBy = "restaurant")
     private List<FoodItem> foodItems;
 

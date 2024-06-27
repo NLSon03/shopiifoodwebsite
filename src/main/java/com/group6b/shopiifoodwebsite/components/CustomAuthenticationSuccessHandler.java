@@ -24,11 +24,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ADMIN"));
         if (isRestaurant) {
             // Chuyển hướng đến trang dashboard của nhà hàng
-            redirectURL="/restaurants/sellerDashboard/dashboard";
+            redirectURL="/restaurants/dashboard";
 
         } else if(isAdmin) {
             // Chuyển hướng đến URL mặc định cho các người dùng khác
-            redirectURL="/admin/dashboard";
+            redirectURL="/admin";
         }
         else {
             redirectURL="/";

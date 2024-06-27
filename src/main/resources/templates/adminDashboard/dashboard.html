@@ -23,11 +23,12 @@
             <div class="lds-pos"></div>
         </div>
     </div>
-
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+    </form>
     <div id="main-wrapper">
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+        <div th:replace="fragments/admin-header :: header"></div>
 
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+        <div th:replace="fragments/admin-header :: aside"></div>
         <!-- Page wrapper  -->
         <div class="page-wrapper">
             <!-- Bread crumb and right sidebar toggle -->
@@ -221,7 +222,7 @@
             <!-- End Container fluid  -->
 
             <!-- footer -->
-            <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+            <div th:replace="fragments/admin-footer :: footer"></div>
 
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -260,7 +261,12 @@
     <script th:src="@{/seller/assets/libs/flot/jquery.flot.crosshair.js}"></script>
     <script th:src="@{/seller/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js}"></script>
     <script th:src="@{/seller/dist/js/pages/chart/chart-page-init.js}"></script>
-
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
 </body>
 
 </html>

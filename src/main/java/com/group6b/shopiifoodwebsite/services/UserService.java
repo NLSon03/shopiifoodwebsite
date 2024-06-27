@@ -96,4 +96,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
 
     }
+    public Restaurant getRestaurantByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return user.getRestaurant(); // Giả sử rằng mỗi User có thuộc tính Restaurant
+    }
 }

@@ -30,13 +30,15 @@
             <div class="lds-pos"></div>
         </div>
     </div>
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+    </form>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
     <div id="main-wrapper">
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+        <div th:replace="fragments/admin-header :: header"></div>
 
-        <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+        <div th:replace="fragments/admin-header :: aside"></div>
         <!-- End Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
         <!-- ============================================================== -->
@@ -571,7 +573,7 @@
             <!-- ============================================================== -->
             <!-- footer -->
             <!-- ============================================================== -->
-            <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+            <div th:replace="fragments/admin-footer :: footer"></div>
             <!-- ============================================================== -->
             <!-- End footer -->
             <!-- ============================================================== -->
@@ -644,7 +646,12 @@
         });
 
     </script>
-
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
 </body>
 
 </html>

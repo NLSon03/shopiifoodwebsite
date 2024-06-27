@@ -20,12 +20,15 @@
     <!-- ============================================================== -->
     <!-- Preloader - style you can find in spinners.css -->
     <!-- ============================================================== -->
+
     <div class="preloader">
         <div class="lds-ripple">
             <div class="lds-pos"></div>
             <div class="lds-pos"></div>
         </div>
     </div>
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+    </form>
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
@@ -252,6 +255,12 @@
     <script th:src="@{/seller/assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js}"></script>
     <script th:src="@{/seller/assets/libs/chart/turning-series.js}"></script>
     <script th:src="@{/seller/dist/js/pages/chart/chart-page-init.js}"></script>
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
 </body>
 
 </html>

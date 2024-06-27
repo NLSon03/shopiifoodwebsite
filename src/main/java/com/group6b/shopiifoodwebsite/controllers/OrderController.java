@@ -42,7 +42,6 @@ public class OrderController {
         String username = authentication.getName();
         User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-
         try {
             boolean cancelled = orderService.cancelOrder(id, user.getId());
             if (cancelled) {
@@ -56,11 +55,12 @@ public class OrderController {
 
         return "redirect:/orders/order";
     }
+
     @GetMapping("/accept/{id}")
     public String acceptOrder(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("User not authenticated");
+            throw new IllegalArgumentException("Restaurant not authenticated");
         }
         String username = authentication.getName();
         Restaurant restaurant = restaurantService.getRestaurantByName(username).orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
@@ -68,9 +68,9 @@ public class OrderController {
         try {
             boolean accepted = orderService.acceptOrder(id, restaurant.getId());
             if (accepted) {
-                redirectAttributes.addFlashAttribute("successMessage", "Đơn hàng đã được chấp nhận.");
+                redirectAttributes.addFlashAttribute("successMessage", "Đơn hàng đã được chấp nhận thành công.");
             } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Không thể chấp nhận đơn hàng.");
+                redirectAttributes.addFlashAttribute("errorMessage", "Không thể chấp nhận đơn hàng do trạng thái không hợp lệ.");
             }
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -78,8 +78,8 @@ public class OrderController {
 
         return "redirect:/orders/order";
     }
-    @GetMapping("/complete/{id}")
-    public String completeOrder(@PathVariable Long id, @AuthenticationPrincipal User userPrincipal) {
+    @PostMapping("/complete/{id}")
+    public String completeOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new IllegalArgumentException("User not authenticated");
@@ -87,7 +87,13 @@ public class OrderController {
         String username = authentication.getName();
         User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        orderService.completeOrder(id, user.getId());
+        try {
+            orderService.completeOrder(id, user.getId());
+            redirectAttributes.addFlashAttribute("successMessage", "Đơn hàng đã được hoàn thành.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
         return "redirect:/orders/order";
     }
 
