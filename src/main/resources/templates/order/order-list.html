@@ -60,9 +60,13 @@
                 <td th:text="${order.deliveryAddress}">Delivery Address</td>
                 <td th:text="${order.status.statusName}">Status</td>
                 <td>
-                    <a th:href="@{/orders/cancel/{id}(id=${order.getId()})}">Hủy đơn hàng</a> |
+                    <a th:href="@{/orders/cancel/{id}(id=${order.getId()})}"
+                       th:attr="data-status=${order.status.statusName}"
+                       class="cancel-order-link">Hủy đơn hàng</a> |
                     <a th:href="@{/orders/order/details/{id}(id=${order.getId()})}">Chi tiết đơn hàng</a> |
-                    <a th:href="@{/orders/complete/{id}(id=${order.getId()})}">Hoàn thành</a>
+                    <a th:href="@{/orders/complete/{id}(id=${order.getId()})}"
+                       th:attr="data-status=${order.status.statusName}"
+                       class="complete-order-link">Hoàn thành</a>
                 </td>
             </tr>
             </tbody>
@@ -179,6 +183,38 @@
     document.getElementById('logoutLink').addEventListener('click', function (event) {
         event.preventDefault();
         document.getElementById('logoutForm').submit();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        /* Xử lý cho từng đơn hàng */
+        /* Đảm bảo nút Hoàn thành được enable sau 30 giây */
+        /* Kiểm tra từng đơn hàng */
+        document.addEventListener("DOMContentLoaded", function() {
+            const cancelLinks = document.querySelectorAll(".cancel-order-link");
+            const completeLinks = document.querySelectorAll(".complete-order-link");
+
+            cancelLinks.forEach(link => {
+                const status = link.getAttribute("data-status");
+                if (status === "CONFIRMED" || status === "IN_PROGRESS") {
+                    link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        alert("Bạn không thể hủy đơn hàng này.");
+                    });
+                }
+            });
+
+            completeLinks.forEach(link => {
+                const status = link.getAttribute("data-status");
+                if (status !== "IN_PROGRESS") {
+                    link.addEventListener("click", function(event) {
+                        event.preventDefault();
+                        alert("Bạn chỉ có thể hoàn thành đơn hàng khi đơn hàng đang trong quá trình xử lý.");
+                    });
+                }
+            });
+        });
     });
 </script>
 </body>
