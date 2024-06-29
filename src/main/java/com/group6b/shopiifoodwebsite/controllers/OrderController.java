@@ -23,16 +23,11 @@ import java.util.stream.Collectors;
 public class OrderController {
     private final OrderService orderService;
     private final UserService userService;
-    private final CartService cartService;
-    private final FoodItemService foodItemService;
-    private final RestaurantService restaurantService;
 
-    public OrderController(OrderService orderService, UserService userService, CartService cartService, FoodItemService foodItemService, RestaurantService restaurantService) {
+
+    public OrderController(OrderService orderService, UserService userService) {
         this.orderService = orderService;
         this.userService = userService;
-        this.cartService = cartService;
-        this.foodItemService = foodItemService;
-        this.restaurantService = restaurantService;
     }
 
     @PostMapping("/cancel/{id}")
@@ -78,80 +73,10 @@ public class OrderController {
         return "redirect:/orders/order";
     }
 
-    @GetMapping("/checkout")
-    public String showCheckoutPage(@AuthenticationPrincipal User userPrincipal, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("User not authenticated");
-        }
-        String username = authentication.getName();
-        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        model.addAttribute("user", user);
-        return "cart/checkout";
-    }
-
-    @PostMapping("/checkout")
-    public String checkout(HttpSession session,
-                           @RequestParam(required = false) String deliveryAddress,
-                           Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("User not authenticated");
-        }
-        var cart = cartService.getCart(session);
-
-        String username = authentication.getName();
-        User user = userService.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("User not found"));
-
-        if (deliveryAddress == null || deliveryAddress.isBlank()) {
-            deliveryAddress = user.getDefaultDeliveryAddress();
-            if (deliveryAddress == null || deliveryAddress.isBlank()) {
-                model.addAttribute("error", "Vui lòng nhập địa chỉ giao hàng!");
-                return "cart/checkout";
-            }
-        }
-
-        // Create a list to store the order details
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        // Retrieve the restaurant from the first food item in the cart (assuming all items are from the same restaurant)
-        Long firstFoodItemId = cart.getCartItems().get(0).getFoodId(); // Assuming cart is not empty
-        Optional<FoodItem> firstFoodItemOptional = foodItemService.getFoodById(firstFoodItemId);
-
-        if (firstFoodItemOptional.isPresent()) {
-            FoodItem firstFoodItem = firstFoodItemOptional.get();
-            Restaurant restaurant = firstFoodItem.getRestaurant();
-
-            // Create order details for each item in the cart
-
-
-            // Create the order and set its attributes
-            Order order = new Order();
-            order.setUser(user);
-            order.setDeliveryAddress(deliveryAddress);
-            order.setTotalPrice(cartService.getSumPrice(session));
-            orderDetails = cart.getCartItems().stream()
-                    .map(cartItem -> {
-                        FoodItem foodItem = foodItemService.getFoodById(cartItem.getFoodId())
-                                .orElseThrow(() -> new IllegalArgumentException("Food item not found"));
-                        return new OrderDetail(order, foodItem, cartItem.getQuantity(), cartItem.getPrice());
-                    }).collect(Collectors.toList());
-            order.setOrderItems(orderDetails);
-            order.setRestaurant(restaurant); // Set the restaurant
-            // Save the order
-            orderService.createOrder(order);
-
-            // Remove the cart items from session
-            cartService.removeCart(session);
-        } else {
-            throw new IllegalArgumentException("Food items in cart not found");
-        }
-
-        return "redirect:/orders/confirmation";
-    }
 
     @GetMapping("/confirmation")
     public String orderConfirmation(Model model) {
-        model.addAttribute("message", "Your order has been successfully placed.");
+        model.addAttribute("message", "Bạn đã đặt đơn thành công.");
         return "cart/order-confirmation";
     }
 
@@ -176,11 +101,6 @@ public class OrderController {
             Order order = orderOptional.get();
             model.addAttribute("order", order);
             // Add logging to check order details
-            System.out.println("Order ID: " + order.getId());
-            System.out.println("User: " + order.getUser().getUsername());
-            System.out.println("Delivery Address: " + order.getDeliveryAddress());
-            System.out.println("Total Price: " + order.getTotalPrice());
-            System.out.println("Number of Order Items: " + order.getOrderItems().size());
         } else {
             // Handle case where order is not found
             model.addAttribute("error", "Order not found!");
