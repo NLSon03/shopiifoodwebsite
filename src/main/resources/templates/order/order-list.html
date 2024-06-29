@@ -36,9 +36,9 @@
 <body>
 <div th:replace="fragments/home-and-product-header :: header"></div>
 <div class="container">
-    <h1>Order List</h1>
+    <h1>Đơn</h1>
     <div th:if="${#lists.isEmpty(orderLists)}" class="alert alert-info">
-        You have no orders.
+        Bạn không có đơn hàng nào! Hãy bắt đầu đặt hàng thôi!
     </div>
     <div th:unless="${#lists.isEmpty(orderLists)}">
         <table class="table table-striped">
@@ -60,13 +60,15 @@
                 <td th:text="${order.deliveryAddress}">Delivery Address</td>
                 <td th:text="${order.status.statusName}">Status</td>
                 <td>
-                    <a th:href="@{/orders/cancel/{id}(id=${order.getId()})}"
-                       th:attr="data-status=${order.status.statusName}"
-                       class="cancel-order-link">Hủy đơn hàng</a> |
-                    <a th:href="@{/orders/order/details/{id}(id=${order.getId()})}">Chi tiết đơn hàng</a> |
-                    <a th:href="@{/orders/complete/{id}(id=${order.getId()})}"
-                       th:attr="data-status=${order.status.statusName}"
-                       class="complete-order-link">Hoàn thành</a>
+                    <form th:if="${order.status.statusName == 'PENDING'}" th:action="@{/orders/cancel/{id}(id=${order.id})}" method="post">
+                        <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
+                    </form>
+                    <span th:if="${order.status.statusName == 'PENDING'}"> | </span>
+                    <a th:href="@{/orders/order/details/{id}(id=${order.id})}">Chi tiết đơn hàng</a>
+                    <span th:if="${order.status.statusName == 'IN_PROGRESS'}"> | </span>
+                    <form th:if="${order.status.statusName == 'IN_PROGRESS'}" th:action="@{/orders/complete/{id}(id=${order.id})}" method="post">
+                        <button type="submit" class="btn btn-success">Hoàn thành</button>
+                    </form>
                 </td>
             </tr>
             </tbody>

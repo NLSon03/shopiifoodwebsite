@@ -1,6 +1,7 @@
 package com.group6b.shopiifoodwebsite.controllers;
 
 import com.group6b.shopiifoodwebsite.entities.FoodItem;
+import com.group6b.shopiifoodwebsite.entities.Order;
 import com.group6b.shopiifoodwebsite.entities.PictureList;
 import com.group6b.shopiifoodwebsite.entities.Restaurant;
 import com.group6b.shopiifoodwebsite.repositories.FoodItemRepository;
@@ -140,9 +141,26 @@ public class RestaurantController {
     public String showStatistical(Model model) {
         return "sellerDashboard/statistical";
     }
+
     @GetMapping("/dashboard/order-lists")
-    public String getOrderLists(Model model) {
+    public String getOrderLists(@NotNull Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Long restaurantId =userService.getRestaurantByUsername(username).getId();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalArgumentException("Restaurant not authenticated");
+        }
+
+        List<Order> orders = orderService.getOrdersByRestaurant(restaurantId);
+        model.addAttribute("orderLists", orders);
         return "sellerDashboard/order-list";
+    }
+
+
+    @GetMapping("/dashboard/order-lists/confirm/{id}")
+    public String confirmOrder(@PathVariable Long id) {
+        orderService.confirmOrder(id);
+        return "redirect:/restaurants/dashboard/order-lists";  // Cần chỉnh {restaurantId} thành id của nhà hàng hiện tại
     }
     @GetMapping("/dashboard/order-lists/accept/{id}")
     public String acceptOrder(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {

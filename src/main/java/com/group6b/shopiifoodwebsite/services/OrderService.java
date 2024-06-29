@@ -1,8 +1,8 @@
 package com.group6b.shopiifoodwebsite.services;
 
 
+import com.group6b.shopiifoodwebsite.constants.OrderStatus;
 import com.group6b.shopiifoodwebsite.entities.Order;
-import com.group6b.shopiifoodwebsite.entities.OrderStatus;
 import com.group6b.shopiifoodwebsite.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.TaskScheduler;
@@ -70,7 +70,6 @@ public class OrderService {
         order.setStatus(pendingStatus);
         order.setLastStatusUpdate(new Date());
         orderRepository.save(order);
-        scheduleOrderStatusUpdate(order);
     }
 
     public List<Order> findByUserId(Long orderId) {
@@ -100,13 +99,7 @@ public class OrderService {
 
         return true;
     }
-    private void scheduleOrderStatusUpdate(Order order) {
-        long currentTime = System.currentTimeMillis();
 
-        taskScheduler.schedule(() -> updateOrderStatuses(order.getId(), "CONFIRMED"), new Date(currentTime + 45000));
-        taskScheduler.schedule(() -> updateOrderStatuses(order.getId(), "IN_PROGRESS"), new Date(currentTime + 75000));
-        taskScheduler.schedule(() -> enableUserCompleteOrder(order.getId()), new Date(currentTime + 135000));
-    }
     private void enableUserCompleteOrder(Long orderId) {
         // Logic to enable the 'Complete Order' button for the user
         // You might set a flag or update a status to indicate that the user can now mark the order as completed
@@ -118,5 +111,18 @@ public class OrderService {
         order.setStatus(status);
         order.setLastStatusUpdate(new Date());
         orderRepository.save(order);
+    }
+    public List<Order> getOrdersByRestaurant(Long restaurantId) {
+        return orderRepository.findOrdersByRestaurantId(restaurantId);
+    }
+    @Transactional
+    public void confirmOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Invalid order ID"));
+        var  confirmedStatus = orderStatusRepository.findByStatusName("CONFIRMED");
+        if (order.getStatus().getStatusName().equals("PENDING")) {
+            order.setStatus(confirmedStatus);  // Cần đảm bảo rằng bạn có hằng số hoặc enum cho các trạng thái đơn hàng
+            order.setLastStatusUpdate(new Date());
+            orderRepository.save(order);
+        }
     }
 }

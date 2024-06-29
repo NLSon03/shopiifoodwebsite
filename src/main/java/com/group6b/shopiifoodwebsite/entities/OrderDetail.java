@@ -38,6 +38,4 @@ public class OrderDetail {
         this.price = price;
     }
 
-//    public OrderDetail(Order order, FoodItem foodItem, int quantity, Double price) {
-//    }
 }

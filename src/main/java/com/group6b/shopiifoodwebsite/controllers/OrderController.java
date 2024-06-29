@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -33,7 +35,7 @@ public class OrderController {
         this.restaurantService = restaurantService;
     }
 
-    @GetMapping("/cancel/{id}")
+    @PostMapping("/cancel/{id}")
     public String cancelOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -56,28 +58,7 @@ public class OrderController {
         return "redirect:/orders/order";
     }
 
-    @GetMapping("/accept/{id}")
-    public String acceptOrder(@PathVariable Long id, Model model, RedirectAttributes redirectAttributes) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new IllegalArgumentException("Restaurant not authenticated");
-        }
-        String username = authentication.getName();
-        Restaurant restaurant = restaurantService.getRestaurantByName(username).orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        try {
-            boolean accepted = orderService.acceptOrder(id, restaurant.getId());
-            if (accepted) {
-                redirectAttributes.addFlashAttribute("successMessage", "Đơn hàng đã được chấp nhận thành công.");
-            } else {
-                redirectAttributes.addFlashAttribute("errorMessage", "Không thể chấp nhận đơn hàng do trạng thái không hợp lệ.");
-            }
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
-        }
-
-        return "redirect:/orders/order";
-    }
     @PostMapping("/complete/{id}")
     public String completeOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -129,22 +110,42 @@ public class OrderController {
                 return "cart/checkout";
             }
         }
-        Order order = new Order();
-        order.setUser(user);
-        order.setDeliveryAddress(deliveryAddress);
 
-        List<OrderDetail> orderDetails = cart.getCartItems().stream()
-                .map(cartItem -> {
-                    FoodItem foodItem = foodItemService.getFoodById(cartItem.getFoodId())
-                        .orElseThrow(() -> new IllegalArgumentException("Food item not found"));
-        return new OrderDetail(order, foodItem, cartItem.getQuantity(), cartItem.getPrice());
-            }).collect(Collectors.toList());
+        // Create a list to store the order details
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        // Retrieve the restaurant from the first food item in the cart (assuming all items are from the same restaurant)
+        Long firstFoodItemId = cart.getCartItems().get(0).getFoodId(); // Assuming cart is not empty
+        Optional<FoodItem> firstFoodItemOptional = foodItemService.getFoodById(firstFoodItemId);
 
-        order.setTotalPrice(cartService.getSumPrice(session));
-        order.setOrderItems(orderDetails);
-        orderService.createOrder(order);
+        if (firstFoodItemOptional.isPresent()) {
+            FoodItem firstFoodItem = firstFoodItemOptional.get();
+            Restaurant restaurant = firstFoodItem.getRestaurant();
 
-        cartService.removeCart(session);
+            // Create order details for each item in the cart
+
+
+            // Create the order and set its attributes
+            Order order = new Order();
+            order.setUser(user);
+            order.setDeliveryAddress(deliveryAddress);
+            order.setTotalPrice(cartService.getSumPrice(session));
+            orderDetails = cart.getCartItems().stream()
+                    .map(cartItem -> {
+                        FoodItem foodItem = foodItemService.getFoodById(cartItem.getFoodId())
+                                .orElseThrow(() -> new IllegalArgumentException("Food item not found"));
+                        return new OrderDetail(order, foodItem, cartItem.getQuantity(), cartItem.getPrice());
+                    }).collect(Collectors.toList());
+            order.setOrderItems(orderDetails);
+            order.setRestaurant(restaurant); // Set the restaurant
+            // Save the order
+            orderService.createOrder(order);
+
+            // Remove the cart items from session
+            cartService.removeCart(session);
+        } else {
+            throw new IllegalArgumentException("Food items in cart not found");
+        }
+
         return "redirect:/orders/confirmation";
     }
 
@@ -169,10 +170,23 @@ public class OrderController {
 
     @GetMapping("/order/details/{id}")
     public String viewOrderDetails(@PathVariable Long id, Model model) {
-        Order order = orderService.findOrdersById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+        Optional<Order> orderOptional = orderService.findOrdersById(id);
 
-        model.addAttribute("order", order);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            model.addAttribute("order", order);
+            // Add logging to check order details
+            System.out.println("Order ID: " + order.getId());
+            System.out.println("User: " + order.getUser().getUsername());
+            System.out.println("Delivery Address: " + order.getDeliveryAddress());
+            System.out.println("Total Price: " + order.getTotalPrice());
+            System.out.println("Number of Order Items: " + order.getOrderItems().size());
+        } else {
+            // Handle case where order is not found
+            model.addAttribute("error", "Order not found!");
+        }
+
         return "order/details";
     }
+
 }
