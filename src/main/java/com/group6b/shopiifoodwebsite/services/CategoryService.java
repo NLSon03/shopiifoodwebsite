@@ -24,16 +24,20 @@ import java.util.Optional;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final String IMAGE_PATH = "src/main/resources/static/categoryimages/";
+
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
     }
+
     public Optional<Category> getCategoryById(Long id) {
         return categoryRepository.findById(id);
     }
+
     public void addCategory(Category category) throws IOException {
         categoryRepository.save(category);
     }
-    public void updateCategory(@NotNull Category category){
+
+    public void updateCategory(@NotNull Category category) {
         Category existingCategory = categoryRepository.findById(category.getId())
                 .orElse(null);
         Objects.requireNonNull(existingCategory).setCategoryDescription(category.getCategoryDescription());
@@ -41,6 +45,7 @@ public class CategoryService {
 
         categoryRepository.save(existingCategory);
     }
+
     public void deleteCategoryById(Long id) {
         categoryRepository.deleteById(id);
     }

@@ -80,6 +80,4 @@ public class RestaurantService {
         Files.write(path, bytes);
         return "/restaurantpictures/" + image.getOriginalFilename();
     }
-
-
 }

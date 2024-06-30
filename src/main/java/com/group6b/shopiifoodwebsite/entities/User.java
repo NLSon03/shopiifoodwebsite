@@ -32,7 +32,7 @@ public class User implements UserDetails {
 
     @Column(name = "username", length = 50, unique = true)
     @NotBlank(message = "Username is required")
-    @Size(min = 8, max = 50, message = "Tên đăng nhập phải có ít nhất 8 ký tự")
+    @Size(min = 4, max = 50, message = "Tên đăng nhập phải có ít nhất 4 ký tự")
     @ValidUsername
     private String username;
 

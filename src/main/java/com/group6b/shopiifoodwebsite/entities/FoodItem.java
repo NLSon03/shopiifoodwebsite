@@ -1,5 +1,7 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,17 +29,23 @@ public class FoodItem {
 
     @Column(name = "mainPicture")
     private String mainPicture;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonManagedReference
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonBackReference
     private Restaurant restaurant;
+
     @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<PictureList> pictures;
 
     @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<OrderDetail> orderDetails;
 
 }

@@ -33,4 +33,6 @@ public interface FoodItemRepository extends
         OR f.restaurant.name LIKE %?1%
         """)
     List<FoodItem> searchFood(String keyword);
+
+    List<FoodItem> findAllByRestaurantUserId(Long id);
 }
