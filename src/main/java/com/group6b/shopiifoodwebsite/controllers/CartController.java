@@ -109,7 +109,7 @@ public class CartController {
             deliveryAddress = user.getDefaultDeliveryAddress();
             if (deliveryAddress == null || deliveryAddress.isBlank()) {
                 model.addAttribute("error", "Vui lòng nhập địa chỉ giao hàng!");
-                return "cart/index";
+                return "cart";
             }
         }
 

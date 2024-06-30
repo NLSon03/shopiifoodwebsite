@@ -23,33 +23,11 @@ public class Category {
     @Column(name = "categoryDescription", length = 50, nullable = false)
     private String categoryDescription;
 
+    @Column(name = "category_icon")
+    private String categoryIcon;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @ToString.Exclude
     private List<FoodItem> foodItems;
 
-
-    public String getCategoryDescription() {
-        return categoryDescription;
-    }
-
-    public void setCategoryDescription(String categoryDescription) {
-        this.categoryDescription = categoryDescription;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<FoodItem> getFoodItems() {
-        return foodItems;
-    }
-
-    public void setFoodItems(List<FoodItem> foodItems) {
-        this.foodItems = foodItems;
-    }
 }

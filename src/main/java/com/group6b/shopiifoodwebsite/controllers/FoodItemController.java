@@ -64,10 +64,11 @@ public class FoodItemController {
     @PostMapping("/add")
     public String addFoodItem(@Valid @ModelAttribute FoodItem foodItem,
                               @RequestParam("image") MultipartFile image,
-                              @RequestParam("images") List<MultipartFile> pictures,
+                              @RequestParam("images") List<MultipartFile> pictures, Model model,
                               BindingResult result) throws IOException {
         if (result.hasErrors()) {
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
+            model.addAttribute("errors", errors);
             return "food/add";
         }
         if (!image.isEmpty()) {

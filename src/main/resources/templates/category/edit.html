@@ -21,7 +21,7 @@
 <body>
 <div class="container">
     <h1>Edit Category</h1>
-    <form th:action="@{/categories/edit}" th:object="${category}" method="post">
+    <form th:action="@{/categories/edit}" th:object="${category}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}" />
         <div class="col-6 mb-3">
             <label class="form-label" for="title">Title:</label>
@@ -29,8 +29,11 @@
                    id="title">
             <div class="text-danger" th:if="${#fields.hasErrors('categoryDescription')}" th:errors="*{categoryDescription}">Title Error</div>
         </div>
-
-        <input type="submit" value="Save">
+        <div class="col-6 mb-3">
+            <label class="form-label" for="icon">Main Picture: <span class="text-danger">*</span></label>
+            <input type="file" class="form-control" id="icon" name="icon" accept="image/*" required>
+        </div>
+        <input type="submit" class="btn btn-danger" value="Save">
     </form>
     <br>
     <a th:href="@{/categories}">Back to List</a>

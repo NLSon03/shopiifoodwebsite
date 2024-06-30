@@ -17,5 +17,8 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/restaurantpictures/**")
                 .addResourceLocations("file:src/main/resources/static/restaurantpictures/")
                 .setCacheControl(CacheControl.noCache().cachePublic());
+        registry.addResourceHandler("/categoryicons/**")
+                .addResourceLocations("file:src/main/resources/static/categoryicons/")
+                .setCacheControl(CacheControl.noCache().cachePublic());
     }
 }

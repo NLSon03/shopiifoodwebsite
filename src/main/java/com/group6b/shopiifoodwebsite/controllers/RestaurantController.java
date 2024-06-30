@@ -193,11 +193,12 @@ public class RestaurantController {
     @PostMapping("/dashboard/add-food-item")
     public String addFoodItem(@Valid @ModelAttribute FoodItem foodItem,
                               @RequestParam("image") MultipartFile image,
-                              @RequestParam("images") List<MultipartFile> pictures,
+                              @RequestParam("images") List<MultipartFile> pictures,Model model,
                               BindingResult result)  throws  IOException{
         // Lấy thông tin người dùng hiện tại
         if (result.hasErrors()) {
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
+            model.addAttribute("errors", errors);
             return "sellerDashboard/create";
         }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -249,7 +250,7 @@ public class RestaurantController {
         return "redirect:/restaurants/dashboard/list-foods";
     }
     @GetMapping("/dashboard/list-foods/edit/{id}")
-    public String showUpdateForm(@PathVariable long id,@NotNull Model model) {
+    public String showUpdateForm(@PathVariable Long id,@NotNull Model model) {
         var foodItem = foodItemService.getFoodById(id);
         model.addAttribute("food", foodItem.orElseThrow(() -> new
                 IllegalArgumentException("Food not found")));
@@ -266,16 +267,8 @@ public class RestaurantController {
         if(result.hasErrors()){
             var errors = result.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).toArray(String[]::new);
             model.addAttribute("errors", errors);
-            model.addAttribute("categories",  categoryService.getAllCategories());
             return "sellerDashboard/edit";
         }
-
-/*
-        foodItemService.updateFood(foodItem,mainPicture,pictures);
-*/
- /*       FoodItem existingFood = foodItemRepository.findById(foodItem.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Food with id " + foodItem.getId() + " not found."));
-*/
         FoodItem existingFood = foodItemService.getFoodById(foodItem.getId()).orElseThrow(()->
                 new IllegalArgumentException("Food with id " + foodItem.getId() + " not found."));
         // Cập nhật các trường khác
