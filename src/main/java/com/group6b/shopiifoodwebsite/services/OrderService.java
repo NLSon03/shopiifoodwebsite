@@ -23,6 +23,10 @@ public class OrderService {
     private final OrderStatusRepository orderStatusRepository;
     private final TaskScheduler taskScheduler;
 
+
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
     public boolean cancelOrder(Long orderId, Long userId) {
         var order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("Order not found"));
         var cancelledStatus = orderStatusRepository.findByStatusName("CANCELLED");

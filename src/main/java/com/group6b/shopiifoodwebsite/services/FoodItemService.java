@@ -60,7 +60,7 @@ public class FoodItemService {
         existingFood.setDescription(foodItem.getDescription());
         existingFood.setPrice(foodItem.getPrice());
         existingFood.setCategory(foodItem.getCategory());
-
+        existingFood.setRestaurant(foodItem.getRestaurant());
         // Cập nhật ảnh nếu có
         if (mainPicture != null && !mainPicture.isEmpty()) {
             String imageSavePath = "src/main/resources/static/foodimages/";  // Đường dẫn lưu ảnh
