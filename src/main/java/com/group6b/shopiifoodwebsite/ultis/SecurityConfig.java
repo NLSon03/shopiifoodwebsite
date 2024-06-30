@@ -72,7 +72,7 @@ public class SecurityConfig {
                         .hasAnyAuthority("ADMIN", "SELLER", "USER")
                         .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
-                        .requestMatchers("/adminDashboard/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/adminDashboard/**","/admin/**").hasAnyAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +38,18 @@ public class CategoryService {
     public void addCategory(Category category) throws IOException {
         categoryRepository.save(category);
     }
-
-    public void updateCategory(@NotNull Category category) {
+    public void updateCategory(@NotNull Category category, MultipartFile icon) throws IOException{
         Category existingCategory = categoryRepository.findById(category.getId())
                 .orElse(null);
         Objects.requireNonNull(existingCategory).setCategoryDescription(category.getCategoryDescription());
         existingCategory.setCategoryDescription(category.getCategoryDescription());
-
+        if (icon != null && !icon.isEmpty()) {
+            String imageSavePath = "src/main/resources/static/categoryicons/";  // Replace with your actual path
+            String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(icon.getOriginalFilename());
+            Path imagePath = Paths.get(imageSavePath + fileName);
+            icon.transferTo(imagePath);
+            existingCategory.setCategoryIcon("/categoryicons/" + fileName);
+        }
         categoryRepository.save(existingCategory);
     }
 

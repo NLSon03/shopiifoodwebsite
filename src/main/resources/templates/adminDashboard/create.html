@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en">
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org" >
 
 <head>
     <meta charset="utf-8">
@@ -74,56 +74,105 @@
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="card">
-                            <form class="form-horizontal">
-                                <div class="card-body">
-                                    <h4 class="card-title">Personal Info</h4>
-                                    <div class="form-group row">
-                                        <label for="#" class="col-sm-3 text-right control-label col-form-label">First Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="" placeholder="First Name Here">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="#" class="col-sm-3 text-right control-label col-form-label">Last Name</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="  " placeholder="Last Name Here">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="#" class="col-sm-3 text-right control-label col-form-label">Password</label>
-                                        <div class="col-sm-9">
-                                            <input type="password" class="form-control" id=" " placeholder="Password Here">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="#" class="col-sm-3 text-right control-label col-form-label">Company</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="#" placeholder="Company Name Here">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Contact No</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="cono1" placeholder="Contact No Here">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Message</label>
-                                        <div class="col-sm-9">
-                                            <textarea class="form-control"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="border-top">
+                            <div class="card">
+                                <form class="form-horizontal" th:action="@{/admin/add-food-item}" method="post"
+                                      th:object="${foodItem}"
+                                      enctype="multipart/form-data">
                                     <div class="card-body">
-                                        <button type="button" class="btn btn-primary">Submit</button>
+                                        <h4 class="card-title">Thêm món ăn</h4>
+                                        <div class="form-group row">
+                                            <label for="FoodName" class="col-sm-3 text-right control-label col-form-label">
+                                                Tên đồ ăn: <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="FoodName" th:field="*{foodName}"
+                                                       required autofocus>
+                                                <span class="text-danger" th:if="${#fields.hasErrors('foodName')}"
+                                                      th:errors="*{foodName}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="price" class="col-sm-3 text-right control-label col-form-label">
+                                                Giá thành: <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control" id="price" th:field="*{price}">
+                                                <span class="text-danger" th:if="${#fields.hasErrors('price')}"
+                                                      th:errors="*{price}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="description" class="col-sm-3 text-right control-label col-form-label">
+                                                Mô tả món ăn:
+                                            </label>
+                                            <div class="col-sm-9">
+                                        <textarea class="form-control" type="text" th:field="*{description}"
+                                                  id="description" required></textarea>
+                                                <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                                      th:errors="*{description}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="category" class="col-sm-3 text-right control-label col-form-label">Chọn
+                                                danh mục<span class="text-danger">*</span></label>
+                                            <div class="col-md-9">
+                                                <select class="select2 form-control custom-select" id="category"
+                                                        th:field="*{category.id}" required style="width: 100%; height:36px;">
+                                                    <option value="">Chọn danh mục</option>
+                                                    <option th:each="category : ${categories}" th:value="${category.id}"
+                                                            th:text="${category.categoryDescription}"></option>
+                                                </select>
+                                                <span class="text-danger" th:if="${#fields.hasErrors('category')}"
+                                                      th:errors="*{category}"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="restaurant" class="col-sm-3 text-right control-label col-form-label">Chọn
+                                                người bán<span class="text-danger">*</span></label>
+                                            <div class="col-md-9">
+                                                <select class="select2 form-control custom-select" id="restaurant"
+                                                        th:field="*{category.id}" required style="width: 100%; height:36px;">
+                                                    <option value="">Chọn nhà hàng</option>
+                                                    <option th:each="restaurant : ${restaurants}" th:value="${restaurant.id}"
+                                                            th:text="${restaurant.name}"></option>
+                                                </select>
+                                                <span class="text-danger" th:if="${#fields.hasErrors('restaurant')}"
+                                                      th:errors="*{restaurant}"></span>
+                                            </div>
+                                        </div>
+
+                                        <span class="text-danger" th:if="${#fields.hasErrors('restaurant')}" th:errors="*{restaurant}"></span>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 text-right control-label col-form-label">Ảnh chính: <span class="text-danger">*</span></label>
+                                            <div class="col-md-9">
+                                                <div class="custom-file">
+                                                    <input type="file"  class="form-control" id="image" name="image" required accept="image/*" placeholder="Chọn
+                                                ảnh từ máy...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-md-3 text-right control-label col-form-label">Ảnh chi tiết: <span class="text-danger">*</span></label>
+                                            <div class="col-md-9">
+                                                <div class="custom-file">
+                                                    <input type="file" class="form-control" id="images" name="images"
+                                                           multiple required accept="image/*" placeholder="Chọn
+                                                ảnh từ máy...">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="border-top text-center">
+                                            <div class="card-body">
+                                                <button type="submit" class="btn btn-primary">Thêm</button>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
-                        <div class="card">
+                        <!--<div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Form Elements</h5>
                                 <div class="form-group row">
@@ -356,10 +405,10 @@
                                     <button type="submit" class="btn btn-danger">Cancel</button>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
 
                     </div>
-                    <div class="col-md-6">
+                    <!--<div class="col-md-6">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title m-b-0">Form Elements</h5>
@@ -435,7 +484,7 @@
                                         <span class="text-success">Input with Sccess</span>
                                     </div>
                                     <div class="col-lg-8 col-md-12">
-<!--                                        <input type="text" class="form-control is-valid" id="">-->
+&lt;!&ndash;                                        <input type="text" class="form-control is-valid" id="">&ndash;&gt;
                                         <div class="valid-feedback">
                                             Woohoo!
                                         </div>
@@ -446,7 +495,7 @@
                                         <span class="text-danger">Input with Error</span>
                                     </div>
                                     <div class="col-lg-8 col-md-12">
-<!--                                        <input type="text" class="form-control is-invalid" id="">-->
+&lt;!&ndash;                                        <input type="text" class="form-control is-invalid" id="">&ndash;&gt;
                                         <div class="invalid-feedback">
                                             Please correct the error
                                         </div>
@@ -536,15 +585,15 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <!-- editor -->
-                <div class="row">
+               <!-- <div class="row">
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Quill Editor</h4>
-                                <!-- Create the editor container -->
+                                &lt;!&ndash; Create the editor container &ndash;&gt;
                                 <div id="editor" style="height: 300px;">
                                     <p>Hello World!</p>
                                     <p>Some initial <strong>bold</strong> text</p>
@@ -555,7 +604,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->

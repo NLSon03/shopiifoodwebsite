@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Thanh toán</title>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <!--===============================================================================================-->
@@ -34,10 +34,21 @@
 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
 </form>
 <div th:replace="fragments/home-and-product-header :: header"></div>
-<h1>Order Confirmation</h1>
-<p th:text="${message}"></p>
-<a href="/" class="btn btn-primary">Go to Home</a>
-<a th:href="@{/orders/order}" class="btn btn-danger ">Đi tới đơn hàng</a>
+
+<br>
+<div class="text-center">
+    <h1>Hoàn thành đơn hàng</h1>
+    <p th:text="${message}"></p>
+    <br>
+    <a href="/" class="btn btn-primary">Về trang chủ</a>
+    <a th:href="@{/orders/order}" class="btn btn-danger ">Đi tới đơn hàng</a>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 <!-- Footer -->
 <div th:replace="fragments/home-and-product-footer :: footer"></div>
 

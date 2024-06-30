@@ -35,6 +35,7 @@
         <tr>
             <th>Id</th>
             <th>Name</th>
+            <th>Icon</th>
             <th  sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
         </tr>
         </thead>
@@ -42,6 +43,7 @@
         <tr th:each="category : ${categories}">
             <td th:text="${category.id}"></td>
             <td th:text="${category.categoryDescription}"></td>
+            <td><img th:src="@{${category.getCategoryIcon()}}" alt="icon" width="100px" height="100px"></td>
             <td colspan="2">
                 <a class="btn btn-primary"  sec:authorize="hasAnyAuthority('ADMIN')"
                    th:href="@{/categories/edit/{id}(id=${category.getId()})}">Edit</a>

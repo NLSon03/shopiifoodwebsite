@@ -36,21 +36,25 @@
 <body>
 <div th:replace="fragments/home-and-product-header :: header"></div>
 
-<h1>Order Details</h1>
-<div th:if="${order != null}">
-    <p><strong>Order ID:</strong> <span th:text="${order.id}"></span></p>
-    <p><strong>User:</strong> <span th:text="${order.user.username}"></span></p>
-    <p><strong>Delivery Address:</strong> <span th:text="${order.deliveryAddress}"></span></p>
-    <p><strong>Total Price:</strong> <span th:text="${order.totalPrice}"></span></p>
 
-    <h2>Order Items</h2>
-    <table>
+<div th:if="${order != null}">
+    <h1>Thông tin đơn hàng</h1>
+    <div class="text-center justify-content-center">
+        <p><strong>Mã đơn hàng: </strong> <span th:text="${order.id}"></span></p>
+        <p><strong>Người đặt: </strong> <span th:text="${order.user.username}"></span></p>
+        <p><strong>Địa chỉ giao hàng: </strong> <span th:text="${order.deliveryAddress}"></span></p>
+        <p><strong>Tổng số tiền:</strong> <span th:text="${order.totalPrice}"></span></p>
+    </div>
+
+
+    <h2>Chi tiết đơn hàng</h2>
+    <table class="table">
         <thead>
         <tr>
-            <th>Food Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
+            <th>Tên món ăn</th>
+            <th>Số lượng</th>
+            <th>Giá</th>
+
         </tr>
         </thead>
         <tbody>
@@ -58,14 +62,16 @@
             <td th:text="${orderItem.foodItem.foodName}"></td>
             <td th:text="${orderItem.quantity}"></td>
             <td th:text="${orderItem.price}"></td>
-            <td th:text="${orderItem.quantity * orderItem.price}"></td>
         </tr>
         </tbody>
     </table>
 </div>
 <div th:unless="${order != null}">
-    <p>Order not found!</p>
+    <p th:text="${error}"></p>
 </div>
+
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+
 <!--===============================================================================================-->
 <script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
 <!--===============================================================================================-->
