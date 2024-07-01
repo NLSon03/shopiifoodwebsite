@@ -62,4 +62,7 @@ public class CategoryService {
         Files.write(path, bytes);
         return "/categoryimages/" + image.getOriginalFilename();
     }
+    public List<Category> searchCategories(String query) {
+        return categoryRepository.findByCategoryDescriptionContainingIgnoreCase(query);
+    }
 }
