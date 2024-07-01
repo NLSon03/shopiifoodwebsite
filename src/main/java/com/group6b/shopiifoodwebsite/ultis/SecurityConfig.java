@@ -61,7 +61,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/", "/oauth/**", "/register", "/register/restaurant", "/register/restaurant/**",
-                                "/error", "/fonts/**", "/vendor/**", "/images/**", "/auth/**", "/foodimages/**", "/restaurantpictures/**",
+                               "/search/**", "/error", "/fonts/**", "/vendor/**", "/images/**", "/auth/**", "/foodimages/**", "/restaurantpictures/**","/categoryicons/**",
                                 "/foods/details/**", "/categories/details/**", "/restaurants/details/**").permitAll()
                         .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
@@ -73,6 +73,9 @@ public class SecurityConfig {
                         .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/adminDashboard/**","/admin/**").hasAnyAuthority("ADMIN")
+                        .requestMatchers("/category/**","/foodItem/**","/foodItem/detail/**","/search",
+                        "/restaurant/detail/**","/restaurant/**").permitAll()
+                        .requestMatchers("/api/random-categories/**").permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

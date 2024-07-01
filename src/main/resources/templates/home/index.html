@@ -132,14 +132,13 @@
 
 <!-- Banner -->
     <div class="container">
-        <div class="p-b-10">
+        <div class="p-b-13">
             <h3 class="ltext-103 cl5">
                 Danh mục
             </h3>
         </div>
         <div class="row">
             <div class="col-md-6 col-xl-4 p-b-30 m-lr-auto" th:each="category: ${categories}">
-                <!-- Block1 -->
                 <div class="category-buttons">
                     <a class="category-button" th:href="@{/category/{id}(id=${category.id})}">
                         <img th:src="@{${category.categoryIcon}}" alt="icon" class="category-icon" width="10px" height="10px"/>
@@ -231,7 +230,7 @@
     <div class="container">
         <div class="p-b-10">
             <h3 class="ltext-103 cl5">
-                Product Overview
+                Món ăn
             </h3>
         </div>
 

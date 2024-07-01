@@ -155,16 +155,9 @@
                 prevArrow:'<button class="arrow-slick3 prev-slick3"><i class="fa fa-angle-left" aria-hidden="true"></i></button>',
                 nextArrow:'<button class="arrow-slick3 next-slick3"><i class="fa fa-angle-right" aria-hidden="true"></i></button>',
 
-                dots: true,
+                dots:false,
                 appendDots: $(this).find('.wrap-slick3-dots'),
-                dotsClass:'slick3-dots',
-                customPaging: function(slick, index) {
-                    var portrait = $(slick.$slides[index]).data('thumb');
-                    return '<img src=" ' + portrait + ' "/><div class="slick3-dot-overlay"></div>';
-                },  
+                dotsClass:'slick3-dots'
             });
         });
-
-                
-
 })(jQuery);

@@ -11,4 +11,5 @@ public interface CategoryRepository  extends        JpaRepository<Category, Long
     default List<Category> findAllCategories() {
         return findAll();
     }
+    List<Category> findByCategoryDescriptionContainingIgnoreCase(String description);
 }

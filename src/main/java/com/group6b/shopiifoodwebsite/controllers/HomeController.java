@@ -1,6 +1,8 @@
 package com.group6b.shopiifoodwebsite.controllers;
 
+import com.group6b.shopiifoodwebsite.entities.Category;
 import com.group6b.shopiifoodwebsite.entities.FoodItem;
+import com.group6b.shopiifoodwebsite.entities.Restaurant;
 import com.group6b.shopiifoodwebsite.services.CategoryService;
 import com.group6b.shopiifoodwebsite.services.FoodItemService;
 import com.group6b.shopiifoodwebsite.services.RestaurantService;
@@ -33,9 +35,8 @@ public class HomeController {
     @GetMapping("foodItem/detail/{id}")
     public String viewFoodItemDetails(@PathVariable long id, Model model) {
         var foodItem = foodItemService.getFoodById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
-        var imgs = foodItem.getPictures();
+
         model.addAttribute("foodItem", foodItem);
-        model.addAttribute("images", imgs);
         return "home/details";
     }
 
@@ -53,6 +54,28 @@ public class HomeController {
         }
         return "home/categorydetail";
     }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("query") String query, Model model) {
+        List<Restaurant> restaurants = restaurantService.searchRestaurants(query);
+        List<Category> categories = categoryService.searchCategories(query);
+        List<FoodItem> foodItems = foodItemService.searchFoodItems(query);
+
+        model.addAttribute("restaurants", restaurants);
+        model.addAttribute("categories", categories);
+        model.addAttribute("foodItems", foodItems);
+        model.addAttribute("query", query);
+        return "home/search";
+    }
+
+
+    @GetMapping("/restaurant/detail/{id}")
+    public String viewRestaurantDetails(@PathVariable long id, Model model) {
+        List<FoodItem> foodItems = foodItemService.getFoodItemsByRestaurantId(id);
+        model.addAttribute("foodItems", foodItems);
+        return "home/restaurantdetails";
+    }
+
     @GetMapping("foodItem/index")
     public String viewFoodItem(Model model) {
         return "product/index";
@@ -61,4 +84,5 @@ public class HomeController {
     public String viewFoodItemDetails(Model model) {
         return "product/details";
     }
+
 }

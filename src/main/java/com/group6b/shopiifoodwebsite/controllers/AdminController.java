@@ -143,43 +143,6 @@ public class AdminController {
             model.addAttribute("restaurants",restaurantService.getAllRestaurants());
             return "adminDashboard/edit";
         }
-/*        FoodItem existingFood = foodItemService.getFoodById(foodItem.getId()).orElseThrow(()->
-                new IllegalArgumentException("Food with id " + foodItem.getId() + " not found."));
-        // Cập nhật các trường khác
-        existingFood.setFoodName(foodItem.getFoodName());
-        existingFood.setDescription(foodItem.getDescription());
-        existingFood.setPrice(foodItem.getPrice());
-        existingFood.setCategory(foodItem.getCategory());
-        existingFood.setRestaurant(foodItem.getRestaurant());
-        // Cập nhật ảnh nếu có
-        if (mainPicture != null && !mainPicture.isEmpty()) {
-            String imageSavePath = "src/main/resources/static/foodimages/";  // Đường dẫn lưu ảnh
-            String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(mainPicture.getOriginalFilename());
-            Path imagePath = Paths.get(imageSavePath + fileName);
-            mainPicture.transferTo(imagePath);
-            existingFood.setMainPicture("/foodimages/" + fileName);  // Đường dẫn truy cập ảnh
-        }
-        if (pictures != null && !pictures.isEmpty()) {
-            // Xóa các ảnh cũ
-            existingFood.getPictures().clear();
-
-            // Thêm các ảnh mới
-            for (MultipartFile picture : pictures) {
-                if (!picture.isEmpty()) {
-                    String imageSavePath = "src/main/resources/static/foodimages/";
-                    String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(picture.getOriginalFilename());
-                    Path imagePath = Paths.get(imageSavePath + fileName);
-                    picture.transferTo(imagePath);
-
-                    PictureList pictureList = new PictureList();
-                    pictureList.setFoodItem(existingFood);
-                    pictureList.setUrl("/foodimages/" + fileName);
-
-                    existingFood.getPictures().add(pictureList);
-                }
-            }
-        }
-        foodItemService.save(existingFood);*/
         foodItemService.updateFood(foodItem, mainPicture, pictures);
         return "redirect:/admin/list-foods";
     }

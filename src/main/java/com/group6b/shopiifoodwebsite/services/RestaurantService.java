@@ -80,6 +80,8 @@ public class RestaurantService {
         Files.write(path, bytes);
         return "/restaurantpictures/" + image.getOriginalFilename();
     }
-
+    public List<Restaurant> searchRestaurants(String query) {
+        return restaurantRepository.findByNameContainingIgnoreCase(query);
+    }
 
 }

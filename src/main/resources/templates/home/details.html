@@ -48,7 +48,7 @@
             Trang chủ
             <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
         </a>
-        <a th:href="@{/category/{id}(id=${foodItem.category.id})}" class="stext-109 cl8 hov-cl1 trans-04">
+        <a th:href="@{/category/{id}(id=${foodItem.category.id})}" class="stext-109 cl8 hov-cl1 trans-04">Danh mục:
             <span th:text="${foodItem.category.categoryDescription}"></span><i class="fa fa-angle-right m-l-9 m-r-10"
                                                                                aria-hidden="true"></i>
         </a>
@@ -69,17 +69,18 @@
                         <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
                         <div class="slick3 gallery-lb">
                             <div th:each="img: ${foodItem.pictures}">
-                                <div class="item-slick3" th:data-thumb="${img.url}">
+                                <div class="item-slick3" th:data-thumb="${img.url != null ? img.url : ''}">
                                     <div class="wrap-pic-w pos-relative">
-                                        <img alt="IMG-PRODUCT" th:src="@{${img.url}}">
+                                        <img alt="IMG-PRODUCT" th:src="@{${img.url != null ? img.url : ''}}" width="500px" height="600px">
 
                                         <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                           th:href="@{${img.url}}" target="_blank">
+                                           th:href="@{${img.url != null ? img.url : ''}}" target="_blank">
                                             <i class="fa fa-expand"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>

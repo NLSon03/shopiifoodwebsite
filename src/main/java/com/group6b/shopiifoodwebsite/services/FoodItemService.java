@@ -111,4 +111,7 @@ public class FoodItemService {
     public void save(FoodItem foodItem) {
         foodItemRepository.save(foodItem);
     }
+    public List<FoodItem> searchFoodItems(String query) {
+        return foodItemRepository.findByFoodNameContainingIgnoreCase(query);
+    }
 }

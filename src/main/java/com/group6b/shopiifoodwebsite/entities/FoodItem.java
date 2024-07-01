@@ -19,7 +19,7 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "foodname", length = 200, nullable = false)
-    private String FoodName;
+    private String foodName;
     @Column(name = "price")
     private double price;
     @Column(name = "description", length = 200)
