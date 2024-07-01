@@ -38,9 +38,9 @@
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->
 <div id="main-wrapper">
-    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+    <div th:replace="fragments/admin-header :: header"></div>
 
-    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+    <div th:replace="fragments/admin-header :: aside"></div>
     <!-- End Left Sidebar - style you can find in sidebar.scss  -->
     <!-- ============================================================== -->
     <!-- ============================================================== -->
@@ -72,31 +72,14 @@
         <!-- Container fluid  -->
         <!-- ============================================================== -->
         <div class="container-fluid">
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
-            <!-- ============================================================== -->
             <div class="row">
                 <div class="col-md-7">
                     <div class="card">
                         <div class="card-body">
-                            <p><strong class="col-sm-3 text-right control-label col-form-label">Tên món
-                                ăn:</strong><span th:text="${foodItem.foodName}"></span>
-                            </p>
-                            <p><strong class="col-sm-3 text-right control-label col-form-label">Mô tả:</strong> <span
-                                    th:text="${foodItem.description}"></span></p>
-                            <p><strong class="col-sm-3 text-right control-label col-form-label">Giá:</strong> <span
-                                    th:text="${foodItem.price}">Giá</span></p>
-                            <p><strong class="col-sm-3 text-right control-label col-form-label">Thể loại:</strong> <span
-                                    th:text="${foodItem.category.categoryDescription}"></span></p>
-                        </div>
-                    </div>
-                    <div class="border-top text-center">
-                        <div class="card-body">
-                            <a class="btn btn-primary"
-                               sec:authorize="hasAnyAuthority('SELLER')"
-                               th:href="@{/restaurants/dashboard/list-foods/edit/{id}(id=${foodItem.getId()})}">Chỉnh
-                                sửa</a>
-                            <a class="btn btn-danger" th:href="@{/restaurants/dashboard/list-foods}">Trở về</a>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Tên món ăn:</strong><span id="foodName"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Mô tả:</strong> <span id="description"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Giá:</strong> <span id="price"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Danh mục:</strong> <span id="categoryDescription"></span></p>
                         </div>
                     </div>
                 </div>
@@ -104,28 +87,61 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title m-b-0">Ảnh: </h5>
-                            <img th:src="@{${foodItem.mainPicture}}" th:alt="${foodItem.foodName} + ' Image'"
-                                 width="200px" height="200px">
+                            <img id="mainPicture" src="" alt="" width="200px" height="200px">
                             <hr>
                             <h3>Ảnh chi tiết</h3>
-                            <div>
-                                <div th:each="picture : ${foodItem.pictures}">
-                                    <img th:src="@{${picture.url}}"
-                                         th:alt="${foodItem.foodName} + ' Additional Image'" width="100px"
-                                         height="100px">
-                                </div>
-                            </div>
+                            <div id="picturesContainer"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+
+        <div th:replace="fragments/admin-footer :: footer"></div>
 
     </div>
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lấy id từ URL hiện tại
+        const urlParts = window.location.pathname.split('/');
+        const foodId = urlParts[urlParts.length - 1];
+
+        if (foodId) {
+            fetch(`/api/admin/foods/${foodId}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDetails(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    function populateDetails(food) {
+        document.getElementById("foodName").textContent = food.foodName;
+        document.getElementById("description").textContent = food.description;
+        document.getElementById("price").textContent = `${food.price} Vnđ`;
+        document.getElementById("categoryDescription").textContent = food.category.categoryDescription;
+
+        const mainPicture = document.getElementById("mainPicture");
+        mainPicture.src = food.mainPicture;
+        mainPicture.alt = `${food.foodName} Image`;
+
+        const picturesContainer = document.getElementById("picturesContainer");
+        picturesContainer.innerHTML = "";
+        food.pictures.forEach(picture => {
+            const img = document.createElement("img");
+            img.src = picture.url;
+            img.alt = `${food.foodName} Additional Image`;
+            img.width = 100;
+            img.height = 100;
+            picturesContainer.appendChild(img);
+        });
+    }
+</script>
 <script>
     document.getElementById('logoutLink').addEventListener('click', function (event) {
         event.preventDefault();

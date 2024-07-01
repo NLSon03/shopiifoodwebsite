@@ -17,6 +17,7 @@
     <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet"/>
     <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet"/>
     <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
+
 </head>
 
 <body>
@@ -202,26 +203,22 @@
 <script th:src="@{/seller/assets/extra-libs/multicheck/datatable-checkbox-init.js}"></script>
 <script th:src="@{/seller/assets/extra-libs/multicheck/jquery.multicheck.js}"></script>
 <script th:src="@{/seller/assets/extra-libs/DataTables/datatables.min.js}"></script>
-<script>
-    /****************************************
-     *       Basic Table                   *
-     ****************************************/
-    $(document).ready(function () {
-        $('#zero_config').DataTable();
-    });
-</script>
-<script>
-    document.getElementById('logoutLink').addEventListener('click', function (event) {
-        event.preventDefault();
-        document.getElementById('logoutForm').submit();
-    });
-</script>
+<!--<script>-->
+<!--    /****************************************-->
+<!--     *       Basic Table                   *-->
+<!--     ****************************************/-->
+<!--    $(document).ready(function () {-->
+<!--        $('#zero_config').DataTable();-->
+<!--    });-->
+<!--</script>-->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         fetch('/api/seller/fooditems')
             .then(response => response.json())
             .then(data => {
                 populateTable(data);
+                // Khởi tạo DataTables sau khi thêm dữ liệu vào bảng
+                $('#zero_config').DataTable();
             })
             .catch(error => console.error('Error:', error));
     });
@@ -277,7 +274,12 @@
             tbody.appendChild(tr);
         });
     }
-
+</script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
 </script>
 </body>
 

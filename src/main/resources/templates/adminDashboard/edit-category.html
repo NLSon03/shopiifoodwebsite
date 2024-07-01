@@ -10,7 +10,7 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
-    <title>Trang người bán</title>
+    <title>Admin</title>
     <!-- Custom CSS -->
     <link th:href="@{/seller/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" />
     <link th:href="@{/seller/assets/libs/jquery-minicolors/jquery.minicolors.css}" rel="stylesheet" />
@@ -18,31 +18,56 @@
     <link th:href="@{/seller/assets/libs/quill/dist/quill.snow.css}" rel="stylesheet" />
     <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet" />
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('createCategoryForm');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Ngăn chặn form gửi theo cách truyền thống
+        // Function to get the category ID from the URL
+        function getCategoryIdFromURL() {
+            const urlParams = window.location.pathname.split('/');
+            return urlParams[urlParams.length - 1];
+        }
 
-                const formData = new FormData(form);
-                fetch('http://localhost:8080/api/admin/categories', {
-                    method: 'POST',
-                    body: formData
+        // Function to fetch category data and bind to the form
+        function fetchCategoryData(categoryId) {
+            fetch(`http://localhost:8080/api/admin/categories/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("categoryDescription").value = data.categoryDescription;
+                    // Handle the icon data if needed
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message) {
-                            alert(data.message); // Hiển thị thông báo thành công
-                            form.reset(); // Reset form sau khi thêm thành công
-                        } else {
-                            console.error('Error:', data);
-                            alert('An error occurred while creating the category');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('An error occurred while creating the category');
-                    });
-            });
+                .catch(error => console.error('Error fetching category:', error));
+        }
+
+        // Function to update category data
+        function updateCategory(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const categoryId = getCategoryIdFromURL();
+            const categoryDescription = document.getElementById("categoryDescription").value;
+            const icon = document.getElementById("icon").files[0];
+
+            const formData = new FormData();
+            formData.append("categoryDescription", categoryDescription);
+            formData.append("icon", icon);
+
+            fetch(`http://localhost:8080/api/admin/categories/${categoryId}`, {
+                method: 'PUT',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Category updated successfully:', data);
+                    // Handle the response after updating the category
+                })
+                .catch(error => console.error('Error updating category:', error));
+        }
+
+        // Event listener for DOMContentLoaded to fetch data when the form loads
+        document.addEventListener("DOMContentLoaded", function () {
+            const categoryId = getCategoryIdFromURL();
+            if (categoryId) {
+                fetchCategoryData(categoryId);
+            }
+
+            // Add event listener to form submit button
+            document.getElementById("updateCategoryForm").addEventListener("submit", updateCategory);
         });
     </script>
 </head>
@@ -91,33 +116,23 @@
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
         <div class="container-fluid">
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
-            <!-- ============================================================== -->
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card">
-                            <form class="form-horizontal" id="createCategoryForm" enctype="multipart/form-data">
+                            <form class="form-horizontal" id="updateCategoryForm" enctype="multipart/form-data">
                                 <div class="card-body">
-                                    <h4 class="card-title">Thêm danh mục</h4>
+                                    <h4 class="card-title">Danh mục</h4>
                                     <div class="form-group row">
                                         <label for="categoryDescription" class="col-sm-3 text-right control-label col-form-label">
-                                            Tên danh mục: <span class="text-danger">*</span>
+                                            Tên đồ ăn: <span class="text-danger">*</span>
                                         </label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="categoryDescription" name="categoryDescription" required autofocus>
-                                            <span class="text-danger" id="categoryDescriptionError"></span>
+                                            <input type="text" class="form-control" id="categoryDescription" name="categoryDescription"
+                                                   required autofocus>
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
                                         <label class="col-md-3 text-right control-label col-form-label">Ảnh chi tiết: <span class="text-danger">*</span></label>
                                         <div class="col-md-9">
@@ -126,10 +141,9 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="border-top text-center">
                                         <div class="card-body">
-                                            <button type="submit" class="btn btn-primary">Thêm</button>
+                                            <button type="submit" class="btn btn-primary">Cập nhật</button>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +155,16 @@
         </div>
         <div th:replace="fragments/admin-footer :: footer"></div>
     </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
 </div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
 <script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap tether Core JavaScript -->
 <script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>

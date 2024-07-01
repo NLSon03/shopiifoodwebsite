@@ -25,7 +25,7 @@ import java.util.UUID;
         rollbackFor = {Exception.class, Throwable.class})
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final String IMAGE_PATH = "src/main/resources/static/categoryimages/";
+    private final String IMAGE_PATH = "src/main/resources/static/images/categories";
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -38,6 +38,7 @@ public class CategoryService {
     public void addCategory(Category category) throws IOException {
         categoryRepository.save(category);
     }
+
     public void updateCategory(@NotNull Category category, MultipartFile icon) throws IOException{
         Category existingCategory = categoryRepository.findById(category.getId())
                 .orElse(null);

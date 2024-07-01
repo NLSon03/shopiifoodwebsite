@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org">
+<html dir="ltr" lang="en">
 
 <head>
     <meta charset="utf-8">
@@ -34,9 +34,9 @@
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->
 <div id="main-wrapper">
-    <div th:replace="fragments/admin-header :: header"></div>
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
 
-    <div th:replace="fragments/admin-header :: aside"></div>
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
     <!-- Page wrapper  -->
     <!-- ============================================================== -->
     <div class="page-wrapper">
@@ -58,72 +58,37 @@
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Danh sách đơn hàng</h5>
+                            <h5 class="card-title">Chi tiết đơn hàng</h5>
                             <div class="table-responsive">
                                 <table id="zero_config" class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Ngày đặt</th>
+                                        <th>Tên món ăn</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá món ăn</th>
                                         <th>Tổng giá</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Trạng thái</th>
-                                        <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <!-- Dữ liệu sẽ được thêm vào đây bởi JavaScript -->
                                     </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Mã đơn hàng</th>
-                                        <th>Ngày đặt</th>
-                                        <th>Tổng giá</th>
-                                        <th>Địa chỉ</th>
-                                        <th>Trạng thái</th>
-                                        <th></th>
-                                    </tr>
-                                    </tfoot>
                                 </table>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Container fluid  -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- footer -->
-        <!-- ============================================================== -->
-        <div th:replace="fragments/admin-footer :: footer"></div>
-
-        <!-- ============================================================== -->
-        <!-- End footer -->
-        <!-- ============================================================== -->
+        <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
     </div>
-    <!-- ============================================================== -->
-    <!-- End Page wrapper  -->
-    <!-- ============================================================== -->
 </div>
-<!-- ============================================================== -->
-<!-- End Wrapper -->
-<!-- ============================================================== -->
-<!-- ============================================================== -->
-<!-- All Jquery -->
-<!-- ============================================================== -->
+
 <script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap tether Core JavaScript -->
 <script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
@@ -145,33 +110,27 @@
     document.addEventListener('DOMContentLoaded', function () {
         var tableBody = document.querySelector("#zero_config tbody");
 
-        fetch('/api/admin/orders')
+        // Lấy id từ URL hiện tại
+        const urlParts = window.location.pathname.split('/');
+        const orderId = urlParts[urlParts.length - 1];
+
+        fetch(`/api/seller/orders/${orderId}`)
             .then(response => response.json())
             .then(data => {
                 data.forEach(order => {
                     var row = tableBody.insertRow();
 
-                    var orderIdCell = row.insertCell();
-                    orderIdCell.textContent = order.id;
+                    var foodNameCell = row.insertCell();
+                    foodNameCell.textContent = order.foodItem.foodName;
 
-                    var orderDateCell = row.insertCell();
-                    orderDateCell.textContent = new Date(order.orderDate).toLocaleString();
+                    var quantityCell = row.insertCell();
+                    quantityCell.textContent = order.quantity;
+
+                    var foodPriceCell = row.insertCell();
+                    foodPriceCell.textContent = order.foodItem.price;
 
                     var totalPriceCell = row.insertCell();
-                    totalPriceCell.textContent = order.totalPrice;
-
-                    var deliveryAddressCell = row.insertCell();
-                    deliveryAddressCell.textContent = order.deliveryAddress;
-
-                    var statusCell = row.insertCell();
-                    statusCell.textContent = order.orderStatus;
-
-                    var viewDetailCell = row.insertCell();
-                    var viewLink = document.createElement('a');
-                    viewLink.href = '/admin/orders/' + order.id;
-                    viewLink.textContent = 'Xem chi tiết';
-                    viewDetailCell.appendChild(viewLink);
-
+                    totalPriceCell.textContent = order.price;
                 });
             })
             .catch(error => console.error('Lỗi khi lấy dữ liệu đơn hàng:', error));
@@ -184,6 +143,7 @@
         document.getElementById('logoutForm').submit();
     });
 </script>
+
 </body>
 
 </html>

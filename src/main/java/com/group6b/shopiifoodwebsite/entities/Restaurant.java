@@ -1,5 +1,8 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -36,12 +39,15 @@ public class Restaurant {
 
     
     @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
     private List<FoodItem> foodItems;
 
     @OneToMany(mappedBy = "restaurant")
+    @JsonIgnore
     private List<Order> orders;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private User user;
 
 }
