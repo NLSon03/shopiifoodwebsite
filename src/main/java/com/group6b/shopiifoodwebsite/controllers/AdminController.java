@@ -48,7 +48,7 @@ public class AdminController {
 
     @GetMapping("/list-foods")
     public String getFoodItems(@NotNull Model model) {
-        model.addAttribute("foods",foodItemService.getAllFood());
+        model.addAttribute("foods", foodItemService.getAllFood());
         return "adminDashboard/list-foods";
     }
 
@@ -150,7 +150,9 @@ public class AdminController {
     // Delete a food item
     @GetMapping("/list-foods/delete/{id}")
     public String deleteFoodItem(@PathVariable Long id) {
-        foodItemService.getFoodById(id).ifPresentOrElse(book->foodItemService.deleteFoodById(id),()->{ throw new IllegalArgumentException("Food not found"); });
+        foodItemService.getFoodById(id).ifPresentOrElse(book -> foodItemService.deleteFoodById(id), () -> {
+            throw new IllegalArgumentException("Food not found");
+        });
         return "redirect:/admin/list-foods";
     }
     @GetMapping("/list-foods/details/{id}")
@@ -159,9 +161,30 @@ public class AdminController {
         model.addAttribute("foodItem", foodItem);
         return "sellerDashboard/details";
     }
+    @GetMapping("/foods/{id}")
+    public String getFoodById(@PathVariable Long id) {
+        return "adminDashboard/details";
+    }
+
+
+    @GetMapping("/foods/categories/{id}")
+    public String getFoodByCategory(@PathVariable Long id) {
+        return "adminDashboard/list-foods-by-category";
+    }
+    //api
+    @GetMapping("/categories/edit/{id}")
+    public String editCategory(@PathVariable Long id) {
+        return "adminDashboard/edit-category";
+    }
+
+    //api
+    @GetMapping("/categories/create")
+    public String createCategory() {
+        return "adminDashboard/createCategory";
+    }
+
     @GetMapping("/list-categories")
-    public String getCategories(Model model) {
-        model.addAttribute("categories",categoryService.getAllCategories());
+    public String getCategories() {
         return "adminDashboard/list-categories";
     }
 
@@ -209,5 +232,19 @@ public class AdminController {
         model.addAttribute("category",category);
         model.addAttribute("FoodByCategories",foodItemService.getFoodItemsByCategoryId(category.getId()));
         return "adminDashboard/list-foods-by-category";
+    }
+    @GetMapping("/orders")
+    public String getOrderLists() {
+        return "adminDashboard/order-list";
+    }
+
+    @GetMapping("/orders/{id}")
+    public String getOrderDetails(@PathVariable String id){
+        return "adminDashboard/order-detail";
+    }
+
+    @GetMapping("/users")
+    public String getUsers(){
+        return "adminDashboard/users";
     }
 }

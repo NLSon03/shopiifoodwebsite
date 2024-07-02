@@ -1,5 +1,6 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class OrderStatus {
     @Column(name = "status_name", nullable = false, unique = true)
     private String statusName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "status", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 

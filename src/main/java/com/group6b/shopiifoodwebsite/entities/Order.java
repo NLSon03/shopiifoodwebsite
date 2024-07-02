@@ -1,5 +1,8 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -23,9 +26,11 @@ public class Order {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
     private List<OrderDetail> orderItems = new ArrayList<>();
 
     @Column(name = "deliveryAddress", length = 300, nullable = false)
@@ -34,15 +39,18 @@ public class Order {
     @Column(name = "totalPrice",nullable = false)
     @Positive(message = "Phải là số dương")
     private double totalPrice;
+
     @Column(name = "order_date")
     private Date orderDate = new Date();
 
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
+    @JsonIgnore
     private Restaurant restaurant;
 
     @ManyToOne
     @JoinColumn(name = "status_id", nullable = false)
+    @JsonIgnore
     private OrderStatus status;
 
     @Column(name = "last_status_update")

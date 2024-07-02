@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -50,6 +51,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(new BCryptPasswordEncoder()
                 .encode(user.getPassword()));
 
+        user.setEnabled(true);
         userRepository.save(user);
         setDefaultRole(user.getUsername());
     }
@@ -78,7 +80,7 @@ public class UserService implements UserDetailsService {
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
-                .disabled(false)
+                .disabled(!user.isEnabled())
                 .build();
     }
 
@@ -93,11 +95,23 @@ public class UserService implements UserDetailsService {
         user.setPassword(new BCryptPasswordEncoder().encode(username));
         user.setProvider(Provider.GOOGLE.value);
         user.getRoles().add(roleRepository.findRoleById(Role.USER.value));
+        user.setEnabled(true) ;
         userRepository.save(user);
 
     }
     public Restaurant getRestaurantByUsername(String username) {
         User user = userRepository.findByUsername(username);
         return user.getRestaurant(); // Giả sử rằng mỗi User có thuộc tính Restaurant
+    }
+
+    public List<User> getAll() {
+        return userRepository.findAll();
+    }
+
+    @Transactional
+    public User updateUserEnabled(Long id, Boolean enabled) {
+        User user = userRepository.findById(id);
+        user.setEnabled(enabled);
+        return userRepository.save(user);
     }
 }

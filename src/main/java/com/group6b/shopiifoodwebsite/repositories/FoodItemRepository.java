@@ -38,4 +38,6 @@ public interface FoodItemRepository extends
         """)
     List<FoodItem> searchFood(String keyword);
 
+
+    List<FoodItem> findAllByRestaurantUserId(Long id);
 }

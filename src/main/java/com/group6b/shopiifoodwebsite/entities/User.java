@@ -1,5 +1,7 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.group6b.shopiifoodwebsite.validators.annotations.ValidUsername;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,7 +14,6 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.util.*;
 
@@ -32,12 +33,13 @@ public class User implements UserDetails {
 
     @Column(name = "username", length = 50, unique = true)
     @NotBlank(message = "Username is required")
-    @Size(min = 8, max = 50, message = "Tên đăng nhập phải có ít nhất 8 ký tự")
+    @Size(min = 4, max = 50, message = "Tên đăng nhập phải có ít nhất 4 ký tự")
     @ValidUsername
     private String username;
 
     @Column(name = "password", length = 250)
     @NotBlank(message = "Password is required")
+    @JsonIgnore
     private String password;
 
     @Column(name = "email", length = 50, unique = true)
@@ -53,21 +55,26 @@ public class User implements UserDetails {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Order> orders = new ArrayList<>();
 
     @Column(name = "default_delivery_address", length = 300)
     private String defaultDeliveryAddress;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonBackReference
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
     @Column(name = "provider", length = 50)
     private String provider;
 
     @OneToOne(mappedBy = "user")
+    @JsonBackReference
     private Restaurant restaurant;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<Role> userRoles = this.getRoles();
@@ -75,30 +82,43 @@ public class User implements UserDetails {
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .toList();
     }
+
     @Override
     public String getPassword() {
         return password;
     }
+
     @Override
     public String getUsername() {
         return username;
     }
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
+    @JsonIgnore
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
+    @JsonIgnore
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+    @Column(name = "enabled")
+    private Boolean enabled = true;
+
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,9 +128,11 @@ public class User implements UserDetails {
         return getId() != null && Objects.equals(getId(),
                 user.getId());
     }
+
     @Override
     public int hashCode() {
         return getClass().hashCode();
     }
+
 
 }

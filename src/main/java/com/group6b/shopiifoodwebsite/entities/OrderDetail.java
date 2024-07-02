@@ -1,5 +1,8 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -16,10 +19,12 @@ import lombok.*;
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "order_id")
+    @JsonIgnore
     private Order order;
 
     @ManyToOne
@@ -28,8 +33,10 @@ public class OrderDetail {
 
     @Column(name = "quantity",nullable = false)
     private int quantity;
+
     @Column(name = "price",nullable = false)
     private Double price;
+
 
     public OrderDetail(Order order, FoodItem foodName, int quantity, Double price) {
         this.order = order;
@@ -37,5 +44,4 @@ public class OrderDetail {
         this.quantity = quantity;
         this.price = price;
     }
-
 }

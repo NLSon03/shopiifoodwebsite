@@ -27,6 +27,7 @@ public class FoodItem {
 
     @Column(name = "mainPicture")
     private String mainPicture;
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

@@ -1,5 +1,6 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,5 +21,6 @@ public class PictureList {
 
     @ManyToOne
     @JoinColumn(name = "fooditems_id")
+    @JsonBackReference
     private FoodItem foodItem;
 }

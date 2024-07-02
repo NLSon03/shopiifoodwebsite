@@ -90,10 +90,7 @@
                                             <td th:text="${food.restaurant.name}"></td>
                                             <td colspan="2">
                                                 <a class="btn btn-primary"
-                                                   th:href="@{/admin/list-foods/details/{id}(id=${food.getId()})}">Xem chi tiết</a>
-                                                <a class="btn btn-primary"
-                                                   sec:authorize="hasAnyAuthority('ADMIN')"
-                                                   th:href="@{/admin/list-foods/edit/{id}(id=${food.getId()})}">Chỉnh sửa</a>
+                                                   th:href="@{/admin/foods/{id}(id=${food.getId()})}">Xem chi tiết</a>
                                                 <a class="btn btn-danger"
                                                    sec:authorize="hasAnyAuthority('ADMIN')"
                                                    th:href="@{/admin/list-foods/delete/{id}(id=${food.getId()})}"

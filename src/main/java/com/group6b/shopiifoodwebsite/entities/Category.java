@@ -1,6 +1,8 @@
 package com.group6b.shopiifoodwebsite.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +30,8 @@ public class Category {
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonManagedReference
+    @JsonIgnore
     private List<FoodItem> foodItems;
 
 }

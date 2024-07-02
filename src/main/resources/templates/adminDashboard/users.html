@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
+    <title>Danh mục</title>
+    <!-- Custom CSS -->
+    <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!--    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>-->
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <div th:replace="fragments/admin-header :: header"></div>
+
+    <div th:replace="fragments/admin-header :: aside"></div>
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title">Sản phẩm</h4>
+                    <div class="ml-auto text-right">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Library</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Danh sách người dùng</h5>
+                            <div class="table-responsive">
+                                <table id="zero_config" class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ giao hàng mặc định</th>
+                                        <th>Loại tài khoản</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Quyền hạn</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- Dữ liệu sẽ được thêm vào đây bởi JavaScript -->
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ giao hàng mặc định</th>
+                                        <th>Loại tài khoản</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Quyền hạn</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="fragments/admin-footer :: footer"></div>
+
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tableBody = document.querySelector("#zero_config tbody");
+
+        fetch('/api/admin/users')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(user => {
+                    var row = tableBody.insertRow();
+
+                    var idCell = row.insertCell();
+                    idCell.textContent = user.id;
+
+                    var usernameCell = row.insertCell();
+                    usernameCell.textContent = user.username;
+
+                    var emailCell = row.insertCell();
+                    emailCell.textContent = user.email;
+
+                    var phoneNumberCell = row.insertCell();
+                    phoneNumberCell.textContent = user.phoneNumber;
+
+                    var defaultDeliveryAddressCell = row.insertCell();
+                    defaultDeliveryAddressCell.textContent = user.defaultDeliveryAddress || 'N/A';
+
+                    var providerCell = row.insertCell();
+                    providerCell.textContent = user.provider || "Đăng ký";
+
+                    var enabledCell = row.insertCell();
+                    enabledCell.textContent = user.enabled ? 'Yes' : 'No';
+
+                    var authoritiesCell = row.insertCell();
+                    authoritiesCell.textContent = user.authorities.map(a => a.authority).join(', ');
+
+                    var actionCell = row.insertCell();
+                    var actionButton = document.createElement('button');
+                    actionButton.textContent = user.enabled ? 'Disable' : 'Enable';
+                    actionButton.addEventListener('click', function () {
+                        toggleUserEnabled(user.id, !user.enabled);
+                    });
+                    actionCell.appendChild(actionButton);
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy dữ liệu người dùng:', error));
+    });
+
+    function toggleUserEnabled(userId, enabled) {
+        fetch(`/api/admin/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ enabled: enabled })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Cập nhật thành công!');
+                    location.reload(); // Tải lại trang để cập nhật bảng
+                } else {
+                    throw new Error('Cập nhật thất bại');
+                }
+            })
+            .catch(error => console.error('Lỗi khi cập nhật người dùng:', error));
+    }
+</script>
+<script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/seller/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script th:src="@{/seller/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/sparkline/sparkline.js}"></script>
+<!--Wave Effects -->
+<script th:src="@{/seller/dist/js/waves.js}"></script>
+<!--Menu sidebar -->
+<script th:src="@{/seller/dist/js/sidebarmenu.js}"></script>
+<!--Custom JavaScript -->
+<script th:src="@{/seller/dist/js/custom.min.js}"></script>
+<!-- this page js -->
+<script th:src="@{/seller/assets/extra-libs/multicheck/datatable-checkbox-init.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/multicheck/jquery.multicheck.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/DataTables/datatables.min.js}"></script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+</body>
+
+</html>
