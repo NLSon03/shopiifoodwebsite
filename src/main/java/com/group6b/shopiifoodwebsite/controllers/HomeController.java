@@ -24,11 +24,21 @@ public class HomeController {
     private final UserService userService;
     private final RestaurantService restaurantService;
     @GetMapping
-    public String home(@NotNull Model model ) {
+    public String home(@RequestParam(defaultValue = "0") Integer pageNo,
+                       @RequestParam(defaultValue = "20") Integer pageSize,
+                       @RequestParam(defaultValue = "id") String sortBy,
+                       @RequestParam(value = "ajax", required = false) Boolean ajax,
+                        @NotNull Model model ) {
+        var page = foodItemService.getAllFood(pageNo, pageSize, sortBy);
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("foods",foodItemService.getAllFood());
+        model.addAttribute("foods",page);
         model.addAttribute("restaurants",restaurantService.getAllRestaurants());
-        model.addAttribute("random3",foodItemService.getRandomFoodItems(3));
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages",foodItemService.getAllFood(pageNo,pageSize,sortBy).size() / pageSize);
+
+        if (Boolean.TRUE.equals(ajax)) {
+            return "home/index :: foodList";
+        }
         return "home/index";
     }
 

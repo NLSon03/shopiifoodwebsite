@@ -7,6 +7,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +41,8 @@ public class FoodItemService {
                 .collect(Collectors.toList());
     }
     public List<FoodItem> getAllFood(Integer pageNo, Integer pageSize, String sortBy) {
-        return foodItemRepository.findAllFoods(pageNo, pageSize, sortBy);
+        PageRequest pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        return foodItemRepository.findAll(pageable).getContent();
     }
     public List<FoodItem> getAllFood(){
         return foodItemRepository.findAll();

@@ -2,6 +2,8 @@ package com.group6b.shopiifoodwebsite.services;
 
 import com.group6b.shopiifoodwebsite.entities.Category;
 import com.group6b.shopiifoodwebsite.repositories.CategoryRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,8 @@ import java.util.UUID;
         rollbackFor = {Exception.class, Throwable.class})
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    @PersistenceContext
+    private EntityManager em;
     private final String IMAGE_PATH = "src/main/resources/static/categoryimages/";
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -64,5 +68,20 @@ public class CategoryService {
     }
     public List<Category> searchCategories(String query) {
         return categoryRepository.findByCategoryDescriptionContainingIgnoreCase(query);
+    }
+
+    public boolean categoryExists(String description) {
+        return categoryRepository.existsByCategoryDescription(description);
+    }
+    public boolean categoryIconExists(String icon) {
+        return categoryRepository.existsByCategoryIcon(icon);
+    }
+    @Transactional
+    public void DeleteAllCategories() {
+        categoryRepository.deleteAll();
+    }
+    @Transactional
+    public void resetAutoIncrement() {
+        em.createNativeQuery("ALTER TABLE category AUTO_INCREMENT = 1").executeUpdate();
     }
 }

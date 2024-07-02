@@ -4,6 +4,10 @@
   flex-wrap: wrap;
   gap: 10px;
  }
+.category-container {
+ display: flex;
+ flex-wrap: wrap;
+}
 
 .category-button {
  display: flex;
@@ -16,12 +20,11 @@
  font-size: 16px;
  color: #333;
  transition: background-color 0.3s, color 0.3s;
+height: 100px;
 }
 
 .category-button img.category-icon {
  margin-right: 10px;
- width: 18px; /* Adjust size as needed */
- height: 18px; /* Adjust size as needed */
 }
 
 .category-button:hover {

@@ -12,4 +12,9 @@ public interface CategoryRepository  extends        JpaRepository<Category, Long
         return findAll();
     }
     List<Category> findByCategoryDescriptionContainingIgnoreCase(String description);
+    boolean existsByCategoryDescription(String description);
+    boolean existsByCategoryIcon(String icon);
+
+    @Override
+    void deleteAll();
 }
