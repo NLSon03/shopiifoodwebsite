@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org"
+>
 
 <head>
     <meta charset="utf-8">
@@ -10,23 +11,23 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
-    <title>Sản phẩm</title>
+    <title>Danh mục</title>
     <!-- Custom CSS -->
-    <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet" />
-    <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet" />
-    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet" />
+    <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
 </head>
 
 <body>
 <!-- ============================================================== -->
 <!-- Preloader - style you can find in spinners.css -->
 <!-- ============================================================== -->
-<div class="preloader">
-    <div class="lds-ripple">
-        <div class="lds-pos"></div>
-        <div class="lds-pos"></div>
-    </div>
-</div>
+<!--    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>-->
 <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
 </form>
 <!-- ============================================================== -->
@@ -44,6 +45,7 @@
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title">Sản phẩm</h4>
                     <div class="ml-auto text-right">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
@@ -62,32 +64,39 @@
         <!-- Container fluid  -->
         <!-- ============================================================== -->
         <div class="container-fluid">
-            <!-- ============================================================== -->
-            <!-- Start Page Content -->
-            <!-- ============================================================== -->
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Danh sách món ăn thuộc: <span id="categoryDescription"></span></h5>
+                            <h5 class="card-title">Danh sách người dùng</h5>
                             <div class="table-responsive">
                                 <table id="zero_config" class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
-                                        <th>Tên thức ăn</th>
-                                        <th>Giá</th>
-                                        <th>Nhà hàng</th>
+                                        <th>ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ giao hàng mặc định</th>
+                                        <th>Loại tài khoản</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Quyền hạn</th>
                                         <th>Hành động</th>
                                     </tr>
                                     </thead>
-                                    <tbody id="categories_body">
-                                    <!-- Dữ liệu sẽ được thêm vào đây -->
+                                    <tbody>
+                                    <!-- Dữ liệu sẽ được thêm vào đây bởi JavaScript -->
                                     </tbody>
                                     <tfoot>
                                     <tr>
-                                        <th>Tên thức ăn</th>
-                                        <th>Giá</th>
-                                        <th>Nhà hàng</th>
+                                        <th>ID</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Địa chỉ giao hàng mặc định</th>
+                                        <th>Loại tài khoản</th>
+                                        <th>Kích hoạt</th>
+                                        <th>Quyền hạn</th>
                                         <th>Hành động</th>
                                     </tr>
                                     </tfoot>
@@ -97,17 +106,9 @@
                     </div>
                 </div>
             </div>
-            <!-- ============================================================== -->
-            <!-- End PAge Content -->
-            <!-- ============================================================== -->
-            <!-- ============================================================== -->
-            <!-- Right sidebar -->
-            <!-- ============================================================== -->
-            <!-- .right-sidebar -->
-            <!-- ============================================================== -->
-            <!-- End Right sidebar -->
-            <!-- ============================================================== -->
         </div>
+
+
         <!-- ============================================================== -->
         <!-- End Container fluid  -->
         <!-- ============================================================== -->
@@ -130,6 +131,71 @@
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tableBody = document.querySelector("#zero_config tbody");
+
+        fetch('/api/admin/users')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(user => {
+                    var row = tableBody.insertRow();
+
+                    var idCell = row.insertCell();
+                    idCell.textContent = user.id;
+
+                    var usernameCell = row.insertCell();
+                    usernameCell.textContent = user.username;
+
+                    var emailCell = row.insertCell();
+                    emailCell.textContent = user.email;
+
+                    var phoneNumberCell = row.insertCell();
+                    phoneNumberCell.textContent = user.phoneNumber;
+
+                    var defaultDeliveryAddressCell = row.insertCell();
+                    defaultDeliveryAddressCell.textContent = user.defaultDeliveryAddress || 'N/A';
+
+                    var providerCell = row.insertCell();
+                    providerCell.textContent = user.provider || "Đăng ký";
+
+                    var enabledCell = row.insertCell();
+                    enabledCell.textContent = user.enabled ? 'Yes' : 'No';
+
+                    var authoritiesCell = row.insertCell();
+                    authoritiesCell.textContent = user.authorities.map(a => a.authority).join(', ');
+
+                    var actionCell = row.insertCell();
+                    var actionButton = document.createElement('button');
+                    actionButton.textContent = user.enabled ? 'Disable' : 'Enable';
+                    actionButton.addEventListener('click', function () {
+                        toggleUserEnabled(user.id, !user.enabled);
+                    });
+                    actionCell.appendChild(actionButton);
+                });
+            })
+            .catch(error => console.error('Lỗi khi lấy dữ liệu người dùng:', error));
+    });
+
+    function toggleUserEnabled(userId, enabled) {
+        fetch(`/api/admin/users/${userId}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ enabled: enabled })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Cập nhật thành công!');
+                    location.reload(); // Tải lại trang để cập nhật bảng
+                } else {
+                    throw new Error('Cập nhật thất bại');
+                }
+            })
+            .catch(error => console.error('Lỗi khi cập nhật người dùng:', error));
+    }
+</script>
 <script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
 <!-- Bootstrap tether Core JavaScript -->
 <script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
@@ -147,88 +213,6 @@
 <script th:src="@{/seller/assets/extra-libs/multicheck/datatable-checkbox-init.js}"></script>
 <script th:src="@{/seller/assets/extra-libs/multicheck/jquery.multicheck.js}"></script>
 <script th:src="@{/seller/assets/extra-libs/DataTables/datatables.min.js}"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = window.location.pathname.split('/');
-        const categoryId =urlParams[urlParams.length - 1] /* Cách lấy id của danh mục */;
-
-        fetch(`http://localhost:8080/api/admin/foods/categories/${categoryId}`)
-            .then(response => response.json())
-            .then(data => {
-                // Lấy tbody để thêm dữ liệu
-                const tbody = document.getElementById('categories_body');
-
-                // Duyệt qua từng food item và tạo các hàng trong bảng
-                data.forEach(food => {
-                    // Tạo một hàng mới
-                    const row = document.createElement('tr');
-
-                    // Tạo cột Tên thức ăn
-                    const nameCell = document.createElement('td');
-                    nameCell.textContent = food.foodName;
-                    row.appendChild(nameCell);
-
-                    // Tạo cột Giá
-                    const priceCell = document.createElement('td');
-                    priceCell.textContent = food.price + ' Vnđ';
-                    row.appendChild(priceCell);
-
-                    // Tạo cột Nhà hàng
-                    const restaurantCell = document.createElement('td');
-                    restaurantCell.textContent = food.restaurant.name;
-                    row.appendChild(restaurantCell);
-
-                    // Tạo cột Hành động
-                    const actionCell = document.createElement('td');
-                    actionCell.colSpan = 2;
-
-                    // Tạo nút 'Xem chi tiết'
-                    const viewButton = document.createElement('a');
-                    viewButton.className = 'btn btn-primary';
-                    viewButton.href = `/admin/foods/${food.id}`;
-                    viewButton.textContent = 'Xem chi tiết';
-                    actionCell.appendChild(viewButton);
-
-                    // Tạo nút 'Xóa'
-                    const deleteButton = document.createElement('a');
-                    deleteButton.className = 'btn btn-danger';
-                    deleteButton.href = '#';
-                    deleteButton.textContent = 'Xóa';
-                    deleteButton.onclick = function(event) {
-                        event.preventDefault();
-                        if (confirm('Are you sure you want to delete this food?')) {
-                            fetch(`http://localhost:8080/api/admin/foods/${food.id}`, {
-                                method: 'DELETE'
-                            })
-                                .then(response => {
-                                    if (response.ok) {
-                                        alert('Food deleted successfully');
-                                        row.remove(); // Xóa hàng khỏi bảng sau khi xóa thành công
-                                    } else {
-                                        alert('Failed to delete food');
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                    alert('An error occurred while deleting the food');
-                                });
-                        }
-                    };
-                    actionCell.appendChild(deleteButton);
-
-                    // Thêm cột hành động vào hàng
-                    row.appendChild(actionCell);
-
-                    // Thêm hàng vào tbody
-                    tbody.appendChild(row);
-                });
-
-                // Khởi tạo DataTable sau khi đã thêm dữ liệu
-                $('#zero_config').DataTable();
-            })
-            .catch(error => console.error('Error fetching food items:', error));
-    });
-</script>
 <script>
     document.getElementById('logoutLink').addEventListener('click', function (event) {
         event.preventDefault();

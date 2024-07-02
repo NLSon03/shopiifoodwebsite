@@ -1,13 +1,11 @@
 package com.group6b.shopiifoodwebsite.controllers;
 
 
-import com.group6b.shopiifoodwebsite.entities.Category;
-import com.group6b.shopiifoodwebsite.entities.FoodItem;
-import com.group6b.shopiifoodwebsite.entities.Order;
-import com.group6b.shopiifoodwebsite.entities.OrderDetail;
+import com.group6b.shopiifoodwebsite.entities.*;
 import com.group6b.shopiifoodwebsite.services.AdminService;
 import com.group6b.shopiifoodwebsite.services.CategoryService;
 import com.group6b.shopiifoodwebsite.services.ImageStorageService;
+import com.group6b.shopiifoodwebsite.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,10 +22,12 @@ public class AdminApiController {
 
     private final AdminService adminService;
     private final ImageStorageService imageStorageService;
+    private final UserService userService;
 
-    public AdminApiController(AdminService adminService, CategoryService categoryService, ImageStorageService imageStorageService) {
+    public AdminApiController(AdminService adminService, CategoryService categoryService, ImageStorageService imageStorageService, UserService userService) {
         this.adminService = adminService;
         this.imageStorageService = imageStorageService;
+        this.userService = userService;
     }
 
     @GetMapping("/categories/{id}")
@@ -89,4 +90,14 @@ public class AdminApiController {
         return ResponseEntity.ok(foodItem);
     }
 
+    @GetMapping("/users")
+    public List<User> getUsers(){
+        return userService.getAll();
+    }
+
+    @PatchMapping("/users/{id}")
+    public ResponseEntity<User> updateUserEnabled(@PathVariable Long id, @RequestBody Map<String, Boolean> updates) {
+        User updatedUser = userService.updateUserEnabled(id, updates.get("enabled"));
+        return ResponseEntity.ok(updatedUser);
+    }
 }

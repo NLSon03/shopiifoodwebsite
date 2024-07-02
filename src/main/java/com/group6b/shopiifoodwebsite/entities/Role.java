@@ -1,9 +1,11 @@
 package com.group6b.shopiifoodwebsite.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -30,9 +32,12 @@ public class Role implements GrantedAuthority {
     @Size(max = 250, message = "Mô tả nhiều nhất 250 ký tự")
     @Column(name = "description", length = 250)
     private String description;
+
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
     @ToString.Exclude
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
+
     @Override
     public String getAuthority() {
         return name;

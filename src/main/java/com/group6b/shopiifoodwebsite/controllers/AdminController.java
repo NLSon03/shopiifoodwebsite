@@ -88,4 +88,9 @@ public class AdminController {
     public String getOrderDetails(@PathVariable String id){
         return "adminDashboard/order-detail";
     }
+
+    @GetMapping("/users")
+    public String getUsers(){
+        return "adminDashboard/users";
+    }
 }
