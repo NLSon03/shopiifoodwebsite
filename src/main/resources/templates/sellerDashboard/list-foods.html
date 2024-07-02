@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html dir="ltr" xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
+    <title>Sản phẩm</title>
+    <!-- Custom CSS -->
+    <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
+
+</head>
+
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div class="preloader">
+    <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+    </div>
+</div>
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title">Sản phẩm</h4>
+                    <div class="ml-auto text-right">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Library</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <!--View thường-->
+            <!--
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Danh sách sản phẩm</h5>
+                            <div class="table-responsive">
+                                <table id="zero_config" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên thức ăn</th>
+                                            <th>Giá</th>
+                                            <th>Danh mục</th>
+                                            <th sec:authorize="hasAnyAuthority('SELLER')">Hành động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="food : ${foodsByRestaurant}">
+                                            <td th:text="${food.getFoodName()}"></td>
+                                            <td th:text="${food.getPrice()}"> Vnđ</td>
+                                            <td th:text="${food.category.categoryDescription}">Edinburgh</td>
+                                            <td colspan="2">
+                                                <a class="btn btn-primary"
+                                                   th:href="@{/restaurants/dashboard/list-foods/details/{id}(id=${food.getId()})}">Xem chi tiết</a>
+                                                <a class="btn btn-primary"
+                                                   sec:authorize="hasAnyAuthority('SELLER')"
+                                                   th:href="@{/restaurants/dashboard/list-foods/edit/{id}(id=${food.getId()})}">Chỉnh sửa</a>
+                                                <a class="btn btn-danger"
+                                                   sec:authorize="hasAnyAuthority('SELLER')"
+                                                   th:href="@{/restaurants/dashboard/list-foods/delete/{id}(id=${food.getId()})}"
+                                                   onclick="return confirm('Are you sure you want to delete this book?')">Xóa</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Tên thức ăn</th>
+                                            <th>Giá</th>
+                                            <th>Danh mục</th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <!--View API-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Danh sách sản phẩm</h5>
+                            <div class="table-responsive">
+                                <table id="zero_config" class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Tên thức ăn</th>
+                                        <th>Giá</th>
+                                        <th>Danh mục</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!-- Data will be populated here by JavaScript -->
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>Tên thức ăn</th>
+                                        <th>Giá</th>
+                                        <th>Danh mục</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Right sidebar -->
+            <!-- ============================================================== -->
+            <!-- .right-sidebar -->
+            <!-- ============================================================== -->
+            <!-- End Right sidebar -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/seller/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script th:src="@{/seller/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/sparkline/sparkline.js}"></script>
+<!--Wave Effects -->
+<script th:src="@{/seller/dist/js/waves.js}"></script>
+<!--Menu sidebar -->
+<script th:src="@{/seller/dist/js/sidebarmenu.js}"></script>
+<!--Custom JavaScript -->
+<script th:src="@{/seller/dist/js/custom.min.js}"></script>
+<!-- this page js -->
+<script th:src="@{/seller/assets/extra-libs/multicheck/datatable-checkbox-init.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/multicheck/jquery.multicheck.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/DataTables/datatables.min.js}"></script>
+<!--<script>-->
+<!--    /****************************************-->
+<!--     *       Basic Table                   *-->
+<!--     ****************************************/-->
+<!--    $(document).ready(function () {-->
+<!--        $('#zero_config').DataTable();-->
+<!--    });-->
+<!--</script>-->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetch('/api/seller/fooditems')
+            .then(response => response.json())
+            .then(data => {
+                populateTable(data);
+                // Khởi tạo DataTables sau khi thêm dữ liệu vào bảng
+                $('#zero_config').DataTable();
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+    function populateTable(foodItems) {
+        const tbody = document.querySelector("#zero_config tbody");
+        tbody.innerHTML = ""; // Clear existing rows
+
+        foodItems.forEach(food => {
+            const tr = document.createElement("tr");
+
+            // Tên thức ăn
+            const tdFoodName = document.createElement("td");
+            tdFoodName.textContent = food.foodName;
+            tr.appendChild(tdFoodName);
+
+            // Giá
+            const tdPrice = document.createElement("td");
+            tdPrice.textContent = `${food.price} Vnđ`;
+            tr.appendChild(tdPrice);
+
+            // Danh mục
+            const tdCategory = document.createElement("td");
+            tdCategory.textContent = food.category.categoryDescription;
+            tr.appendChild(tdCategory);
+
+            // Hành động
+            const tdActions = document.createElement("td");
+
+            const viewButton = document.createElement("a");
+            viewButton.className = "btn btn-primary";
+            viewButton.href = `/restaurants/dashboard/list-foods/details/${food.id}`;
+            viewButton.textContent = "Xem chi tiết";
+            tdActions.appendChild(viewButton);
+
+            const editButton = document.createElement("a");
+            editButton.className = "btn btn-primary";
+            editButton.href = `/restaurants/dashboard/list-foods/edit/${food.id}`;
+            editButton.textContent = "Chỉnh sửa";
+            tdActions.appendChild(editButton);
+
+            const deleteButton = document.createElement("a");
+            deleteButton.className = "btn btn-danger";
+            deleteButton.href = `/restaurants/dashboard/list-foods/delete/${food.id}`;
+            deleteButton.textContent = "Xóa";
+            deleteButton.onclick = function () {
+                return confirm('Are you sure you want to delete this food item?');
+            };
+            tdActions.appendChild(deleteButton);
+
+            tr.appendChild(tdActions);
+
+            tbody.appendChild(tr);
+        });
+    }
+</script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+</body>
+
+</html>

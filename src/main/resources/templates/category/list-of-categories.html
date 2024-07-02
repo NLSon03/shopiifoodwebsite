@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <link th:fragment="link-css" rel="stylesheet"
+          th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet"
+          th:href="@{/css/style.css}">
+    <style>
+        .card {
+            display: flex;
+            align-items: center;
+        }
+        .card img {
+            margin-right: 10px;
+            width: 50px; /* Adjust as needed */
+            height: 50px; /* Adjust as needed */
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<!--<th:block th:replace="~{layout::header}"></th:block>-->
+
+<h1>category List</h1>
+<a href="/categories/add" sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-primary">Thêm thể loại mới</a>
+<div class="container">
+    <h1>Categories</h1>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Icon</th>
+            <th  sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="category : ${categories}">
+            <td th:text="${category.id}"></td>
+            <td th:text="${category.categoryDescription}"></td>
+            <td><img th:src="@{${category.getCategoryIcon()}}" alt="icon" width="100px" height="100px"></td>
+            <td colspan="2">
+                <a class="btn btn-primary"  sec:authorize="hasAnyAuthority('ADMIN')"
+                   th:href="@{/categories/edit/{id}(id=${category.getId()})}">Edit</a>
+                <a class="btn btn-danger" sec:authorize="hasAnyAuthority('ADMIN')"
+                   th:href="@{/categories/delete/{id}(id=${category.getId()})}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+                <a class="btn btn-primary"
+                   th:href="@{/categories/details/{id}(id=${category.getId()})}">Details</a>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    <!--<div th:each="category : ${categories}">
+        <button class="btn btn-primary">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <p class="card-text" th:text="${category.categoryDescription}"></p>
+                </div>
+            </div>
+        </button>
+    </div>-->
+</div>
+
+<!--<th:block th:replace="~{layout::footer}"></th:block>-->
+
+</body>
+</html>

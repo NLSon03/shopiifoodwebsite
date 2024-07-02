@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org"
+>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
+    <title>Trang người bán</title>
+    <!-- Custom CSS -->
+    <link th:href="@{/seller/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/jquery-minicolors/jquery.minicolors.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/quill/dist/quill.snow.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
+</head>
+
+
+<body>
+
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!--<div class="preloader">
+    <div class="lds-ripple">
+        <div class="lds-pos"></div>
+        <div class="lds-pos"></div>
+    </div>
+</div>-->
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: header"></div>
+
+    <div th:replace="fragments/seller-dashboard-header-and-sidebar :: aside"></div>
+    <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Page wrapper  -->
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title">Chi tiết</h4>
+                    <div class="ml-auto text-right">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <!--                                    <li class="breadcrumb-item"><a href="#">Home</a></li>-->
+                                <!--                                    <li class="breadcrumb-item active" aria-current="page">Library</li>-->
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <!--Trang thường-->
+        <!--
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Tên món
+                                ăn:</strong><span th:text="${foodItem.foodName}"></span>
+                            </p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Mô tả:</strong> <span
+                                    th:text="${foodItem.description}"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Giá:</strong> <span
+                                    th:text="${foodItem.price}">Giá</span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Thể loại:</strong> <span
+                                    th:text="${foodItem.category.categoryDescription}"></span></p>
+                        </div>
+                    </div>
+                    <div class="border-top text-center">
+                        <div class="card-body">
+                            <a class="btn btn-primary"
+                               sec:authorize="hasAnyAuthority('SELLER')"
+                               th:href="@{/restaurants/dashboard/list-foods/edit/{id}(id=${foodItem.getId()})}">Chỉnh
+                                sửa</a>
+                            <a class="btn btn-danger" th:href="@{/restaurants/dashboard/list-foods}">Trở về</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title m-b-0">Ảnh: </h5>
+                            <img th:src="@{${foodItem.mainPicture}}" th:alt="${foodItem.foodName} + ' Image'"
+                                 width="200px" height="200px">
+                            <hr>
+                            <h3>Ảnh chi tiết</h3>
+                            <div>
+                                <div th:each="picture : ${foodItem.pictures}">
+                                    <img th:src="@{${picture.url}}"
+                                         th:alt="${foodItem.foodName} + ' Additional Image'" width="100px"
+                                         height="100px">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+        <!--Trang API-->
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Tên món ăn:</strong><span id="foodName"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Mô tả:</strong> <span id="description"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Giá:</strong> <span id="price"></span></p>
+                            <p><strong class="col-sm-3 text-right control-label col-form-label">Danh mục:</strong> <span id="categoryDescription"></span></p>
+                        </div>
+                    </div>
+                    <div class="border-top text-center">
+                        <div class="card-body">
+                            <a class="btn btn-primary" id="editLink">Chỉnh sửa</a>
+                            <a class="btn btn-danger" href="/restaurants/dashboard/list-foods">Trở về</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title m-b-0">Ảnh: </h5>
+                            <img id="mainPicture" src="" alt="" width="200px" height="200px">
+                            <hr>
+                            <h3>Ảnh chi tiết</h3>
+                            <div id="picturesContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div th:replace="fragments/seller-dashboard-footer :: footer"></div>
+
+    </div>
+
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Lấy id từ URL hiện tại
+        const urlParts = window.location.pathname.split('/');
+        const foodId = urlParts[urlParts.length - 1];
+
+        if (foodId) {
+            fetch(`/api/seller/fooditems/${foodId}`)
+                .then(response => response.json())
+                .then(data => {
+                    populateDetails(data);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    });
+
+    function populateDetails(food) {
+        document.getElementById("foodName").textContent = food.foodName;
+        document.getElementById("description").textContent = food.description;
+        document.getElementById("price").textContent = `${food.price} Vnđ`;
+        document.getElementById("categoryDescription").textContent = food.category.categoryDescription;
+
+        const mainPicture = document.getElementById("mainPicture");
+        mainPicture.src = food.mainPicture;
+        mainPicture.alt = `${food.foodName} Image`;
+
+        const picturesContainer = document.getElementById("picturesContainer");
+        picturesContainer.innerHTML = "";
+        food.pictures.forEach(picture => {
+            const img = document.createElement("img");
+            img.src = picture.url;
+            img.alt = `${food.foodName} Additional Image`;
+            img.width = 100;
+            img.height = 100;
+            picturesContainer.appendChild(img);
+        });
+
+        const editLink = document.getElementById("editLink");
+        editLink.href = `/restaurants/dashboard/list-foods/edit/${food.id}`;
+    }
+</script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+<script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/seller/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script th:src="@{/seller/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/sparkline/sparkline.js}"></script>
+<!--Wave Effects -->
+<script th:src="@{/seller/dist/js/waves.js}"></script>
+<!--Menu sidebar -->
+<script th:src="@{/seller/dist/js/sidebarmenu.js}"></script>
+<!--Custom JavaScript -->
+<script th:src="@{/seller/dist/js/custom.min.js}"></script>
+<!-- This Page JS -->
+<script th:src="@{/seller/assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js}"></script>
+<script th:src="@{/seller/dist/js/pages/mask/mask.init.js}"></script>
+<script th:src="@{/seller/assets/libs/select2/dist/js/select2.full.min.js}"></script>
+<script th:src="@{/seller/assets/libs/select2/dist/js/select2.min.js}"></script>
+<script th:src="@{/seller/assets/libs/jquery-asColor/dist/jquery-asColor.min.js}"></script>
+<script th:src="@{/seller/assets/libs/jquery-asGradient/dist/jquery-asGradient.js}"></script>
+<script th:src="@{/seller/assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js}"></script>
+<script th:src="@{/seller/assets/libs/jquery-minicolors/jquery.minicolors.min.js}"></script>
+<script th:src="@{/seller/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/seller/assets/libs/quill/dist/quill.min.js}"></script>
+<script>
+    //***********************************//
+    // For select 2
+    //***********************************//
+    $(".select2").select2();
+
+    /*colorpicker*/
+    $('.demo').each(function () {
+        $(this).minicolors({
+            control: $(this).attr('data-control') || 'hue',
+            position: $(this).attr('data-position') || 'bottom left',
+            change: function (value, opacity) {
+                if (!value) return;
+                if (opacity) value += ', ' + opacity;
+                if (typeof console === 'object') {
+                    console.log(value);
+                }
+            },
+            theme: 'bootstrap'
+        });
+    });
+
+    /*datepicker*/
+    $('.mydatepicker').datepicker();
+    $('#datepicker-autoclose').datepicker({
+        autoclose: true,
+        todayHighlight: true
+    });
+
+    var quill = new Quill('#editor', {
+        theme: 'snow'
+    });
+
+</script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+</body>
+
+</html>

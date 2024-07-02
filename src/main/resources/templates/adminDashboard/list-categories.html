@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
+    <title>Danh mục</title>
+    <!-- Custom CSS -->
+    <link th:href="@{/seller/assets/extra-libs/multicheck/multicheck.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css}" rel="stylesheet"/>
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet"/>
+</head>
+
+<body>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!--    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>-->
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<!-- ============================================================== -->
+<!-- Main wrapper - style you can find in pages.scss -->
+<!-- ============================================================== -->
+<div id="main-wrapper">
+    <div th:replace="fragments/admin-header :: header"></div>
+
+    <div th:replace="fragments/admin-header :: aside"></div>
+    <!-- ============================================================== -->
+    <div class="page-wrapper">
+        <!-- ============================================================== -->
+        <!-- Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-12 d-flex no-block align-items-center">
+                    <h4 class="page-title">Sản phẩm</h4>
+                    <div class="ml-auto text-right">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Library</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Bread crumb and right sidebar toggle -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Container fluid  -->
+        <!-- ============================================================== -->
+        <div class="container-fluid">
+            <!-- ============================================================== -->
+            <!-- Start Page Content -->
+            <!-- ============================================================== -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Danh mục món ăn</h5>
+                            <div class="table-responsive">
+                                <table id="zero_config" class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên</th>
+                                        <th>Icon</th>
+                                        <th sec:authorize="hasAnyAuthority('ADMIN')">Hành động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="categories_body">
+                                    <!-- Dữ liệu sẽ được thêm vào đây -->
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tên</th>
+                                        <th>Icon miêu tả</th>
+                                        <th></th>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End PAge Content -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Right sidebar -->
+            <!-- ============================================================== -->
+            <!-- .right-sidebar -->
+            <!-- ============================================================== -->
+            <!-- End Right sidebar -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Container fluid  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- footer -->
+        <!-- ============================================================== -->
+        <div th:replace="fragments/admin-footer :: footer"></div>
+
+        <!-- ============================================================== -->
+        <!-- End footer -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- All Jquery -->
+<!-- ============================================================== -->
+<script th:src="@{/seller/assets/libs/jquery/dist/jquery.min.js}"></script>
+<!-- Bootstrap tether Core JavaScript -->
+<script th:src="@{/seller/assets/libs/popper.js/dist/umd/popper.min.js}"></script>
+<script th:src="@{/seller/assets/libs/bootstrap/dist/js/bootstrap.min.js}"></script>
+<!-- slimscrollbar scrollbar JavaScript -->
+<script th:src="@{/seller/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/sparkline/sparkline.js}"></script>
+<!--Wave Effects -->
+<script th:src="@{/seller/dist/js/waves.js}"></script>
+<!--Menu sidebar -->
+<script th:src="@{/seller/dist/js/sidebarmenu.js}"></script>
+<!--Custom JavaScript -->
+<script th:src="@{/seller/dist/js/custom.min.js}"></script>
+<!-- this page js -->
+<script th:src="@{/seller/assets/extra-libs/multicheck/datatable-checkbox-init.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/multicheck/jquery.multicheck.js}"></script>
+<script th:src="@{/seller/assets/extra-libs/DataTables/datatables.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fetch dữ liệu từ API
+        fetch('http://localhost:8080/api/admin/categories')
+            .then(response => response.json())
+            .then(data => {
+                // Lấy tbody để thêm dữ liệu
+                const tbody = document.getElementById('categories_body');
+
+                // Duyệt qua từng category và tạo các hàng trong bảng
+                data.forEach(category => {
+                    // Tạo một hàng mới
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-category-id', category.id); // Thêm attribute để dễ dàng tìm hàng sau khi xóa
+
+                    // Tạo cột ID
+                    const idCell = document.createElement('td');
+                    idCell.textContent = category.id;
+                    row.appendChild(idCell);
+
+                    // Tạo cột Tên
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = category.categoryDescription;
+                    row.appendChild(nameCell);
+
+                    // Tạo cột Icon miêu tả
+                    const iconCell = document.createElement('td');
+                    const img = document.createElement('img');
+                    img.src = category.categoryIcon || 'default-icon.png'; // Sử dụng icon mặc định nếu categoryIcon là null
+                    img.alt = category.categoryDescription;
+                    img.width = 25;
+                    iconCell.appendChild(img);
+                    row.appendChild(iconCell);
+
+                    // Tạo cột Hành động
+                    const actionCell = document.createElement('td');
+                    actionCell.colSpan = 2;
+
+                    // Tạo nút 'Xem danh sách món ăn thuộc danh mục'
+                    const viewButton = document.createElement('a');
+                    viewButton.className = 'btn btn-primary';
+                    viewButton.href = `/admin/foods/categories/${category.id}`;
+                    viewButton.textContent = 'Xem món ăn';
+                    actionCell.appendChild(viewButton);
+
+                    // Tạo nút 'Chỉnh sửa'
+                    const editButton = document.createElement('a');
+                    editButton.className = 'btn btn-primary';
+                    editButton.href = `/admin/categories/edit/${category.id}`;
+                    editButton.textContent = 'Chỉnh sửa';
+                    actionCell.appendChild(editButton);
+
+                    // Tạo nút 'Xóa'
+                    const deleteButton = document.createElement('button'); // Đổi từ <a> thành <button> để dễ dàng xử lý sự kiện
+                    deleteButton.className = 'btn btn-danger';
+                    deleteButton.textContent = 'Xóa';
+                    deleteButton.onclick = function() {
+                        if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
+                            fetch(`http://localhost:8080/api/admin/categories/${category.id}`, {
+                                method: 'DELETE'
+                            })
+                                .then(response => {
+                                    if (response.ok) {
+                                        // Xóa hàng khỏi bảng
+                                        tbody.removeChild(row);
+                                    } else {
+                                        console.error('Error deleting category:', response.statusText);
+                                    }
+                                })
+                                .catch(error => console.error('Error deleting category:', error));
+                        }
+                    };
+                    actionCell.appendChild(deleteButton);
+
+                    // Thêm cột hành động vào hàng
+                    row.appendChild(actionCell);
+
+                    // Thêm hàng vào tbody
+                    tbody.appendChild(row);
+                });
+
+                // Khởi tạo DataTable sau khi đã thêm dữ liệu
+                $('#zero_config').DataTable();
+            })
+            .catch(error => console.error('Error fetching categories:', error));
+    });
+</script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+</body>
+
+</html>

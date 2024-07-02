@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order List</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/icons/favicon.png}" type="image/png"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animate/animate.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animsition/css/animsition.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/select2/select2.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/daterangepicker/daterangepicker.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/slick/slick.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/MagnificPopup/magnific-popup.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/css/util.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" type="text/css">
+</head>
+<body>
+<div th:replace="fragments/home-and-product-header :: header"></div>
+<div class="container">
+    <div class="wrap-table-shopping-cart">
+        <div th:if="${#lists.isEmpty(orderLists)}" class="alert alert-info">
+            Bạn không có đơn hàng nào! Hãy bắt đầu đặt hàng thôi!
+        </div>
+        <div th:unless="${#lists.isEmpty(orderLists)}">
+            <table class="table-shopping-cart table-striped">
+                <thead class="table_head">
+                <tr>
+                    <th class="column-1">Mã Đơn</th>
+                    <th class="column-2">Ngày Đặt</th>
+                    <th class="column-3">Giá Tổng</th>
+                    <th class="column-4">Địa Chỉ</th>
+                    <th class="column-5">Trạng Thái</th>
+                    <th class="column-6"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table_row" th:each="order : ${orderLists}">
+                    <td class="column-1" th:text="${order.id}">Mã Đơn</td>
+                    <td class="column-2" th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">Ngày Đặt</td>
+                    <td class="column-3" th:text="${order.totalPrice}">Giá Tổng</td>
+                    <td class="column-4" th:text="${order.deliveryAddress}">Địa Chỉ</td>
+                    <td class="column-5" th:text="${order.status.statusName}">Trạng Thái</td>
+                    <td class="column-6">
+                        <div class="d-inline">
+                            <form th:if="${order.status.statusName == 'PENDING'}"
+                                  th:action="@{/orders/cancel/{id}(id=${order.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Hủy</button>
+                            </form>
+                            <span th:if="${order.status.statusName == 'PENDING'}"> | </span>
+                            <a th:href="@{/orders/order/details/{id}(id=${order.id})}" class="btn btn-link">Chi Tiết</a>
+                            <span th:if="${order.status.statusName == 'IN_PROGRESS'}"> | </span>
+                            <form th:if="${order.status.statusName == 'IN_PROGRESS'}"
+                                  th:action="@{/orders/complete/{id}(id=${order.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-success">Hoàn Thành</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/vendor/daterangepicker/daterangepicker.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/slick/slick.min.js}"></script>
+<script th:src="@{/js/slick-custom.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/parallax100/parallax100.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.parallax100').parallax100();
+    });
+</script>
+<!--===============================================================================================-->
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.gallery-lb').each(function () {
+            $(this).magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                gallery: {
+                    enabled: true
+                },
+                mainClass: 'mfp-fade'
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/isotope/isotope.pkgd.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/sweetalert/sweetalert.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-addwish-b2').on('click', function (e) {
+            e.preventDefault();
+        });
+
+        $('.js-addwish-b2').each(function () {
+            var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+                $(this).addClass('js-addedwish-b2');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addwish-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+                $(this).addClass('js-addedwish-detail');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addcart-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to cart !", "success");
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-pscroll').each(function () {
+            $(this).css('position', 'relative');
+            $(this).css('overflow', 'hidden');
+            var ps = new PerfectScrollbar(this, {
+                wheelSpeed: 1,
+                scrollingThreshold: 1000,
+                wheelPropagation: false,
+            });
+
+            $(window).on('resize', function () {
+                ps.update();
+            })
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}"></script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        /* Xử lý cho từng đơn hàng */
+        /* Đảm bảo nút Hoàn thành được enable sau 30 giây */
+        /* Kiểm tra từng đơn hàng */
+        document.addEventListener("DOMContentLoaded", function () {
+            const cancelLinks = document.querySelectorAll(".cancel-order-link");
+            const completeLinks = document.querySelectorAll(".complete-order-link");
+
+            cancelLinks.forEach(link => {
+                const status = link.getAttribute("data-status");
+                if (status === "CONFIRMED" || status === "IN_PROGRESS") {
+                    link.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        alert("Bạn không thể hủy đơn hàng này.");
+                    });
+                }
+            });
+
+            completeLinks.forEach(link => {
+                const status = link.getAttribute("data-status");
+                if (status !== "IN_PROGRESS") {
+                    link.addEventListener("click", function (event) {
+                        event.preventDefault();
+                        alert("Bạn chỉ có thể hoàn thành đơn hàng khi đơn hàng đang trong quá trình xử lý.");
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

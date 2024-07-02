@@ -9,6 +9,10 @@ import java.util.Objects;
 @Data
 public class Cart {
     private List<CartItem> cartItems = new ArrayList<>();
+
+    public Cart(ArrayList<Object> objects) {
+    }
+
     public void addItems(CartItem item) {
         boolean isExist = cartItems.stream()
                 .filter(i -> Objects.equals(i.getFoodId(),item.getFoodId()))
@@ -28,5 +32,14 @@ public class Cart {
         cartItems.stream()
                 .filter(item -> Objects.equals(item.getFoodId(), foodId))
                 .forEach(item -> item.setQuantity(quantity));
+    }
+
+    public void increaseItems(Long foodId, int quantity) {
+        cartItems.stream().filter(item -> Objects.equals(item.getFoodId(), foodId))
+                .forEach(item -> item.setQuantity(item.getQuantity() + quantity));
+    }
+    public void decreaseItems(Long foodId, int quantity) {
+        cartItems.stream().filter(item -> Objects.equals(item.getFoodId(), foodId))
+                .forEach(item -> item.setQuantity(item.getQuantity() - quantity));
     }
 }

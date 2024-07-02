@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details</title>
+    <!--===============================================================================================-->
+    <link rel="icon" th:href="@{/images/icons/favicon.png}" type="image/png"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animate/animate.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animsition/css/animsition.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/select2/select2.min.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/daterangepicker/daterangepicker.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/slick/slick.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/MagnificPopup/magnific-popup.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}" type="text/css">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/css/util.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/main.css}" type="text/css">
+</head>
+<body>
+<div th:replace="fragments/home-and-product-header :: header"></div>
+
+
+<div class="container mt-5" th:if="${order != null}">
+    <h1 class="text-center ltext-103 cl5">Order Information</h1>
+    <div class="text-center justify-content-center">
+        <p><strong>Mã đơn hàng: </strong> <span th:text="${order.id}"></span></p>
+        <p><strong>Người đặt: </strong> <span th:text="${order.user.username}"></span></p>
+        <p><strong>Địa chỉ giao hàng: </strong> <span th:text="${order.deliveryAddress}"></span></p>
+        <p><strong>Tổng số tiền:</strong> <span th:text="${order.totalPrice}"></span></p>
+    </div>
+    <div class="wrap-table-shopping-cart">
+        <h2 class="ltext-103 cl5">Order Details</h2>
+        <table class="table table-striped table-shopping-cart">
+            <thead class="table_head">
+            <tr>
+                <th class="column-1">Tên món ăn</th>
+                <th class="column-2">Số lượng</th>
+                <th class="column-3">Giá</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table_row" th:each="orderItem : ${order.orderItems}">
+                <td class="column-1" th:text="${orderItem.foodItem.foodName}"></td>
+                <td class="column-2" th:text="${orderItem.quantity}"></td>
+                <td class="column-3" th:text="${orderItem.price}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:unless="${order != null}">
+    <p th:text="${error}"></p>
+</div>
+
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/vendor/daterangepicker/daterangepicker.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/slick/slick.min.js}"></script>
+<script th:src="@{/js/slick-custom.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/parallax100/parallax100.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.parallax100').parallax100();
+    });
+</script>
+<!--===============================================================================================-->
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.gallery-lb').each(function () {
+            $(this).magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                gallery: {
+                    enabled: true
+                },
+                mainClass: 'mfp-fade'
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/isotope/isotope.pkgd.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/sweetalert/sweetalert.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-addwish-b2').on('click', function (e) {
+            e.preventDefault();
+        });
+
+        $('.js-addwish-b2').each(function () {
+            var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+                $(this).addClass('js-addedwish-b2');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addwish-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to wishlist !", "success");
+                $(this).addClass('js-addedwish-detail');
+                $(this).off('click');
+            });
+        });
+
+        $('.js-addcart-detail').each(function () {
+            var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+            $(this).on('click', function () {
+                swal(nameProduct, "is added to cart !", "success");
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-pscroll').each(function () {
+            $(this).css('position', 'relative');
+            $(this).css('overflow', 'hidden');
+            var ps = new PerfectScrollbar(this, {
+                wheelSpeed: 1,
+                scrollingThreshold: 1000,
+                wheelPropagation: false,
+            });
+
+            $(window).on('resize', function () {
+                ps.update();
+            })
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

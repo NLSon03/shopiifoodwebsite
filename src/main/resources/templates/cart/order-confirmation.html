@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán</title>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <!--===============================================================================================-->
+    <link rel="icon" th:href="@{/images/icons/favicon.png}" type="image/png"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animate/animate.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/animsition/css/animsition.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/select2/select2.min.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}" type="text/css"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" th:href="@{/css/util.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/css/main.css}" type="text/css"/>
+
+</head>
+<body class="animsition">
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<div th:replace="fragments/home-and-product-header :: header"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center">
+                    <h1>Hoàn thành đơn hàng</h1>
+                </div>
+                <div class="card-body text-center">
+                    <p th:text="${message}" class="lead"></p>
+                    <a th:href="@{/orders/order}" class="btn btn-danger mt-3">Đi tới đơn hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-pscroll').each(function () {
+            $(this).css('position', 'relative');
+            $(this).css('overflow', 'hidden');
+            var ps = new PerfectScrollbar(this, {
+                wheelSpeed: 1,
+                scrollingThreshold: 1000,
+                wheelPropagation: false,
+            });
+
+            $(window).on('resize', function () {
+                ps.update();
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

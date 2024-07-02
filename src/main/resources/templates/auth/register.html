@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Register</title>
+    <!-- loader-->
+    <link th:href="@{/auth/assets/css/pace.min.css}" rel="stylesheet"/>
+    <script th:src="@{/auth/assets/js/pace.min.js}"></script>
+    <!--favicon-->
+    <link rel="icon" th:href="@{/auth/assets/images/favicon.ico}" type="image/x-icon">
+    <!-- Bootstrap core CSS-->
+    <link th:href="@{/auth/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <!-- animate CSS-->
+    <link th:href="@{/auth/assets/css/animate.css}" rel="stylesheet" type="text/css"/>
+    <!-- Icons CSS-->
+    <link th:href="@{/auth/assets/css/icons.css}" rel="stylesheet" type="text/css"/>
+    <!-- Custom Style-->
+    <link th:href="@{/auth/assets/css/app-style.css}" rel="stylesheet"/>
+
+
+</head>
+
+<body class="bg-theme bg-theme9">
+
+<!-- start loader -->
+<div id="pageloader-overlay" class="visible incoming">
+    <div class="loader-wrapper-outer">
+        <div class="loader-wrapper-inner">
+            <div class="loader"></div>
+        </div>
+    </div>
+</div>
+<!-- end loader -->
+
+<!-- Start wrapper-->
+<div id="wrapper">
+    <div class="card card-authentication1 mx-auto my-4">
+        <div class="card-body">
+            <div class="card-content p-2">
+                <div class="text-center">
+                    <img th:src="@{/auth/assets/images/logo-icon.png}" alt="logo icon">
+                </div>
+                <div class="card-title text-uppercase text-center py-3">Sign Up</div>
+                <form th:action="@{/register}" th:object="${user}" method="post">
+                    <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                        <ul>
+                            <li th:each="error : ${errors}" th:text="${error}" class="text-black text-start"></li>
+                        </ul>
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="sr-only">Name</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="text" id="username" class="form-control input-shadow" th:field="*{username}"
+                                   placeholder="Enter Your Name">
+                            <div class="form-control-position">
+                                <i class="icon-user"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="sr-only">Email ID</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="email" id="email" class="form-control input-shadow" th:field="*{email}"
+                                   placeholder="Enter Your Email ID">
+                            <div class="form-control-position">
+                                <i class="icon-envelope-open"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Password</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="password" id="password" class="form-control input-shadow" th:field="*{password}"
+                                   placeholder="Password">
+                            <div class="form-control-position">
+                                <i class="icon-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+					<div class="form-group">
+						<label for="phoneNumber" class="sr-only">Password</label>
+						<div class="position-relative has-icon-right">
+							<input type="tel" id="phoneNumber" class="form-control input-shadow" th:field="*{phoneNumber}"
+								   placeholder="Phone Number">
+							<div class="form-control-position">
+								<i class="fa fa-phone"></i>
+							</div>
+						</div>
+					</div>
+                    <div class="form-group">
+                        <div class="icheck-material-white">
+                            <input type="checkbox" id="user-checkbox" checked=""/>
+                            <label for="user-checkbox">I Agree With Terms & Conditions</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-light btn-block waves-effect waves-light">Sign Up</button>
+                    <div class="text-center mt-3">Sign Up With</div>
+
+                    <div class="form-row mt-4">
+                        <div class="form-group mb-0 col-6">
+                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-facebook-square"></i>
+                                Facebook
+                            </button>
+                        </div>
+                        <div class="form-group mb-0 col-6 text-right">
+                            <button type="button" class="btn btn-light btn-block"><i class="fa fa-twitter-square"></i>
+                                Twitter
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        <div class="card-footer text-center py-3">
+            <p class="text-warning mb-0">Already have an account? <a th:href="@{/login}"> Sign In here</a></p>
+        </div>
+    </div>
+</div><!--wrapper-->
+
+<!-- Bootstrap core JavaScript-->
+<script th:src="@{/auth/assets/js/jquery.min.js}"></script>
+<script th:src="@{/auth/assets/js/popper.min.js}"></script>
+<script th:src="@{/auth/assets/js/bootstrap.min.js}"></script>
+
+<!-- sidebar-menu js -->
+<script th:src="@{/auth/assets/js/sidebar-menu.js}"></script>
+
+<!-- Custom scripts -->
+<script th:src="@{/auth/assets/js/app-script.js}"></script>
+
+</body>
+</html>

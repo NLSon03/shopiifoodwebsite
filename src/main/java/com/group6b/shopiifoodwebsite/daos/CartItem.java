@@ -13,4 +13,5 @@ public class CartItem {
     private String foodName;
     private Double price;
     private int quantity;
+    private String imageUrl;
 }

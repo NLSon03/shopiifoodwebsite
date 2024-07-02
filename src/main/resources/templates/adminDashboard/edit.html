@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/seller/assets/images/favicon.png}">
+    <title>Trang người bán</title>
+    <!-- Custom CSS -->
+    <link th:href="@{/seller/assets/libs/select2/dist/css/select2.min.css}" rel="stylesheet" />
+    <link th:href="@{/seller/assets/libs/jquery-minicolors/jquery.minicolors.css}" rel="stylesheet" />
+    <link th:href="@{/seller/assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css}" rel="stylesheet" />
+    <link th:href="@{/seller/assets/libs/quill/dist/quill.snow.css}" rel="stylesheet" />
+    <link th:href="@{/seller/dist/css/style.min.css}" rel="stylesheet" />
+
+</head>
+
+<body>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+   <!-- <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
+        </div>
+    </div>-->
+    <form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+    </form>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <div th:replace="fragments/admin-header :: header"></div>
+        <div th:replace="fragments/admin-header :: aside"></div>
+
+        <!-- Page wrapper -->
+        <div class="page-wrapper">
+            <!-- Bread crumb and right sidebar toggle -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">Chỉnh sửa</h4>
+                        <div class="ml-auto text-right">
+                            <nav aria-label="breadcrumb">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Library</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Bread crumb and right sidebar toggle -->
+
+            <!-- Container fluid -->
+            <div class="container-fluid">
+                <!-- Start Page Content -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <form class="form-horizontal" id="showUpdateForm" th:object="${food}"
+                                  th:action="@{/admin/list-foods/edit}" method="post"
+                                  enctype="multipart/form-data">
+                                <input type="hidden" th:field="*{id}">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="FoodName" class="col-sm-3 text-right control-label col-form-label">
+                                            Tên đồ ăn: <span class="text-danger">*</span>
+                                        </label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="FoodName" th:field="*{foodName}"
+                                                   required autofocus>
+                                            <span class="text-danger" th:if="${#fields.hasErrors('foodName')}"
+                                                  th:errors="*{foodName}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="price" class="col-sm-3 text-right control-label col-form-label">Giá:<span class="text-danger">*</span></label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="price" required th:field="*{price}">
+                                            <span class="text-danger" th:if="${#fields.hasErrors('price')}"
+                                                  th:errors="*{price}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="description" class="col-sm-3 text-right control-label col-form-label">
+                                            Mô tả món ăn:
+                                        </label>
+                                        <div class="col-sm-9">
+                                        <textarea class="form-control" type="text" th:field="*{description}"
+                                                  id="description" required></textarea>
+                                            <span class="text-danger" th:if="${#fields.hasErrors('description')}"
+                                                  th:errors="*{description}"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="category" class="col-sm-3 text-right control-label col-form-label">Chọn danh mục<span class="text-danger">*</span></label>
+                                        <div class="col-md-9">
+                                            <select class="select2 form-control custom-select" id="category"
+                                                    th:field="*{category.id}" required style="width: 100%; height:36px;">
+                                                <option value="">Chọn</option>
+                                                <option th:each="category : ${categories}" th:value="${category.id}"
+                                                        th:text="${category.categoryDescription}"
+                                                        th:selected="${category.id == food.category.getId()}"></option>
+                                            </select>
+                                            <span class="text-danger" th:if="${#fields.hasErrors('category')}"
+                                                  th:errors="*{category}"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 text-right control-label col-form-label">Ảnh chính: <span class="text-danger">*</span></label>
+                                        <div class="col-md-9">
+                                            <div class="custom-file">
+                                                <input type="file"  class="form-control" id="image" name="image" required accept="image/*" placeholder="Chọn ảnh từ máy...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 text-right control-label col-form-label">Ảnh chi tiết: <span class="text-danger">*</span></label>
+                                        <div class="col-md-9">
+                                            <div class="custom-file">
+                                                <input type="file"  class="form-control" id="images" name="images" multiple required accept="image/*" placeholder="Chọn ảnh từ máy...">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-top">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Chỉnh sửa</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Page Content -->
+            <!-- ============================================================== -->
+            <div th:replace="fragments/admin-footer :: footer"></div>
+        </div>
+    </div>
+
+
+    <script src="../../static/seller/assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../../static/seller/assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../../static/seller/assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="../../static/seller/assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../../static/seller/assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="../../static/seller/dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="../../static/seller/dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../../static/seller/dist/js/custom.min.js"></script>
+    <!-- This Page JS -->
+    <script src="../../static/seller/assets/libs/inputmask/dist/min/jquery.inputmask.bundle.min.js"></script>
+    <script src="../../static/seller/dist/js/pages/mask/mask.init.js"></script>
+    <script src="../../static/seller/assets/libs/select2/dist/js/select2.full.min.js"></script>
+    <script src="../../static/seller/assets/libs/select2/dist/js/select2.min.js"></script>
+    <script src="../../static/seller/assets/libs/jquery-asColor/dist/jquery-asColor.min.js"></script>
+    <script src="../../static/seller/assets/libs/jquery-asGradient/dist/jquery-asGradient.js"></script>
+    <script src="../../static/seller/assets/libs/jquery-asColorPicker/dist/jquery-asColorPicker.min.js"></script>
+    <script src="../../static/seller/assets/libs/jquery-minicolors/jquery.minicolors.min.js"></script>
+    <script src="../../static/seller/assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script src="../../static/seller/assets/libs/quill/dist/quill.min.js"></script>
+    <script>
+        document.getElementById('logoutLink').addEventListener('click', function (event) {
+            event.preventDefault();
+            document.getElementById('logoutForm').submit();
+        });
+    </script>
+    <script>
+        //***********************************//
+        // For select 2
+        //***********************************//
+        $(".select2").select2();
+
+        /*colorpicker*/
+        $('.demo').each(function() {
+        //
+        // Dear reader, it's actually very easy to initialize MiniColors. For example:
+        //
+        //  $(selector).minicolors();
+        //
+        // The way I've done it below is just for the demo, so don't get confused
+        // by it. Also, data- attributes aren't supported at this time...they're
+        // only used for this demo.
+        //
+        $(this).minicolors({
+                control: $(this).attr('data-control') || 'hue',
+                position: $(this).attr('data-position') || 'bottom left',
+
+                change: function(value, opacity) {
+                    if (!value) return;
+                    if (opacity) value += ', ' + opacity;
+                    if (typeof console === 'object') {
+                        console.log(value);
+                    }
+                },
+                theme: 'bootstrap'
+            });
+
+        });
+        /*datwpicker*/
+        jQuery('.mydatepicker').datepicker();
+        jQuery('#datepicker-autoclose').datepicker({
+            autoclose: true,
+            todayHighlight: true
+        });
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+
+    </script>
+</body>
+
+</html>

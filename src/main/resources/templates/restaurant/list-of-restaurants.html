@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/springsecurity6" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+    <link th:fragment="link-css" rel="stylesheet"
+          th:href="@{/css/bootstrap.min.css}">
+    <link th:fragment="custom-css" rel="stylesheet"
+          th:href="@{/css/style.css}">
+    <style>
+    .restaurant {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 400px;
+    }
+    .restaurant img {
+        max-width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body>
+
+
+
+<h1>Restaurant List</h1>
+<a href="/restaurants/add" sec:authorize="hasAnyAuthority('ADMIN')" class="btn btn-primary">Thêm thể loại mới</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>PhoneNo</th>
+        <th>Picture</th>
+
+        <th  sec:authorize="hasAnyAuthority('ADMIN')">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="restaurant : ${restaurants}">
+        <td th:text="${restaurant.id}"></td>
+        <td th:text="${restaurant.name}"></td>
+        <td th:text="${restaurant.address}"></td>
+        <td th:text="${restaurant.phoneNumber}"></td>
+        <td><img th:src="${restaurant.restaurantPicture}" th:alt="Picture" width="100px" height="100px"></td>
+        <td colspan="2">
+            <a class="btn btn-primary"  sec:authorize="hasAnyAuthority('ADMIN')"
+               th:href="@{/restaurants/edit/{id}(id=${restaurant.getId()})}">Edit</a>
+            <a class="btn btn-danger" sec:authorize="hasAnyAuthority('ADMIN')"
+               th:href="@{/restaurants/delete/{id}(id=${restaurant.getId()})}" onclick="return confirm('Are you sure you want to delete this book?')">Delete</a>
+            <a class="btn btn-primary"
+               th:href="@{/restaurants/details/{id}(id=${restaurant.getId()})}">Details</a>
+        </td>
+
+    </tr>
+    </tbody>
+</table>
+<th:block th:replace="~{layout::footer}"></th:block>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animate/animate.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animsition/css/animsition.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/select2/select2.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/daterangepicker/daterangepicker.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/slick/slick.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/MagnificPopup/magnific-popup.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <!--===============================================================================================-->
+
+
+</head>
+
+<body class="animsition">
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<div th:replace="fragments/home-and-product-header :: header"></div>
+
+<!-- Slider -->
+<!--<section class="section-slide">
+    <div class="wrap-slick1">
+        <div class="slick1">
+            <div class="item-slick1" th:attr="style='background-image: url(' + @{/images/slide-01.jpg} + ');'"></div>
+
+            <div class="container h-full">
+                    <div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
+                        <div class="layer-slick1 animated visible-false" data-appear="fadeInDown" data-delay="0">
+								<span class="ltext-101 cl2 respon2">
+									Women Collection 2018
+								</span>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="fadeInUp" data-delay="800">
+                            <h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
+                                NEW SEASON
+                            </h2>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="zoomIn" data-delay="1600">
+                            <a href="product.html"
+                               class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
+                                Shop Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-slick1" th:style="'background-image: url(' + @{/images/slide-02.jpg} + ');'">
+                <div class="container h-full">
+                    <div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
+                        <div class="layer-slick1 animated visible-false" data-appear="rollIn" data-delay="0">
+								<span class="ltext-101 cl2 respon2">
+									Men New-Season
+								</span>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="lightSpeedIn" data-delay="800">
+                            <h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
+                                Jackets & Coats
+                            </h2>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="slideInUp" data-delay="1600">
+                            <a href="product.html"
+                               class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
+                                Shop Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="item-slick1" th:style="'background-image: url(' + @{/images/slide-03.jpg} + ');'">
+                <div class="container h-full">
+                    <div class="flex-col-l-m h-full p-t-100 p-b-30 respon5">
+                        <div class="layer-slick1 animated visible-false" data-appear="rotateInDownLeft" data-delay="0">
+								<span class="ltext-101 cl2 respon2">
+									Men Collection 2018
+								</span>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="rotateInUpRight" data-delay="800">
+                            <h2 class="ltext-201 cl2 p-t-19 p-b-43 respon1">
+                                New arrivals
+                            </h2>
+                        </div>
+
+                        <div class="layer-slick1 animated visible-false" data-appear="rotateIn" data-delay="1600">
+                            <a href="product.html"
+                               class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
+                                Shop Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>-->
+
+
+<!-- Banner -->
+<div class="container">
+    <div class="p-b-13" style="padding-top: 13px">
+        <h4 class="ltext-103 cl5" style="font-family: Arial;font-size: 30px">
+            Danh mục
+        </h4>
+    </div>
+    <div class="category-container">
+        <div class="p-b-5 m-lr-auto" th:each="category: ${categories}">
+            <div class="category-buttons"
+                 style="display: flex; justify-content: center; align-items: center; width: 100%;">
+                <a class="category-button" th:href="@{/category/{id}(id=${category.id})}"
+                   style="display: flex; justify-content: center; align-items: center; width: 150px; height: 50px; text-align: center; border: 1px solid #ccc; padding: 10px; box-sizing: border-box;">
+                    <img th:src="@{${category.categoryIcon}}" alt="icon"
+                         style="width: 25px; height: 25px; margin-right: 10px;"/>
+                    <span th:text="${category.categoryDescription}"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+
+
+<!-- Product -->
+<section class="bg0 p-t-23 p-b-140">
+    <div class="container">
+        <div class="p-b-10">
+            <h3 class="ltext-103 cl5" style="font-family: Arial;font-size: 30px">
+                Món ăn
+            </h3>
+        </div>
+        <div class="row isotope-grid">
+            <div id="foodListContainer" th:fragment="foodList">
+                <div th:each="food : ${foods}">
+                    <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                        <!-- Block2 -->
+                        <div class="block2">
+
+                            <div class="block2-pic hov-img0">
+                                <img alt="IMG-PRODUCT" th:src="${food.mainPicture}" height="250px " width="200px">
+
+                                <a class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04"
+                                   th:href="@{/foodItem/detail/{id}(id=${food.id})}">
+                                    Xem chi tiết
+                                </a>
+                            </div>
+
+                            <div class="block2-txt flex-w flex-t p-t-14">
+                                <div class="block2-txt-child1 flex-col-l ">
+                                <span class="stext-104 cl4 hov-cl1 p-b-6">Tên món ăn:
+                                <span class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                                      th:text="${food.foodName}">
+                                </span></span><br>
+                                    <a class="stext-104 cl4 hov-cl1 p-b-6"
+                                       th:href="@{/restaurants-list/restaurant/detail/{id}(id=${food.restaurant.id})}">Quán:
+                                        <span class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6"
+                                              th:text="${food.restaurant.name}">
+                                </span></a><br>
+                                    <span class="stext-105 cl3">Giá: <span class="stext-105 cl3"
+                                                                           th:text="${food.price}"></span> Vnđ</span>
+                                </div>
+                                <div class="block2-txt-child2 flex-r p-t-3">
+                                    <form th:action="@{/foods/add-to-cart}" method="post"
+                                          class="d-inline js-addcart-form">
+                                        <input type="hidden" name="id" th:value="${food.getId()}">
+                                        <input type="hidden" name="name" th:value="${food.getFoodName()}">
+                                        <input type="hidden" name="price" th:value="${food.getPrice()}">
+                                        <button type="submit"
+                                                class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                            <img alt="ICON" class="icon-heart1 dis-block trans-04"
+                                                 th:src="@{~/images/icons/icon-heart-01.png}">
+                                            <img alt="ICON" class="icon-heart2 dis-block trans-04 ab-t-l"
+                                                 th:src="@{~/images/icons/icon-heart-02.png}">
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Load more -->
+        <div class="flex-c-m flex-w w-full p-t-45 pagination">
+            <button onclick="loadPage(0)" style="padding-right: 13px">Trang đầu</button>
+            <button onclick="loadPage(${currentPage - 1})" th:if="${currentPage > 0}">Trang trước</button>
+            <span th:text="'Trang ' + ${currentPage + 1} + ' / ' + ${totalPages}"></span>
+            <button onclick="loadPage(${currentPage + 1})" th:if="${currentPage < totalPages - 1}">Trang sau</button>
+            <button onclick="loadPage(${totalPages - 1})" style="padding-left: 13px">Trang cuối</button>
+        </div>
+    </div>
+</section>
+
+
+<!-- Footer -->
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+
+
+<!-- Back to top -->
+<div class="btn-back-to-top" id="myBtn">
+		<span class="symbol-btn-back-to-top">
+			<i class="zmdi zmdi-chevron-up"></i>
+		</span>
+</div>
+
+<!-- Modal1 -->
+
+
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".js-select2").each(function () {
+            $(this).select2({
+                minimumResultsForSearch: 20,
+                dropdownParent: $(this).next('.dropDownSelect2')
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/vendor/daterangepicker/daterangepicker.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/slick/slick.min.js}"></script>
+<script th:src="@{/js/slick-custom.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/parallax100/parallax100.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.parallax100').parallax100();
+    });
+</script>
+<!--===============================================================================================-->
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.gallery-lb').each(function () {
+            $(this).magnificPopup({
+                delegate: 'a',
+                type: 'image',
+                gallery: {
+                    enabled: true
+                },
+                mainClass: 'mfp-fade'
+            });
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/isotope/isotope.pkgd.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/sweetalert/sweetalert.min.js}"></script>
+<script th:inline="javascript">
+
+    $('.js-addcart-form').on('submit', function (e) {
+        e.preventDefault(); // Prevent default form submission
+        var form = $(this);
+        var nameProduct = form.find('input[name="name"]').val(); // Adjusted line to find correct name
+        if (nameProduct) {
+            $.post(form.attr('action'), form.serialize(), function (response) {
+                swal(nameProduct, "is added to cart !", "success");
+            }).fail(function () {
+                swal(nameProduct, "could not be added to cart. Please try again.", "error");
+            });
+        } else {
+            swal("Error", "Product name is undefined", "error");
+        }
+    });
+
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.js-pscroll').each(function () {
+            $(this).css('position', 'relative');
+            $(this).css('overflow', 'hidden');
+            var ps = new PerfectScrollbar(this, {
+                wheelSpeed: 1,
+                scrollingThreshold: 1000,
+                wheelPropagation: false,
+            });
+
+            $(window).on('resize', function () {
+                ps.update();
+            })
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}"></script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+<script>
+    function loadPage(pageNo) {
+        $.ajax({
+            url: '/your-url-path?pageNo=' + pageNo + '&ajax=true',
+            success: function (data) {
+                $('#foodListContainer').html($(data).find('#foodListContainer').html());
+            }
+        });
+    }
+</script>
+</body>
+</html>

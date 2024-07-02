@@ -3,6 +3,8 @@ package com.group6b.shopiifoodwebsite.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @ToString
@@ -17,11 +19,14 @@ public class FoodItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "foodname", length = 200, nullable = false)
-    private String FoodName;
+    private String foodName;
     @Column(name = "price")
     private double price;
     @Column(name = "description", length = 200)
     private String description;
+
+    @Column(name = "mainPicture")
+    private String mainPicture;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -30,4 +35,10 @@ public class FoodItem {
     @ManyToOne
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant;
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PictureList> pictures;
+
+    @OneToMany(mappedBy = "foodItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderDetail> orderDetails;
+
 }

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quán ăn</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--===============================================================================================-->
+    <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/iconic/css/material-design-iconic-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/fonts/linearicons-v1.0.0/icon-font.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animate/animate.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/css-hamburgers/hamburgers.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/animsition/css/animsition.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/select2/select2.min.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/daterangepicker/daterangepicker.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/slick/slick.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/MagnificPopup/magnific-popup.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/vendor/perfect-scrollbar/perfect-scrollbar.css}">
+    <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/util.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <!--===============================================================================================-->
+
+</head>
+<body class="animsition">
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display: none;">
+</form>
+<div th:replace="fragments/home-and-product-header :: header"></div>
+<!-- breadcrumb -->
+
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a href="/" class="stext-109 cl8 hov-cl1 trans-04" style="font-family: Arial">
+            Trang chủ
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+        <a th:href="@{/restaurants-list}" class="stext-109 cl8 hov-cl1 trans-04" style="font-family: Arial">Quán ăn
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+        <span class="stext-109" style="color: black;font-family: Arial"> Quán ăn:
+            <span class="stext-109 text-black" th:text="${restaurantName}">
+            </span>
+        </span>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4 restaurant-details">
+            <img th:src="${restaurant.getRestaurantPicture()}" alt="Restaurant image">
+        </div>
+        <div class="col-md-8 restaurant-info">
+
+            <h1>Thông tin quán</h1>
+            <p><strong>Tên:</strong> <span th:text="${restaurant.getName()}"></span></p>
+            <p><strong>Địa chỉ:</strong> <span th:text="${restaurant.address}"></span></p>
+            <p><strong>Số điện thoại:</strong> <span th:text="${restaurant.getPhoneNumber()}"></span></p>
+            <!-- Add more restaurant information here if needed -->
+        </div>
+    </div>
+    <br>
+    <hr style="height: 10px; color: black; margin-bottom: unset; margin-top: unset;border-top: black solid 1px">
+    <div class="row isotope-grid">
+        <p th:if="${#lists.isEmpty(foodItem)}">Quán hiện tại chưa có món ăn nào.</p>
+        <div th:each="food : ${foodItem}">
+            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                <!-- Block2 -->
+                <div class="block2">
+
+                    <div class="block2-pic hov-img0">
+                        <img alt="IMG-PRODUCT" th:src="${food.mainPicture}" height="250px " width="200px">
+
+                        <a class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04"
+                           th:href="@{/foodItem/detail/{id}(id=${food.id})}">
+                            Xem chi tiết
+                        </a>
+                    </div>
+
+                    <div class="block2-txt flex-w flex-t p-t-14">
+                        <div class="block2-txt-child1 flex-col-l ">
+                                <span class="stext-104 text-black hov-cl1 p-b-6">Tên món ăn:
+                                <span class="stext-104  text-black hov-cl1 trans-04 js-name-b2 p-b-6"
+                                      th:text="${food.foodName}">
+                                </span></span>
+                            <span class="stext-105 cl3">Giá: <span class="stext-105 cl3" th:text="${food.price}"></span> Vnđ</span>
+                        </div>
+                        <div class="block2-txt-child2 flex-r p-t-3">
+                            <a class="btn-addwish-b2 dis-block pos-relative js-addwish-b2" href="#">
+                                <img alt="ICON" class="icon-heart1 dis-block trans-04"
+                                     th:src="@{~/images/icons/icon-heart-01.png}">
+                                <img alt="ICON" class="icon-heart2 dis-block trans-04 ab-t-l"
+                                     th:src="@{~/images/icons/icon-heart-02.png}">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<br><br><br><br><br><br><br><br><br><br>
+<br>
+<br>
+<br>
+<br><br><br><br><br><br><br><br><br><br><br>
+<div th:replace="fragments/home-and-product-footer :: footer"></div>
+<!-- Back to top -->
+
+<!--===============================================================================================-->
+<script th:src="@{/vendor/jquery/jquery-3.2.1.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/animsition/js/animsition.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/bootstrap/js/popper.js}"></script>
+<script th:src="@{/vendor/bootstrap/js/bootstrap.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/select2/select2.min.js}"></script>
+<script th:inline="javascript">
+    $(".js-select2").each(function () {
+        $(this).select2({
+            minimumResultsForSearch: 20,
+            dropdownParent: $(this).next('.dropDownSelect2')
+        });
+    })
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/daterangepicker/moment.min.js}"></script>
+<script th:src="@{/vendor/daterangepicker/daterangepicker.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/slick/slick.min.js}"></script>
+<script th:src="@{/js/slick-custom.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/parallax100/parallax100.js}"></script>
+<script th:inline="javascript">
+    $('.parallax100').parallax100();
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
+<script th:inline="javascript">
+    $('.gallery-lb').each(function () { // the containers for all your galleries
+        $(this).magnificPopup({
+            delegate: 'a', // the selector for gallery item
+            type: 'image',
+            gallery: {
+                enabled: true
+            },
+            mainClass: 'mfp-fade'
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/isotope/isotope.pkgd.min.js}"></script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/sweetalert/sweetalert.min.js}"></script>
+<script th:inline="javascript">
+    $('.js-addwish-b2, .js-addwish-detail').on('click', function (e) {
+        e.preventDefault();
+    });
+
+    $('.js-addwish-b2').each(function () {
+        var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
+        $(this).on('click', function () {
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-b2');
+            $(this).off('click');
+        });
+    });
+
+    $('.js-addwish-detail').each(function () {
+        var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
+
+        $(this).on('click', function () {
+            swal(nameProduct, "is added to wishlist !", "success");
+
+            $(this).addClass('js-addedwish-detail');
+            $(this).off('click');
+        });
+    });
+
+    /*---------------------------------------------*/
+
+    $('.js-addcart-detail').each(function () {
+        var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
+        $(this).on('click', function () {
+            swal(nameProduct, "is added to cart !", "success");
+        });
+    });
+</script>
+<!--===============================================================================================-->
+<script th:src="@{/vendor/perfect-scrollbar/perfect-scrollbar.min.js}"></script>
+<script th:inline="javascript">
+    $('.js-pscroll').each(function () {
+        $(this).css('position', 'relative');
+        $(this).css('overflow', 'hidden');
+        var ps = new PerfectScrollbar(this, {
+            wheelSpeed: 1,
+            scrollingThreshold: 1000,
+            wheelPropagation: false,
+        });
+
+        $(window).on('resize', function () {
+            ps.update();
+        })
+    });
+</script>
+
+<!--===============================================================================================-->
+<script th:src="@{/js/main.js}"></script>
+<script>
+    document.getElementById('logoutLink').addEventListener('click', function (event) {
+        event.preventDefault();
+        document.getElementById('logoutForm').submit();
+    });
+</script>
+
+</body>
+</html>
