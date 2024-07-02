@@ -148,7 +148,7 @@ public class CartController {
             throw new IllegalArgumentException("Food items in cart not found");
         }
 
-        return "redirect:/orders/confirmation";
+        return "redirect:/orders-confirmation";
     }
 
 }
