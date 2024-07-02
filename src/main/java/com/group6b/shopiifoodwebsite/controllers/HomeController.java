@@ -9,6 +9,7 @@ import com.group6b.shopiifoodwebsite.services.RestaurantService;
 import com.group6b.shopiifoodwebsite.services.UserService;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,6 @@ public class HomeController {
     @GetMapping("foodItem/detail/{id}")
     public String viewFoodItemDetails(@PathVariable long id, Model model) {
         var foodItem = foodItemService.getFoodById(id).orElseThrow(() -> new IllegalArgumentException("Food not found"));
-
         model.addAttribute("foodItem", foodItem);
         return "home/details";
     }
@@ -79,13 +79,20 @@ public class HomeController {
     }
 
 
-    @GetMapping("/restaurant/detail/{id}")
+    @GetMapping("/restaurants-list/restaurant/detail/{id}")
     public String viewRestaurantDetails(@PathVariable long id, Model model) {
         List<FoodItem> foodItems = foodItemService.getFoodItemsByRestaurantId(id);
-        model.addAttribute("foodItems", foodItems);
+        model.addAttribute("foodItem", foodItems);
+        model.addAttribute("restaurantName", restaurantService.getRestaurantById(id).get().getName());
+        var restaurant = restaurantService.getRestaurantById(id).orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
+        model.addAttribute("restaurant", restaurant);
         return "home/restaurantdetails";
     }
-
+    @GetMapping("/restaurants-list")
+    public String viewRestaurantList(@NotNull Model model) {
+        model.addAttribute("restaurants", restaurantService.getAllRestaurants());
+        return "home/restaurants-list";
+    }
     @GetMapping("foodItem/index")
     public String viewFoodItem(Model model) {
         return "product/index";

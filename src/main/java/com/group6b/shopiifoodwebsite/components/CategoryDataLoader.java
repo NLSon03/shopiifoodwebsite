@@ -15,12 +15,9 @@ public class CategoryDataLoader implements CommandLineRunner {
     @Autowired
     private CategoryService categoryService;
 
-    @PersistenceContext
-    private EntityManager em;
     @Override
     public void run(String... args) throws Exception {
-
-        categoryService.DeleteAllCategories();
+        categoryService.deleteAllCategories();
         categoryService.resetAutoIncrement();
         String[] descriptions = {
                 "Hamburger", "Café", "Trà sữa", "Mì", "Thịt nướng",
@@ -46,12 +43,12 @@ public class CategoryDataLoader implements CommandLineRunner {
         };
 
         for (int i = 0; i < descriptions.length; i++) {
-            Category category = new Category();
-            category.setCategoryDescription(descriptions[i]);
-            if (i < icons.length) {
+            if (!categoryService.categoryExists(descriptions[i])) {
+                Category category = new Category();
+                category.setCategoryDescription(descriptions[i]);
                 category.setCategoryIcon(icons[i]);
+                categoryService.addCategory(category);
             }
-            categoryService.addCategory(category);
         }
     }
 }
