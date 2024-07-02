@@ -76,8 +76,8 @@ public class CategoryService {
     public boolean categoryIconExists(String icon) {
         return categoryRepository.existsByCategoryIcon(icon);
     }
-    @Transactional
-    public void DeleteAllCategories() {
+
+    public void deleteAllCategories() {
         categoryRepository.deleteAll();
     }
     @Transactional

@@ -42,17 +42,17 @@
         <div class="top-bar">
             <div class="content-topbar flex-sb-m h-full container">
                 <div class="left-top-bar">
-                    Free shipping for standard order over $100
+
                 </div>
                 <div class="right-top-bar flex-w h-full">
                     <a class="flex-c-m trans-04 p-lr-25" href="#">Help & FAQs</a>
 
                     <div sec:authorize="isAuthenticated()">
-                        <a href="javascript:void(0);" id="logoutLink" class="flex-c-m trans-04 p-lr-25">Logout</a>
+                        <a href="javascript:void(0);" id="logoutLink" class="flex-c-m trans-04 p-lr-25">Đăng xuất</a>
                     </div>
                     <div sec:authorize="!isAuthenticated()">
                         <a href="/login" class="flex-c-m trans-04 p-lr-25">
-                            Login
+                            Đăng nhập
                         </a>
                     </div>
                 </div>
@@ -68,18 +68,14 @@
                 <div class="menu-desktop">
                     <ul class="main-menu">
                         <li>
-                            <a href="/">Home</a>
+                            <a href="/" class="active-menu">Home</a>
                             <ul class="sub-menu">
                                 <li><a href="/">Homepage 1</a></li>
                                 <li><a th:href="@{/home-02}">Homepage 2</a></li>
                                 <li><a th:href="@{/home-03}">Homepage 3</a></li>
                             </ul>
                         </li>
-                        <li class="active-menu"><a th:href="@{/product}">Shop</a></li>
-                        <li class="label1" data-label1="hot"><a th:href="@{/shoping-cart}">Features</a></li>
-                        <li><a th:href="@{/blog}">Blog</a></li>
-                        <li><a th:href="@{/about}">About</a></li>
-                        <li><a th:href="@{/contact}">Contact</a></li>
+                        <li><a th:href="@{/restaurants-list}">Quán ăn</a></li>
                     </ul>
                 </div>
                 <!-- Icon header -->

@@ -32,3 +32,35 @@ height: 100px;
  color: #000;
 }
 
+.restaurant-details {
+ display: flex;
+ align-items: flex-start;
+ margin-bottom: 20px;
+}
+
+.restaurant-details img {
+ margin-right: 20px;
+ max-width: 200px;
+ height: auto;
+}
+
+.restaurant-info {
+ flex: 1;
+}
+
+.restaurant-info h1 {
+ margin-bottom: 10px;
+ font-size: 24px;
+}
+
+.restaurant-info p {
+ margin: 5px 0;
+ font-size: 16px;
+}
+
+.restaurant-info p strong {
+ display: inline-block;
+ width: 120px;
+}
+
+

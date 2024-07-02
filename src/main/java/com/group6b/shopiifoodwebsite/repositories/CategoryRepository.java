@@ -7,14 +7,18 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface CategoryRepository  extends        JpaRepository<Category, Long> {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
     default List<Category> findAllCategories() {
         return findAll();
     }
+
     List<Category> findByCategoryDescriptionContainingIgnoreCase(String description);
+
     boolean existsByCategoryDescription(String description);
+
     boolean existsByCategoryIcon(String icon);
 
     @Override
     void deleteAll();
+
 }

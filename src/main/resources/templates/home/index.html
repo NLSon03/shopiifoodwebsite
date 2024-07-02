@@ -4,7 +4,7 @@
     <title>Home</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ỨNG DỤNG QUẢN LÝ SÁCH</title>
+    <title>Trang chủ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" th:href="@{/images/icons/favicon.png}"/>
@@ -132,10 +132,10 @@
 
 <!-- Banner -->
     <div class="container">
-        <div class="p-b-13">
-            <h3 class="ltext-103 cl5">
-                Category
-            </h3>
+        <div class="p-b-13" style="padding-top: 13px">
+            <h4 class="ltext-103 cl5" style="font-family: Arial;font-size: 30px">
+                Danh mục
+            </h4>
         </div>
         <div class=" category-container">
             <div class="p-b-5 m-lr-auto" th:each="category: ${categories}">
@@ -155,7 +155,7 @@
 <section class="bg0 p-t-23 p-b-140">
     <div class="container">
         <div class="p-b-10">
-            <h3 class="ltext-103 cl5">
+            <h3 class="ltext-103 cl5" style="font-family: Arial;font-size: 30px">
                 Món ăn
             </h3>
         </div>
@@ -180,7 +180,7 @@
                                 <span class="stext-104 cl4 hov-cl1 p-b-6">Tên món ăn:
                                 <span class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" th:text="${food.foodName}">
                                 </span></span><br>
-                                    <a class="stext-104 cl4 hov-cl1 p-b-6" th:href="@{/restaurant/detail/{id}(id=${food.restaurant.id})}">Quán:
+                                    <a class="stext-104 cl4 hov-cl1 p-b-6" th:href="@{/restaurants-list/restaurant/detail/{id}(id=${food.restaurant.id})}">Quán:
                                 <span class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6" th:text="${food.restaurant.name}">
                                 </span></a><br>
                                     <span  class="stext-105 cl3">Giá: <span class="stext-105 cl3" th:text="${food.price}"></span> Vnđ</span>
@@ -203,11 +203,11 @@
 
         <!-- Load more -->
         <div class="flex-c-m flex-w w-full p-t-45 pagination">
-            <button onclick="loadPage(0)">Trang đầu</button>
-            <button onclick="loadPage(${currentPage - 1})" th:if="${currentPage > 0}">Trang trước</button>
+            <button onclick="loadPage(0)" style="padding-right: 13px">Trang đầu </button>
+            <button onclick="loadPage(${currentPage - 1})" th:if="${currentPage > 0}" >Trang trước </button>
             <span th:text="'Trang ' + ${currentPage + 1} + ' / ' + ${totalPages}"></span>
-            <button onclick="loadPage(${currentPage + 1})" th:if="${currentPage < totalPages - 1}">Trang sau</button>
-            <button onclick="loadPage(${totalPages - 1})">Trang cuối</button>
+            <button onclick="loadPage(${currentPage + 1})" th:if="${currentPage < totalPages - 1}">Trang sau </button>
+            <button onclick="loadPage(${totalPages - 1})" style="padding-left: 13px">Trang cuối </button>
         </div>
     </div>
 </section>

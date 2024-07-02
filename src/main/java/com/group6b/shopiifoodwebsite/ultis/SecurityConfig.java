@@ -78,8 +78,8 @@ public class SecurityConfig {
                         .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/adminDashboard/**","/admin/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/category/**","/foodItem/**","/foodItem/detail/**","/search",
-                        "/restaurant/detail/**","/restaurant/**").permitAll()
+                        .requestMatchers("/category/**","/foodItem/**","/foodItem/detail/**","/search","/restaurants-list/**","/restaurants-list/restaurant/**",
+                        "/restaurants-list/restaurant/detail/**").permitAll()
                         .requestMatchers("/api/random-categories/**").permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
