@@ -61,11 +61,11 @@ public class UserController {
                                      RedirectAttributes redirectAttributes) {
         try {
             if (!image.isEmpty()) {
-                    String imageSavePath = "src/main/resources/static/restaurantpictures/";  // Replace with your actual path
+                    String imageSavePath = "src/main/resources/static/images/restaurants/";  // Replace with your actual path
                     String fileName = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(image.getOriginalFilename());
                     Path imagePath = Paths.get(imageSavePath + fileName);
                     image.transferTo(imagePath);
-                    restaurant.setRestaurantPicture("/restaurantpictures/" + fileName);  // Adjust the path based on your storage location
+                    restaurant.setRestaurantPicture("/images/restaurants/" + fileName);  // Adjust the path based on your storage location
             }
             userService.createRestaurantAccount(user, restaurant);
             redirectAttributes.addFlashAttribute("successMessage", "Đăng ký tài khoản nhà hàng thành công.");
