@@ -109,7 +109,7 @@ public class CartController {
             deliveryAddress = user.getDefaultDeliveryAddress();
             if (deliveryAddress == null || deliveryAddress.isBlank()) {
                 model.addAttribute("error", "Vui lòng nhập địa chỉ giao hàng!");
-                return "cart";
+                return "cart/index";
             }
         }
 
@@ -148,7 +148,7 @@ public class CartController {
             throw new IllegalArgumentException("Food items in cart not found");
         }
 
-        return "redirect:/orders-confirmation";
+        return "cart/order-confirmation";
     }
 
 }

@@ -16,48 +16,128 @@
     <link th:href="@{/auth/assets/css/app-style.css}" rel="stylesheet"/>
 
 </head>
-<body>
+<body class="bg-theme bg-theme9">
 
-<h1>Đăng ký tài khoản nhà hàng</h1>
-<form th:action="@{/register/restaurant}" method="post"  enctype="multipart/form-data">
-    <div class="col-6 mb-3">
-        <label for="username">Tên đăng nhập:</label>
-        <input type="text" id="username" name="username" th:field="*{user.username}" required/>
+<!-- start loader -->
+<div id="pageloader-overlay" class="visible incoming">
+    <div class="loader-wrapper-outer">
+        <div class="loader-wrapper-inner">
+            <div class="loader"></div>
+        </div>
     </div>
-    <div class="col-6 mb-3">
-        <label for="password">Mật khẩu:</label>
-        <input type="password" id="password" name="password" th:field="*{user.password}" required/>
-    </div>
-    <div class="col-6 mb-3">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" th:field="*{user.email}" required/>
-    </div>
-    <div class="col-6 mb-3">
-        <label for="phoneNumber">Số điện thoại:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{user.phoneNumber}" required/>
-    </div>
-    <div class="col-6 mb-3">
-        <label for="name">Tên nhà hàng:</label>
-        <input type="text" id="name" name="name" th:field="*{restaurant.name}" required/>
-    </div>
-    <div class="col-6 mb-3">
-        <label for="address">Địa chỉ:</label>
-        <input type="text" id="address" name="address" th:field="*{restaurant.address}" required/>
-    </div>
-    <div class="col-6 mb-3">
-        <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>
-        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
-    </div>
-    <button type="submit">Đăng ký</button>
-</form>
+</div>
+<!-- end loader -->
 
-<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
-<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
+<!-- Start wrapper-->
+<div id="wrapper">
+    <div class="card card-authentication1 mx-auto my-4">
+        <div class="card-body">
+            <div class="card-content p-2">
+                <div class="text-center">
+                    <img th:src="@{/auth/assets/images/logo-icon.png}" alt="logo icon">
+                </div>
+                <div class="card-title text-uppercase text-center py-3">Sign Up</div>
+                <form th:action="@{/register/restaurant}" method="post" enctype="multipart/form-data">
+                    <!-- Hiển thị lỗi -->
+                    <div th:if="${errors}" class="alert alert-danger justify-content-center" role="alert">
+                        <ul>
+                            <li th:each="error : ${errors}" th:text="${error}" class="text-black text-start"></li>
+                        </ul>
+                    </div>
 
+                    <!-- Tên đăng nhập -->
+                    <div class="form-group">
+                        <label for="username" class="sr-only">Tên đăng nhập</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="text" id="username" class="form-control input-shadow" th:field="*{user.username}" placeholder="Enter Your UserName" required>
+                            <div class="form-control-position">
+                                <i class="icon-user"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="form-group">
+                        <label for="password" class="sr-only">Mật khẩu</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="password" id="password" class="form-control input-shadow" th:field="*{user.password}" placeholder="Enter Your Password" required>
+                            <div class="form-control-position">
+                                <i class="icon-lock"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email" class="sr-only">Email</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="email" id="email" class="form-control input-shadow" th:field="*{user.email}" placeholder="Enter Your Email ID" required>
+                            <div class="form-control-position">
+                                <i class="icon-envelope-open"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Số điện thoại -->
+                    <div class="form-group">
+                        <label for="phoneNumber" class="sr-only">Số điện thoại</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="tel" id="phoneNumber" class="form-control input-shadow" th:field="*{user.phoneNumber}" placeholder="Phone Number" required>
+                            <div class="form-control-position">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tên nhà hàng -->
+                    <div class="form-group">
+                        <label for="name" class="sr-only">Tên nhà hàng</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="text" id="name" class="form-control input-shadow" th:field="*{restaurant.name}" placeholder="Restaurant Name" required>
+                            <div class="form-control-position">
+                                <i class="icon-home"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Địa chỉ nhà hàng -->
+                    <div class="form-group">
+                        <label for="address" class="sr-only">Địa chỉ</label>
+                        <div class="position-relative has-icon-right">
+                            <input type="text" id="address" class="form-control input-shadow" th:field="*{restaurant.address}" placeholder="Restaurant Address" required>
+                            <div class="form-control-position">
+                                <i class="icon-location-pin"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ảnh đại diện nhà hàng -->
+                    <div class="form-group">
+                        <label class="form-label" for="image">Main Picture: <span class="text-danger">*</span></label>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                    </div>
+                    <!-- Nút đăng ký -->
+                    <button type="submit" class="btn btn-light btn-block waves-effect waves-light">Sign Up</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div><!--wrapper-->
+
+<!-- Bootstrap core JavaScript-->
 <script th:src="@{/auth/assets/js/jquery.min.js}"></script>
 <script th:src="@{/auth/assets/js/popper.min.js}"></script>
 <script th:src="@{/auth/assets/js/bootstrap.min.js}"></script>
 
+<!-- sidebar-menu js -->
+<script th:src="@{/auth/assets/js/sidebar-menu.js}"></script>
+
+<!-- Custom scripts -->
+<script th:src="@{/auth/assets/js/app-script.js}"></script>
+
+<div th:if="${successMessage}" th:text="${successMessage}" style="color: green;"></div>
+<div th:if="${errorMessage}" th:text="${errorMessage}" style="color: red;"></div>
 
 </body>
 </html>

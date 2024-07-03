@@ -36,43 +36,49 @@
 <body>
 <div th:replace="fragments/home-and-product-header :: header"></div>
 <div class="container">
-    <h1>Đơn</h1>
-    <div th:if="${#lists.isEmpty(orderLists)}" class="alert alert-info">
-        Bạn không có đơn hàng nào! Hãy bắt đầu đặt hàng thôi!
-    </div>
-    <div th:unless="${#lists.isEmpty(orderLists)}">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Order Date</th>
-                <th>Total Price</th>
-                <th>Delivery Address</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="order : ${orderLists}">
-                <td th:text="${order.id}">Order ID</td>
-                <td th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">Order Date</td>
-                <td th:text="${order.totalPrice}">Total Price</td>
-                <td th:text="${order.deliveryAddress}">Delivery Address</td>
-                <td th:text="${order.status.statusName}">Status</td>
-                <td>
-                    <form th:if="${order.status.statusName == 'PENDING'}" th:action="@{/orders/cancel/{id}(id=${order.id})}" method="post">
-                        <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
-                    </form>
-                    <span th:if="${order.status.statusName == 'PENDING'}"> | </span>
-                    <a th:href="@{/orders/order/details/{id}(id=${order.id})}">Chi tiết đơn hàng</a>
-                    <span th:if="${order.status.statusName == 'IN_PROGRESS'}"> | </span>
-                    <form th:if="${order.status.statusName == 'IN_PROGRESS'}" th:action="@{/orders/complete/{id}(id=${order.id})}" method="post">
-                        <button type="submit" class="btn btn-success">Hoàn thành</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+    <div class="wrap-table-shopping-cart">
+        <div th:if="${#lists.isEmpty(orderLists)}" class="alert alert-info">
+            Bạn không có đơn hàng nào! Hãy bắt đầu đặt hàng thôi!
+        </div>
+        <div th:unless="${#lists.isEmpty(orderLists)}">
+            <table class="table-shopping-cart table-striped">
+                <thead class="table_head">
+                <tr>
+                    <th class="column-1">Mã Đơn</th>
+                    <th class="column-2">Ngày Đặt</th>
+                    <th class="column-3">Giá Tổng</th>
+                    <th class="column-4">Địa Chỉ</th>
+                    <th class="column-5">Trạng Thái</th>
+                    <th class="column-6"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="table_row" th:each="order : ${orderLists}">
+                    <td class="column-1" th:text="${order.id}">Mã Đơn</td>
+                    <td class="column-2" th:text="${#dates.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">Ngày Đặt</td>
+                    <td class="column-3" th:text="${order.totalPrice}">Giá Tổng</td>
+                    <td class="column-4" th:text="${order.deliveryAddress}">Địa Chỉ</td>
+                    <td class="column-5" th:text="${order.status.statusName}">Trạng Thái</td>
+                    <td class="column-6">
+                        <div class="d-inline">
+                            <form th:if="${order.status.statusName == 'PENDING'}"
+                                  th:action="@{/orders/cancel/{id}(id=${order.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Hủy</button>
+                            </form>
+                            <span th:if="${order.status.statusName == 'PENDING'}"> | </span>
+                            <a th:href="@{/orders/order/details/{id}(id=${order.id})}" class="btn btn-link">Chi Tiết</a>
+                            <span th:if="${order.status.statusName == 'IN_PROGRESS'}"> | </span>
+                            <form th:if="${order.status.statusName == 'IN_PROGRESS'}"
+                                  th:action="@{/orders/complete/{id}(id=${order.id})}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-success">Hoàn Thành</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
     </div>
 </div>
 <!--===============================================================================================-->
@@ -85,8 +91,8 @@
 <!--===============================================================================================-->
 <script th:src="@{/vendor/select2/select2.min.js}"></script>
 <script th:inline="javascript">
-    $(document).ready(function() {
-        $(".js-select2").each(function(){
+    $(document).ready(function () {
+        $(".js-select2").each(function () {
             $(this).select2({
                 minimumResultsForSearch: 20,
                 dropdownParent: $(this).next('.dropDownSelect2')
@@ -103,7 +109,7 @@
 <!--===============================================================================================-->
 <script th:src="@{/vendor/parallax100/parallax100.js}"></script>
 <script th:inline="javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.parallax100').parallax100();
     });
 </script>
@@ -111,8 +117,8 @@
 <!--===============================================================================================-->
 <script th:src="@{/vendor/MagnificPopup/jquery.magnific-popup.min.js}"></script>
 <script th:inline="javascript">
-    $(document).ready(function() {
-        $('.gallery-lb').each(function() {
+    $(document).ready(function () {
+        $('.gallery-lb').each(function () {
             $(this).magnificPopup({
                 delegate: 'a',
                 type: 'image',
@@ -129,32 +135,32 @@
 <!--===============================================================================================-->
 <script th:src="@{/vendor/sweetalert/sweetalert.min.js}"></script>
 <script th:inline="javascript">
-    $(document).ready(function() {
-        $('.js-addwish-b2').on('click', function(e){
+    $(document).ready(function () {
+        $('.js-addwish-b2').on('click', function (e) {
             e.preventDefault();
         });
 
-        $('.js-addwish-b2').each(function(){
+        $('.js-addwish-b2').each(function () {
             var nameProduct = $(this).parent().parent().find('.js-name-b2').html();
-            $(this).on('click', function(){
+            $(this).on('click', function () {
                 swal(nameProduct, "is added to wishlist !", "success");
                 $(this).addClass('js-addedwish-b2');
                 $(this).off('click');
             });
         });
 
-        $('.js-addwish-detail').each(function(){
+        $('.js-addwish-detail').each(function () {
             var nameProduct = $(this).parent().parent().parent().find('.js-name-detail').html();
-            $(this).on('click', function(){
+            $(this).on('click', function () {
                 swal(nameProduct, "is added to wishlist !", "success");
                 $(this).addClass('js-addedwish-detail');
                 $(this).off('click');
             });
         });
 
-        $('.js-addcart-detail').each(function(){
+        $('.js-addcart-detail').each(function () {
             var nameProduct = $(this).parent().parent().parent().parent().find('.js-name-detail').html();
-            $(this).on('click', function(){
+            $(this).on('click', function () {
                 swal(nameProduct, "is added to cart !", "success");
             });
         });
@@ -189,18 +195,18 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         /* Xử lý cho từng đơn hàng */
         /* Đảm bảo nút Hoàn thành được enable sau 30 giây */
         /* Kiểm tra từng đơn hàng */
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const cancelLinks = document.querySelectorAll(".cancel-order-link");
             const completeLinks = document.querySelectorAll(".complete-order-link");
 
             cancelLinks.forEach(link => {
                 const status = link.getAttribute("data-status");
                 if (status === "CONFIRMED" || status === "IN_PROGRESS") {
-                    link.addEventListener("click", function(event) {
+                    link.addEventListener("click", function (event) {
                         event.preventDefault();
                         alert("Bạn không thể hủy đơn hàng này.");
                     });
@@ -210,7 +216,7 @@
             completeLinks.forEach(link => {
                 const status = link.getAttribute("data-status");
                 if (status !== "IN_PROGRESS") {
-                    link.addEventListener("click", function(event) {
+                    link.addEventListener("click", function (event) {
                         event.preventDefault();
                         alert("Bạn chỉ có thể hoàn thành đơn hàng khi đơn hàng đang trong quá trình xử lý.");
                     });

@@ -35,20 +35,22 @@
 </form>
 <div th:replace="fragments/home-and-product-header :: header"></div>
 
-<br>
-<div class="text-center">
-    <h1>Hoàn thành đơn hàng</h1>
-    <p th:text="${message}"></p>
-    <br>
-    <a href="/" class="btn btn-primary">Về trang chủ</a>
-    <a th:href="@{/orders/order}" class="btn btn-danger ">Đi tới đơn hàng</a>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white text-center">
+                    <h1>Hoàn thành đơn hàng</h1>
+                </div>
+                <div class="card-body text-center">
+                    <p th:text="${message}" class="lead"></p>
+                    <a th:href="@{/orders/order}" class="btn btn-danger mt-3">Đi tới đơn hàng</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
 <!-- Footer -->
 <div th:replace="fragments/home-and-product-footer :: footer"></div>
 

@@ -71,10 +71,8 @@ public class SecurityConfig {
                         .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/cart", "/cart/**").hasAnyAuthority("ADMIN", "USER")
-                        .requestMatchers("/orders/order/details/**", "/orders/checkout/", "/orders/complete/**", "/orders/checkout/", "/orders/cancel/**",
-                                "/orders/confirmation/", "/orders/order/**")
-                        .hasAnyAuthority("ADMIN", "SELLER", "USER")
+                        .requestMatchers("/cart", "/cart/**").hasAnyAuthority("ADMIN","USER","SELLER")
+                        .requestMatchers("/orders/**").hasAnyAuthority("ADMIN", "SELLER", "USER")
                         .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/adminDashboard/**","/admin/**").hasAnyAuthority("ADMIN")
