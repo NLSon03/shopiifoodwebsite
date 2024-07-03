@@ -23,12 +23,16 @@ public class OAuthService extends DefaultOAuth2UserService {
         // Extract user information
         String email = (String) oAuth2User.getAttributes().get("email");
         if (email == null) {
-            throw new OAuth2AuthenticationException("Email not found from OAuth2 provider");
+            return oAuth2User;
         }
 
         // Check if user exists in your database
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        User user = userRepository.findByEmail(email).orElse(null);
+
+        if (user == null) {
+            return oAuth2User;
+        }
+
 
         // Check if the user account is enabled
         if (!user.isEnabled()) {

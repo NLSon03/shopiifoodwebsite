@@ -71,13 +71,15 @@ public class SecurityConfig {
                         .requestMatchers("/foods/edit/**", "/foods/add", "/foods/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/categories/edit/**", "/categories/add", "/categories/delete").hasAnyAuthority("ADMIN")
                         .requestMatchers("/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/cart", "/cart/**").hasAnyAuthority("ADMIN","USER","SELLER")
-                        .requestMatchers("/orders/**").hasAnyAuthority("ADMIN", "SELLER", "USER")
+                        .requestMatchers("/cart", "/cart/**").authenticated()
+
                         .requestMatchers("/orders/accept/**", "/orders/accept/","/restaurants/sellerDashboard/**").hasAnyAuthority("SELLER")
+                        .requestMatchers("/orders/**").authenticated()
                         .requestMatchers("/sellerDashboard/**", "/restaurants/edit/**", "/restaurants/add", "/restaurants/delete").hasAnyAuthority("ADMIN", "SELLER")
                         .requestMatchers("/adminDashboard/**","/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/category/**","/foodItem/**","/foodItem/detail/**","/search","/restaurants-list/**","/restaurants-list/restaurant/**",
                         "/restaurants-list/restaurant/detail/**").permitAll()
+                        .requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers("/api/random-categories/**").permitAll()
                         .anyRequest().authenticated())
                 .logout(logout -> logout
@@ -96,18 +98,15 @@ public class SecurityConfig {
                         .permitAll())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
-                        .failureUrl("/login?error")
                         .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuthService))
                         .successHandler((request, response, authentication) -> {
                             OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
                             String email = null;
                             String name = null;
-                            if (oAuth2User instanceof DefaultOidcUser) {
-                                DefaultOidcUser oidcUser = (DefaultOidcUser) oAuth2User;
+                            if (oAuth2User instanceof DefaultOidcUser oidcUser) {
                                 email = oidcUser.getEmail();
                                 name = oidcUser.getName();
-                            } else if (oAuth2User instanceof DefaultOAuth2User) {
-                                DefaultOAuth2User oauth2User = (DefaultOAuth2User) oAuth2User;
+                            } else if (oAuth2User instanceof DefaultOAuth2User oauth2User) {
                                 email = (String) oauth2User.getAttributes().get("email");
                                 name = oauth2User.getName();
                             }
@@ -116,6 +115,7 @@ public class SecurityConfig {
                             }
                             response.sendRedirect("/");
                         })
+                        .failureUrl("/login?error")
                         .permitAll())
                 .rememberMe(rememberMe -> rememberMe
                         .key("hutech")
