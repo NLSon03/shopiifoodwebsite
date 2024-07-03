@@ -23,6 +23,8 @@ public class Restaurant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "restaurantpicture",nullable = false)
+    private String RestaurantPicture;
     @Size(max = 250,min = 4, message = "Tên phải có ít nhất 4 ký tự")
     @Column(name = "name", length = 250,nullable = false)
     private String name;
@@ -34,10 +36,6 @@ public class Restaurant {
     @Column(name = "phoneNumber",nullable = false)
     private String phoneNumber;
 
-    @Column(name = "restaurantpicture",nullable = false)
-    private String RestaurantPicture;
-
-    
     @OneToMany(mappedBy = "restaurant")
     @JsonIgnore
     private List<FoodItem> foodItems;

@@ -99,7 +99,8 @@ public class OrderService {
         orderRepository.save(order);
 
         // Schedule IN_PROGRESS status update
-        taskScheduler.schedule(() -> updateOrderStatuses(orderId, "IN_PROGRESS"), new Date(System.currentTimeMillis() + 15000));
+        taskScheduler.schedule(() -> updateOrderStatuses(orderId, "IN_PROGRESS"),
+                new Date(System.currentTimeMillis() + 15000));
 
         return true;
     }
